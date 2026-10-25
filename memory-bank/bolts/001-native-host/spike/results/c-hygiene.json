@@ -1,0 +1,68 @@
+{
+  "maxTurnsAccepted": {
+    "exitCode": 0,
+    "durationMs": 2550,
+    "isError": false,
+    "subtype": "success",
+    "apiErrorStatus": null,
+    "terminalReason": "completed",
+    "numTurns": 1,
+    "modelUsage": [
+      "claude-haiku-5-5"
+    ],
+    "costUsd": 0.00060409,
+    "ttftMs": 1263,
+    "result": "OK",
+    "stderr": ""
+  },
+  "maxTurns1WithSchema": {
+    "exitCode": 0,
+    "durationMs": 2563,
+    "isError": false,
+    "subtype": "success",
+    "apiErrorStatus": null,
+    "terminalReason": "completed",
+    "numTurns": 2,
+    "modelUsage": [
+      "claude-haiku-5-5"
+    ],
+    "costUsd": 0.0006455100000000001,
+    "ttftMs": 1220,
+    "result": "{\"ok\":true}",
+    "stderr": ""
+  },
+  "effortLow": {
+    "exitCode": 0,
+    "durationMs": 3244,
+    "isError": false,
+    "subtype": "success",
+    "apiErrorStatus": null,
+    "terminalReason": "completed",
+    "numTurns": 1,
+    "modelUsage": [
+      "claude-haiku-5-5"
+    ],
+    "costUsd": 0.00011142000000000001,
+    "ttftMs": 1831,
+    "result": "OK",
+    "stderr": ""
+  },
+  "systemPromptOverride": {
+    "exitCode": 0,
+    "durationMs": 3020,
+    "isError": false,
+    "subtype": "success",
+    "apiErrorStatus": null,
+    "terminalReason": "completed",
+    "numTurns": 1,
+    "modelUsage": [
+      "claude-haiku-5-5"
+    ],
+    "costUsd": 0.0002321,
+    "ttftMs": 1637,
+    "result": "{\"tools\": [], \"skills\": []}",
+    "stderr": ""
+  },
+  "sessionDirExists": true,
+  "sessionDirGuess": "~\\.claude\\projects\\C--Users-<user>-AppData-Local-Temp-cvsnap-spike-xNDjvC"
+}

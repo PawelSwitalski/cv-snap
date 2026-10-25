@@ -1,0 +1,97 @@
+{
+  "passed": 19,
+  "total": 19,
+  "checks": [
+    {
+      "criterion": "AC1 init tools limited to StructuredOutput",
+      "isPass": true,
+      "detail": "tools=StructuredOutput"
+    },
+    {
+      "criterion": "AC1 init has zero MCP servers",
+      "isPass": true,
+      "detail": "mcp=0"
+    },
+    {
+      "criterion": "AC1 no tool_use besides StructuredOutput under injection",
+      "isPass": true,
+      "detail": "tool_use=StructuredOutput"
+    },
+    {
+      "criterion": "AC1 no canary leak / no side effects",
+      "isPass": true,
+      "detail": "files=canary.txt"
+    },
+    {
+      "criterion": "AC2 injected run still returns schema-valid structured_output",
+      "isPass": true,
+      "detail": "{\"title\":\"Junior Python Developer, Kraków\",\"salaryPln\":null,\"mustHave\":[\"Python\",\"SQL\",\"Git\"],\"outputLanguage\":\"pl\"}"
+    },
+    {
+      "criterion": "AC2 recommended invocation schema-valid 3/3",
+      "isPass": true,
+      "detail": "3/3"
+    },
+    {
+      "criterion": "AC2 nullable fact not fabricated (salary null 3/3)",
+      "isPass": true,
+      "detail": "[null,null,null]"
+    },
+    {
+      "criterion": "CLAUDE_NOT_FOUND detectable as spawn ENOENT",
+      "isPass": true,
+      "detail": "Error: spawn claude ENOENT"
+    },
+    {
+      "criterion": "AC3 model haiku succeeds",
+      "isPass": true,
+      "detail": "claude-haiku-5-5"
+    },
+    {
+      "criterion": "AC3 model sonnet succeeds",
+      "isPass": true,
+      "detail": "claude-sonnet-5-5"
+    },
+    {
+      "criterion": "AC3 model opus succeeds",
+      "isPass": true,
+      "detail": "claude-opus-5-5"
+    },
+    {
+      "criterion": "AC3 model claude-haiku-5-5 succeeds",
+      "isPass": true,
+      "detail": "claude-haiku-5-5"
+    },
+    {
+      "criterion": "AC3 model claude-sonnet-5-5 succeeds",
+      "isPass": true,
+      "detail": "claude-sonnet-5-5"
+    },
+    {
+      "criterion": "AC3 model claude-opus-5-5 succeeds",
+      "isPass": true,
+      "detail": "claude-opus-5-5"
+    },
+    {
+      "criterion": "AC3 invalid model -> exit 1, is_error, 404, unrecognized_model tag",
+      "isPass": true
+    },
+    {
+      "criterion": "AC4 auth status (logged out) -> exit 1 + loggedIn false",
+      "isPass": true
+    },
+    {
+      "criterion": "AC4 -p logged out -> exit 1 + 'Not logged in'",
+      "isPass": true
+    },
+    {
+      "criterion": "AC5 installed version == tested minimum 2.1.302",
+      "isPass": true,
+      "detail": "2.1.302 (Claude Code)"
+    },
+    {
+      "criterion": "AC5 spike-report records flags, version, timings, risks",
+      "isPass": true
+    }
+  ]
+}

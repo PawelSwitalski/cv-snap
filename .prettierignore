@@ -1,0 +1,10 @@
+node_modules
+dist
+coverage
+.output
+.wxt
+pnpm-lock.yaml
+.specsmd
+.claude
+memory-bank
+exampleCV

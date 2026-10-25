@@ -1,0 +1,9 @@
+{
+  "run": {
+    "args": [
+      "--version"
+    ],
+    "spawnError": "Error: spawn claude ENOENT",
+    "durationMs": 1
+  }
+}

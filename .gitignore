@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+.output/
+.wxt/
+*.log
+.env*
+.DS_Store
+
+# Raw sample CVs may contain real personal data; use anonymized copies in */test/fixtures/
+exampleCV/

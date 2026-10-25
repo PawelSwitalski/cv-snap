@@ -1,0 +1,10 @@
+{
+  "pid": 21524,
+  "treeBefore": "[{\"ProcessId\":21524,\"ParentProcessId\":5848,\"Name\":\"claude.exe\"},{\"ProcessId\":19556,\"ParentProcessId\":21524,\"Name\":\"conhost.exe\"}]\r\n",
+  "plainKill": {
+    "code": null,
+    "signal": "SIGTERM",
+    "ms": 13
+  },
+  "treeAfter": "(none)"
+}

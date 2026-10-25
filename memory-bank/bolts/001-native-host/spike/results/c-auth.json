@@ -1,0 +1,43 @@
+{
+  "authStatusLoggedOut": {
+    "exitCode": 1,
+    "durationMs": 214,
+    "result": "",
+    "stdoutIfNotJson": "{\n  \"loggedIn\": false,\n  \"authMethod\": \"none\",\n  \"apiProvider\": \"firstParty\",\n  \"analyticsDisabled\": false,\n  \"projectsDirectory\": \"~\\\\AppData\\\\Local\\\\Temp\\\\cvsnap-noauth-AWF0AJ\\\\projects\",\n  \"configDirectory\": \"~\\\\AppData\\\\Local\\\\Temp\\\\cvsnap-noauth-AWF0AJ\"\n}\n",
+    "stderr": ""
+  },
+  "authStatusLoggedOutRaw": "{\n  \"loggedIn\": false,\n  \"authMethod\": \"none\",\n  \"apiProvider\": \"firstParty\",\n  \"analyticsDisabled\": false,\n  \"projectsDirectory\": \"~\\\\AppData\\\\Local\\\\Temp\\\\cvsnap-noauth-AWF0AJ\\\\projects\",\n  \"configDirectory\": \"~\\\\AppData\\\\Local\\\\Temp\\\\cvsnap-noauth-AWF0AJ\"\n}\n",
+  "printLoggedOut": {
+    "exitCode": 1,
+    "durationMs": 653,
+    "isError": true,
+    "subtype": "success",
+    "apiErrorStatus": null,
+    "terminalReason": "api_error",
+    "numTurns": 1,
+    "modelUsage": [],
+    "costUsd": 0,
+    "result": "Not logged in · Please run /login",
+    "stderr": ""
+  },
+  "authStatusLoggedIn": {
+    "exitCode": 0,
+    "durationMs": 133,
+    "result": "",
+    "stdoutIfNotJson": "{\n  \"loggedIn\": true,\n  \"authMethod\": \"claude.ai\",\n  \"apiProvider\": \"firstParty\",\n  \"analyticsDisabled\": false,\n  \"projectsDirectory\": \"~\\\\.claude\\\\projects\",\n  \"configDirectory\": \"~\\\\.claude\",\n  \"email\": \"<email>\",\n  \"orgId\": \"<org>\",\n  \"orgName\": \"<email>'s Organization\",\n  \"subscriptionType\": \"pro\"\n}\n",
+    "stderr": ""
+  },
+  "versionCmd": {
+    "exitCode": 0,
+    "durationMs": 33,
+    "result": "",
+    "stdoutIfNotJson": "2.1.302 (Claude Code)\n",
+    "stderr": ""
+  },
+  "configDirFilesAfter": [
+    ".claude.json",
+    "backups",
+    "projects",
+    "sessions"
+  ]
+}
