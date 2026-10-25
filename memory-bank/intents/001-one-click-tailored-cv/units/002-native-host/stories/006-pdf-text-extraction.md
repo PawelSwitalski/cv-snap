@@ -2,11 +2,11 @@
 id: 006-pdf-text-extraction
 unit: 002-native-host
 intent: 001-one-click-tailored-cv
-status: draft
+status: complete
 priority: must
-created: 2026-10-25T12:00:00Z
+created: '2026-10-25T12:00:00Z'
 assigned_bolt: 004-native-host
-implemented: false
+implemented: true
 ---
 
 # Story: 006-pdf-text-extraction

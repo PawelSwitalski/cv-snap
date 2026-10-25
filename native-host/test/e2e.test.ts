@@ -6,6 +6,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import { installHost } from "../src/install/install.js";
 import { frame, parseFrames } from "./frames.js";
+import { buildPdf, column } from "./pdf-fixtures.js";
 
 /**
  * End-to-end: the built host (`dist/main.js`, built by global-setup) as a real child process.
@@ -129,6 +130,44 @@ describe("built native host (end to end)", () => {
     expect(fileLog).toContain('"message":"host started"');
     expect(result.stderr).toContain('"message":"host stopped"');
     expect(fileLog + result.stderr).not.toContain("Jan Testowy");
+  });
+
+  it("extracts PDF text with progress, and rejects a scanned PDF, over real stdio", async () => {
+    const textPdf = buildPdf([{ texts: column(["Jan Testowy", "Frontend Developer"], 60) }]);
+    const scannedPdf = buildPdf([{ hasImage: true }]);
+
+    const result = await exchange(
+      process.execPath,
+      [MAIN],
+      isolatedEnv(tempDir("cvsnap-e2e-")),
+      [
+        frame({ type: "extractPdfText", requestId: "p1", pdfBase64: textPdf.toString("base64") }),
+        frame({
+          type: "extractPdfText",
+          requestId: "p2",
+          pdfBase64: scannedPdf.toString("base64"),
+        }),
+      ],
+      4,
+    );
+
+    const frames = parseFrames(result.stdout);
+    expect(
+      frames
+        .filter((f) => f.type === "progress")
+        .map((f) => f.requestId)
+        .sort(),
+    ).toEqual(["p1", "p2"]);
+    const replies = new Map(
+      frames.filter((f) => f.type === "response").map((f) => [f.requestId, f]),
+    );
+    expect(replies.get("p1")).toMatchObject({
+      response: { ok: true, data: { text: "Jan Testowy\nFrontend Developer", pageCount: 1 } },
+    });
+    expect(replies.get("p2")).toMatchObject({
+      response: { ok: false, error: { code: "PDF_PARSE_FAILED", reason: "NO_TEXT" } },
+    });
+    expect(result.exitCode).toBe(0);
   });
 
   it("exits cleanly when the extension disconnects without sending anything", async () => {

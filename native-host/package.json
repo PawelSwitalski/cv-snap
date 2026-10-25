@@ -11,6 +11,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@cv-snap/shared": "workspace:*"
+    "@cv-snap/shared": "workspace:*",
+    "pdfjs-dist": "6.4.299",
+    "zod": "^4.6.7"
   }
 }

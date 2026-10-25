@@ -2,9 +2,9 @@
 
 ## Overview
 - **Total stories**: 32
-- **Generated**: 26
-- **Completed**: 6
-- **Last updated**: 2026-10-25T19:37:59Z
+- **Generated**: 24
+- **Completed**: 8
+- **Last updated**: 2026-10-25T20:10:12Z
 
 ---
 
@@ -42,9 +42,9 @@
   `memory-bank/intents/001-one-click-tailored-cv/units/002-native-host/stories/003-host-install-scripts.md`
 - [x] **004-health-check** — Health check - Must - bolt `003-native-host` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/002-native-host/stories/004-health-check.md`
-- [x] **005-claude-code-provider** — Claude Code provider - Must - bolt `004-native-host` - ✅ GENERATED
+- [x] **005-claude-code-provider** — Claude Code provider - Must - bolt `004-native-host` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/002-native-host/stories/005-claude-code-provider.md`
-- [x] **006-pdf-text-extraction** — PDF text extraction - Must - bolt `004-native-host` - ✅ GENERATED
+- [x] **006-pdf-text-extraction** — PDF text extraction - Must - bolt `004-native-host` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/002-native-host/stories/006-pdf-text-extraction.md`
 
 #### 003-job-ad-capture
@@ -97,6 +97,6 @@
 ## Stories by Status
 
 - **Planned**: 0
-- **Generated**: 26
+- **Generated**: 24
 - **In Progress**: 0
-- **Completed**: 6
+- **Completed**: 8

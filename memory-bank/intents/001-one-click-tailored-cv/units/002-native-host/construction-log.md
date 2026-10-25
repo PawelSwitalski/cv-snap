@@ -2,7 +2,7 @@
 unit: 002-native-host
 intent: 001-one-click-tailored-cv
 created: 2026-10-25T17:25:48Z
-last_updated: 2026-10-25T19:37:59Z
+last_updated: 2026-10-25T20:10:12Z
 ---
 
 # Construction Log: native-host
@@ -29,7 +29,7 @@ last_updated: 2026-10-25T19:37:59Z
 |---------|---------|--------|---------|
 | 001-native-host | 001-claude-code-headless-spike | ✅ completed | - |
 | 003-native-host | 002-native-messaging-protocol, 003-host-install-scripts, 004-health-check | ✅ completed | - |
-| 004-native-host | 005-claude-code-provider, 006-pdf-text-extraction | [ ] planned | - |
+| 004-native-host | 005-claude-code-provider, 006-pdf-text-extraction | ✅ completed | - |
 
 ## Execution History
 
@@ -43,6 +43,10 @@ last_updated: 2026-10-25T19:37:59Z
 | 2026-10-25T18:54:25Z | 003-native-host | stage-complete | plan → implement |
 | 2026-10-25T19:11:21Z | 003-native-host | stage-complete | implement → test |
 | 2026-10-25T19:37:59Z | 003-native-host | completed | All 3 stages done (176/176 tests, Chrome check passed) |
+| 2026-10-25T19:39:45Z | 004-native-host | started | Stage 1: plan |
+| 2026-10-25T19:44:14Z | 004-native-host | stage-complete | plan → implement |
+| 2026-10-25T19:56:46Z | 004-native-host | stage-complete | implement → test |
+| 2026-10-25T20:10:12Z | 004-native-host | completed | All 3 stages done (230/230 tests, real-CLI smoke passed) |
 
 ## Execution Summary
 
@@ -50,12 +54,13 @@ last_updated: 2026-10-25T19:37:59Z
 |--------|-------|
 | Original bolts planned | 3 |
 | Current bolt count | 3 |
-| Bolts completed | 2 |
+| Bolts completed | 3 |
 | Bolts in progress | 0 |
-| Bolts remaining | 1 |
+| Bolts remaining | 0 |
 | Replanning events | 0 |
 
 ## Notes
 
 - User supplied sample material in `exampleCV/`: ~45 CV PDFs (Polish templates + others) and `list-of-jobs.txt` (job boards: indeed.com, stepstone.de, justjoin.it, pracuj.pl). Not needed by the spike itself; earmarked for 006-pdf-text-extraction, 008-regression-fixture-suite and job-ad-capture bolts 007/008.
 - 2026-10-25: Spike findings (`memory-bank/bolts/001-native-host/spike-report.md`) fix the provider invocation and add two error codes (`MODEL_UNAVAILABLE`, `CLAUDE_VERSION_UNSUPPORTED`) for bolt 002. Minimum Claude Code version: 2.1.302.
+- 2026-10-25: Unit complete. AI request handlers (createProfile / parseRequirements / tailor) are registered in the host by bolt 005-cv-tailoring-core, together with the prompt builders that ClaudeCodeProvider needs.

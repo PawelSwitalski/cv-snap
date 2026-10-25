@@ -3,6 +3,7 @@ import { NATIVE_HOST_NAME } from "@cv-snap/shared";
 import { checkHealth } from "./health/check-health.js";
 import { createLogger, createRotatingFileSink, stderrSink, teeSinks } from "./lib/logger.js";
 import { logDir } from "./lib/paths.js";
+import { extractPdfText } from "./pdf/extract-text.js";
 import { runHost } from "./protocol/host.js";
 import { HOST_VERSION } from "./version.js";
 
@@ -41,6 +42,12 @@ await runHost({
   logger,
   handlers: {
     health: (_request, { signal }) => checkHealth({ signal }),
+    extractPdfText: (request, { signal, progress }) => {
+      progress("extracting-pdf-text");
+      return extractPdfText(request.pdfBase64, { signal });
+    },
+    // createProfile / parseRequirements / tailor: registered with the prompt builders in
+    // bolt 005-cv-tailoring-core (ClaudeCodeProvider needs them).
   },
 });
 
