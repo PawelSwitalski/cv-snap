@@ -1,6 +1,8 @@
 // The only barrel export in the repo (coding standards → File Organization).
 export * from "./cv-profile.js";
 export * from "./errors.js";
+export * from "./extension-identity.js";
+export * from "./health.js";
 export * from "./ids.js";
 export * from "./job-requirements.js";
 export * from "./json-schema.js";

@@ -2,7 +2,7 @@
 unit: 002-native-host
 intent: 001-one-click-tailored-cv
 created: 2026-10-25T17:25:48Z
-last_updated: 2026-10-25T17:49:04Z
+last_updated: 2026-10-25T19:37:59Z
 ---
 
 # Construction Log: native-host
@@ -28,7 +28,7 @@ last_updated: 2026-10-25T17:49:04Z
 | Bolt ID | Stories | Status | Changed |
 |---------|---------|--------|---------|
 | 001-native-host | 001-claude-code-headless-spike | ✅ completed | - |
-| 003-native-host | 002-native-messaging-protocol, 003-host-install-scripts, 004-health-check | [ ] planned | - |
+| 003-native-host | 002-native-messaging-protocol, 003-host-install-scripts, 004-health-check | ✅ completed | - |
 | 004-native-host | 005-claude-code-provider, 006-pdf-text-extraction | [ ] planned | - |
 
 ## Execution History
@@ -39,6 +39,10 @@ last_updated: 2026-10-25T17:49:04Z
 | 2026-10-25T17:34:45Z | 001-native-host | stage-complete | plan → implement |
 | 2026-10-25T17:46:00Z | 001-native-host | stage-complete | implement → test |
 | 2026-10-25T17:49:04Z | 001-native-host | completed | All 3 stages done (19/19 verification checks) |
+| 2026-10-25T18:47:19Z | 003-native-host | started | Stage 1: plan |
+| 2026-10-25T18:54:25Z | 003-native-host | stage-complete | plan → implement |
+| 2026-10-25T19:11:21Z | 003-native-host | stage-complete | implement → test |
+| 2026-10-25T19:37:59Z | 003-native-host | completed | All 3 stages done (176/176 tests, Chrome check passed) |
 
 ## Execution Summary
 
@@ -46,9 +50,9 @@ last_updated: 2026-10-25T17:49:04Z
 |--------|-------|
 | Original bolts planned | 3 |
 | Current bolt count | 3 |
-| Bolts completed | 1 |
+| Bolts completed | 2 |
 | Bolts in progress | 0 |
-| Bolts remaining | 2 |
+| Bolts remaining | 1 |
 | Replanning events | 0 |
 
 ## Notes

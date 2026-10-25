@@ -2,9 +2,9 @@
 
 ## Overview
 - **Total stories**: 32
-- **Generated**: 29
-- **Completed**: 3
-- **Last updated**: 2026-10-25T18:42:14Z
+- **Generated**: 26
+- **Completed**: 6
+- **Last updated**: 2026-10-25T19:37:59Z
 
 ---
 
@@ -36,11 +36,11 @@
 
 - [x] **001-claude-code-headless-spike** — Claude Code headless spike - Must - bolt `001-native-host` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/002-native-host/stories/001-claude-code-headless-spike.md`
-- [x] **002-native-messaging-protocol** — Native messaging protocol - Must - bolt `003-native-host` - ✅ GENERATED
+- [x] **002-native-messaging-protocol** — Native messaging protocol - Must - bolt `003-native-host` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/002-native-host/stories/002-native-messaging-protocol.md`
-- [x] **003-host-install-scripts** — Host install scripts - Must - bolt `003-native-host` - ✅ GENERATED
+- [x] **003-host-install-scripts** — Host install scripts - Must - bolt `003-native-host` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/002-native-host/stories/003-host-install-scripts.md`
-- [x] **004-health-check** — Health check - Must - bolt `003-native-host` - ✅ GENERATED
+- [x] **004-health-check** — Health check - Must - bolt `003-native-host` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/002-native-host/stories/004-health-check.md`
 - [x] **005-claude-code-provider** — Claude Code provider - Must - bolt `004-native-host` - ✅ GENERATED
   `memory-bank/intents/001-one-click-tailored-cv/units/002-native-host/stories/005-claude-code-provider.md`
@@ -97,6 +97,6 @@
 ## Stories by Status
 
 - **Planned**: 0
-- **Generated**: 29
+- **Generated**: 26
 - **In Progress**: 0
-- **Completed**: 3
+- **Completed**: 6
