@@ -10,3 +10,12 @@ createRoot(rootElement).render(
     <App />
   </StrictMode>,
 );
+
+// Dev-only console handle for the manual allowed-sites check (bolt 007) until the settings UI
+// exists. On this page, not the service worker: permissions.request needs a user gesture in a
+// document, and DevTools console commands count as one. Removed from production builds.
+if (import.meta.env.DEV) {
+  void import("@/features/allowed-sites/allowed-sites").then(({ createAllowedSites }) => {
+    Object.assign(globalThis, { cvSnapDev: { allowedSites: createAllowedSites() } });
+  });
+}

@@ -2,11 +2,11 @@
 id: 001-allowed-sites-management
 unit: 003-job-ad-capture
 intent: 001-one-click-tailored-cv
-status: draft
+status: complete
 priority: must
-created: 2026-10-25T12:00:00Z
+created: '2026-10-25T12:00:00Z'
 assigned_bolt: 007-job-ad-capture
-implemented: false
+implemented: true
 ---
 
 # Story: 001-allowed-sites-management
