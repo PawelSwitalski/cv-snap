@@ -2,11 +2,11 @@
 id: 003-pdf-download-and-naming
 unit: 004-cv-pdf-renderer
 intent: 001-one-click-tailored-cv
-status: draft
+status: complete
 priority: must
-created: 2026-10-25T12:00:00Z
+created: '2026-10-25T12:00:00Z'
 assigned_bolt: 009-cv-pdf-renderer
-implemented: false
+implemented: true
 ---
 
 # Story: 003-pdf-download-and-naming
