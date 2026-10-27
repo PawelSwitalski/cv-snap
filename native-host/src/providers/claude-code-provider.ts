@@ -1,5 +1,7 @@
 import { join } from "node:path";
 import {
+  assignProfileIds,
+  CvProfileExtractionSchema,
   CvSnapError,
   JobRequirementsSchema,
   ParsedCvProfileContentSchema,
@@ -26,6 +28,7 @@ import { runProcess, type ProcessRunner } from "../lib/run-process.js";
 import { runStructured } from "./claude-runner.js";
 
 export interface ClaudeCodeProviderDeps {
+  /** Usually the shared `promptBuilders`; injected so tests can use their own. */
   prompts: PromptBuilders;
   findClaude?: () => ClaudeCommand | null;
   run?: ProcessRunner;
@@ -65,12 +68,15 @@ export class ClaudeCodeProvider implements CvGenerationProvider {
     options: ProviderCallOptions,
   ): Promise<CvProfileContent> {
     options.onProgress?.("creating-profile");
-    return this.runStep(
+    // Claude returns the profile without IDs; code assigns them, then the full contract
+    // (including unique IDs) is checked once more before the reply leaves the host.
+    const extraction = await this.runStep(
       "profile",
       this.deps.prompts.profile(input),
-      ParsedCvProfileContentSchema,
+      CvProfileExtractionSchema,
       options,
     );
+    return validated(ParsedCvProfileContentSchema, assignProfileIds(extraction));
   }
 
   async parseRequirements(
@@ -110,17 +116,22 @@ export class ClaudeCodeProvider implements CvGenerationProvider {
         ? {}
         : { claudeConfigDir: this.deps.claudeConfigDir }),
     });
-    const parsed = schema.safeParse(output);
-    if (!parsed.success) {
-      // Issue details can echo model output (CV text), so they stay out of the message.
-      throw new CvSnapError(
-        "GENERATION_FAILED",
-        "Claude returned data that doesn't match the schema",
-        {
-          reason: "INVALID_OUTPUT",
-        },
-      );
-    }
-    return parsed.data;
+    return validated(schema, output);
   }
+}
+
+/** Parses with `schema` or throws `GENERATION_FAILED`/`INVALID_OUTPUT` (retryable). */
+function validated<T extends z.ZodType>(schema: T, output: unknown): z.infer<T> {
+  const parsed = schema.safeParse(output);
+  if (!parsed.success) {
+    // Issue details can echo model output (CV text), so they stay out of the message.
+    throw new CvSnapError(
+      "GENERATION_FAILED",
+      "Claude returned data that doesn't match the schema",
+      {
+        reason: "INVALID_OUTPUT",
+      },
+    );
+  }
+  return parsed.data;
 }

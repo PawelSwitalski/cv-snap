@@ -1,15 +1,15 @@
 import { z } from "zod";
-import { CvProfileContentSchema } from "./cv-profile.js";
+import { CvProfileExtractionSchema } from "./cv-profile.js";
 import { JobRequirementsSchema } from "./job-requirements.js";
 import { TailoringPlanSchema } from "./tailoring-plan.js";
 
 /**
  * Schemas of what Claude must return, passed to `claude --json-schema` (spike 001: the most
- * reliable structured-output method). Refinements (e.g. unique IDs) are not part of JSON Schema;
- * they run in zod after parsing.
+ * reliable structured-output method). Refinements are not part of JSON Schema; they run in zod
+ * after parsing. The profile schema carries no IDs: code assigns them (`assignProfileIds`).
  */
 export const AI_OUTPUT_SCHEMAS = {
-  profile: CvProfileContentSchema,
+  profile: CvProfileExtractionSchema,
   requirements: JobRequirementsSchema,
   plan: TailoringPlanSchema,
 } as const;

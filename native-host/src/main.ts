@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-import { NATIVE_HOST_NAME } from "@cv-snap/shared";
+import { NATIVE_HOST_NAME, promptBuilders } from "@cv-snap/shared";
 import { checkHealth } from "./health/check-health.js";
 import { createLogger, createRotatingFileSink, stderrSink, teeSinks } from "./lib/logger.js";
 import { logDir } from "./lib/paths.js";
 import { extractPdfText } from "./pdf/extract-text.js";
 import { runHost } from "./protocol/host.js";
+import { ClaudeCodeProvider } from "./providers/claude-code-provider.js";
 import { HOST_VERSION } from "./version.js";
 
 const logger = createLogger(
@@ -34,6 +35,9 @@ process.on("unhandledRejection", () => {
   logger.error("unhandled rejection");
 });
 
+// Every AI step runs through the user's Claude Code with the shared prompts (bolt 005).
+const provider = new ClaudeCodeProvider({ prompts: promptBuilders });
+
 logger.info("host started", { host: NATIVE_HOST_NAME, version: HOST_VERSION, pid: process.pid });
 
 await runHost({
@@ -46,8 +50,30 @@ await runHost({
       progress("extracting-pdf-text");
       return extractPdfText(request.pdfBase64, { signal });
     },
-    // createProfile / parseRequirements / tailor: registered with the prompt builders in
-    // bolt 005-cv-tailoring-core (ClaudeCodeProvider needs them).
+    createProfile: (request, { signal, progress }) =>
+      provider.createProfile(
+        { cvText: request.cvText },
+        { model: request.model, signal, onProgress: progress },
+      ),
+    parseRequirements: (request, { signal, progress }) =>
+      provider.parseRequirements(
+        {
+          adText: request.adText,
+          url: request.url,
+          structuredFields: request.structuredFields ?? null,
+        },
+        { model: request.model, signal, onProgress: progress },
+      ),
+    tailor: (request, { signal, progress }) =>
+      provider.tailor(
+        {
+          profile: request.profile,
+          requirements: request.requirements,
+          outputLanguage: request.outputLanguage,
+          validatorFeedback: request.validatorFeedback,
+        },
+        { model: request.model, signal, onProgress: progress },
+      ),
   },
 });
 

@@ -2,11 +2,11 @@
 id: 003-cv-profile-extraction
 unit: 001-cv-tailoring-core
 intent: 001-one-click-tailored-cv
-status: draft
+status: complete
 priority: must
-created: 2026-10-25T12:00:00Z
+created: '2026-10-25T12:00:00Z'
 assigned_bolt: 005-cv-tailoring-core
-implemented: false
+implemented: true
 ---
 
 # Story: 003-cv-profile-extraction

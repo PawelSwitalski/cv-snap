@@ -1,13 +1,15 @@
 import { z } from "zod";
 import { findDuplicateIds, IdSchema } from "./ids.js";
 import { LanguageCodeSchema } from "./language.js";
+import { LIMITS, LineTextSchema, OptionalShortTextSchema, ShortTextSchema } from "./limits.js";
 
 /**
  * CV profile: the user-reviewed, only source of facts (FR-4, FR-5).
  *
- * `CvProfileContentSchema` is what Claude returns from the extracted PDF text (it is also sent to
- * `claude --json-schema`, so it avoids constructs JSON Schema can't express). `CvProfileSchema` is
- * the persisted, versioned form. Facts the CV may not state are nullable, never invented.
+ * `CvProfileExtractionSchema` is what Claude returns from the extracted PDF text: the same content
+ * **without IDs**, because IDs are assigned by code (`assignProfileIds`), never invented by the
+ * model. `CvProfileContentSchema` is that content with IDs; `CvProfileSchema` is the persisted,
+ * versioned form. Facts the CV may not state are nullable, never invented.
  */
 
 export const CV_PROFILE_SCHEMA_VERSION = 1;
@@ -20,8 +22,11 @@ export const CvDateSchema = z.object({
 
 export const BulletSchema = z.object({
   id: IdSchema,
-  text: z.string().min(1),
+  text: LineTextSchema,
 });
+
+const bullets = z.array(BulletSchema).max(LIMITS.bullets);
+const skillNames = z.array(ShortTextSchema).max(LIMITS.listItems);
 
 const datedFields = {
   startDate: CvDateSchema.nullable(),
@@ -31,78 +36,105 @@ const datedFields = {
 
 export const ExperienceItemSchema = z.object({
   id: IdSchema,
-  company: z.string().min(1),
-  title: z.string().min(1),
-  location: z.string().nullable(),
+  company: ShortTextSchema,
+  title: ShortTextSchema,
+  location: OptionalShortTextSchema,
   ...datedFields,
-  bullets: z.array(BulletSchema),
-  skills: z.array(z.string().min(1)),
+  bullets,
+  skills: skillNames,
 });
 
 export const ProjectItemSchema = z.object({
   id: IdSchema,
-  name: z.string().min(1),
-  role: z.string().nullable(),
-  url: z.string().nullable(),
+  name: ShortTextSchema,
+  role: OptionalShortTextSchema,
+  url: OptionalShortTextSchema,
   ...datedFields,
-  bullets: z.array(BulletSchema),
-  skills: z.array(z.string().min(1)),
+  bullets,
+  skills: skillNames,
 });
 
 export const EducationItemSchema = z.object({
   id: IdSchema,
-  institution: z.string().min(1),
-  degree: z.string().nullable(),
-  field: z.string().nullable(),
+  institution: ShortTextSchema,
+  degree: OptionalShortTextSchema,
+  field: OptionalShortTextSchema,
   ...datedFields,
-  bullets: z.array(BulletSchema),
+  bullets,
 });
 
 export const SkillItemSchema = z.object({
   id: IdSchema,
-  name: z.string().min(1),
-  category: z.string().nullable(),
+  name: ShortTextSchema,
+  category: OptionalShortTextSchema,
 });
 
 export const LanguageItemSchema = z.object({
   id: IdSchema,
-  name: z.string().min(1),
-  level: z.string().nullable(),
+  name: ShortTextSchema,
+  level: OptionalShortTextSchema,
 });
 
 export const CertificationItemSchema = z.object({
   id: IdSchema,
-  name: z.string().min(1),
-  issuer: z.string().nullable(),
+  name: ShortTextSchema,
+  issuer: OptionalShortTextSchema,
   date: CvDateSchema.nullable(),
 });
 
 export const OtherSectionSchema = z.object({
   id: IdSchema,
-  title: z.string().min(1),
-  items: z.array(BulletSchema),
+  title: ShortTextSchema,
+  items: bullets,
 });
 
 export const ContactSchema = z.object({
-  fullName: z.string().min(1),
-  email: z.string().nullable(),
-  phone: z.string().nullable(),
-  location: z.string().nullable(),
-  links: z.array(z.object({ label: z.string(), url: z.string() })),
+  fullName: ShortTextSchema,
+  email: OptionalShortTextSchema,
+  phone: OptionalShortTextSchema,
+  location: OptionalShortTextSchema,
+  links: z
+    .array(
+      z.object({
+        label: z.string().max(LIMITS.shortChars),
+        url: z.string().max(LIMITS.shortChars),
+      }),
+    )
+    .max(LIMITS.sectionItems),
 });
+
+const section = <T extends z.ZodType>(item: T) => z.array(item).max(LIMITS.sectionItems);
 
 export const CvProfileContentSchema = z.object({
   sourceLanguage: LanguageCodeSchema,
   contact: ContactSchema,
-  headline: z.string().nullable(),
-  summary: z.array(BulletSchema),
-  experience: z.array(ExperienceItemSchema),
-  projects: z.array(ProjectItemSchema),
-  education: z.array(EducationItemSchema),
-  skills: z.array(SkillItemSchema),
-  languages: z.array(LanguageItemSchema),
-  certifications: z.array(CertificationItemSchema),
-  otherSections: z.array(OtherSectionSchema),
+  headline: OptionalShortTextSchema,
+  summary: z.array(BulletSchema).max(LIMITS.bullets),
+  experience: section(ExperienceItemSchema),
+  projects: section(ProjectItemSchema),
+  education: section(EducationItemSchema),
+  skills: z.array(SkillItemSchema).max(LIMITS.listItems),
+  languages: section(LanguageItemSchema),
+  certifications: section(CertificationItemSchema),
+  otherSections: section(OtherSectionSchema),
+});
+
+/** Bullets as plain lines: the model writes text only, code assigns the IDs. */
+const extractedLines = z.array(LineTextSchema).max(LIMITS.bullets);
+
+/** What Claude returns for a CV: the profile content without any `id` (story 003, ddd-02). */
+export const CvProfileExtractionSchema = z.object({
+  sourceLanguage: LanguageCodeSchema,
+  contact: ContactSchema,
+  headline: OptionalShortTextSchema,
+  summary: extractedLines,
+  experience: section(ExperienceItemSchema.omit({ id: true }).extend({ bullets: extractedLines })),
+  projects: section(ProjectItemSchema.omit({ id: true }).extend({ bullets: extractedLines })),
+  education: section(EducationItemSchema.omit({ id: true }).extend({ bullets: extractedLines })),
+  skills: z.array(SkillItemSchema.omit({ id: true })).max(LIMITS.listItems),
+  languages: section(LanguageItemSchema.omit({ id: true })),
+  certifications: section(CertificationItemSchema.omit({ id: true })),
+  otherSections: section(OtherSectionSchema.omit({ id: true }).extend({ items: extractedLines })),
 });
 
 export type CvDate = z.infer<typeof CvDateSchema>;
@@ -115,6 +147,7 @@ export type LanguageItem = z.infer<typeof LanguageItemSchema>;
 export type CertificationItem = z.infer<typeof CertificationItemSchema>;
 export type OtherSection = z.infer<typeof OtherSectionSchema>;
 export type CvProfileContent = z.infer<typeof CvProfileContentSchema>;
+export type CvProfileExtraction = z.infer<typeof CvProfileExtractionSchema>;
 
 /** Every item and bullet ID in the profile, in document order (duplicates included). */
 export function collectProfileIds(content: CvProfileContent): string[] {
@@ -144,7 +177,7 @@ function rejectDuplicateIds(content: CvProfileContent, ctx: z.RefinementCtx): vo
   }
 }
 
-/** Content as returned by Claude, plus the unique-ID rule (checked after parsing). */
+/** Content with IDs plus the unique-ID rule (checked after parsing). */
 export const ParsedCvProfileContentSchema = CvProfileContentSchema.superRefine(rejectDuplicateIds);
 
 /** Persisted profile (chrome.storage.local, export). */

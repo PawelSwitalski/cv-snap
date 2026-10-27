@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { CvProfileContentSchema, CvProfileSchema } from "./cv-profile.js";
+import { CvProfileSchema, ParsedCvProfileContentSchema } from "./cv-profile.js";
 import { ErrorPayloadSchema, type ErrorPayload } from "./errors.js";
-import { JobRequirementsSchema } from "./job-requirements.js";
+import { JobRequirementsSchema, StructuredAdFieldsSchema } from "./job-requirements.js";
 import { LanguageCodeSchema } from "./language.js";
 import { ModelIdSchema } from "./models.js";
 import { TailoringPlanSchema } from "./tailoring-plan.js";
@@ -61,6 +61,8 @@ export const ParseRequirementsRequestSchema = z.object({
   model: ModelIdSchema,
   adText: z.string().min(1),
   url: z.string().nullable(),
+  /** schema.org JobPosting fields from the page, when present (absent from older clients). */
+  structuredFields: StructuredAdFieldsSchema.nullable().optional(),
 });
 
 export const TailorRequestSchema = z.object({
@@ -111,7 +113,7 @@ export type PdfText = z.infer<typeof PdfTextSchema>;
 export const RESPONSE_DATA_SCHEMAS = {
   health: HealthReportSchema,
   extractPdfText: PdfTextSchema,
-  createProfile: CvProfileContentSchema,
+  createProfile: ParsedCvProfileContentSchema,
   parseRequirements: JobRequirementsSchema,
   tailor: TailoringPlanSchema,
 } as const;

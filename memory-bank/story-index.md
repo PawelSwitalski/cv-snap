@@ -2,9 +2,9 @@
 
 ## Overview
 - **Total stories**: 32
-- **Generated**: 24
-- **Completed**: 8
-- **Last updated**: 2026-10-25T20:10:12Z
+- **Generated**: 15
+- **Completed**: 17
+- **Last updated**: 2026-10-27T19:03:07Z
 
 ---
 
@@ -19,11 +19,11 @@
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/001-monorepo-scaffold.md`
 - [x] **002-domain-schemas-and-contracts** — Domain schemas and contracts - Must - bolt `002-cv-tailoring-core` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/002-domain-schemas-and-contracts.md`
-- [x] **003-cv-profile-extraction** — CV profile extraction - Must - bolt `005-cv-tailoring-core` - ✅ GENERATED
+- [x] **003-cv-profile-extraction** — CV profile extraction - Must - bolt `005-cv-tailoring-core` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/003-cv-profile-extraction.md`
-- [x] **004-job-requirements-parsing-and-cache** — Job requirements parsing and cache - Must - bolt `005-cv-tailoring-core` - ✅ GENERATED
+- [x] **004-job-requirements-parsing-and-cache** — Job requirements parsing and cache - Must - bolt `005-cv-tailoring-core` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/004-job-requirements-parsing-and-cache.md`
-- [x] **005-tailoring-plan-generation** — Tailoring plan generation - Must - bolt `005-cv-tailoring-core` - ✅ GENERATED
+- [x] **005-tailoring-plan-generation** — Tailoring plan generation - Must - bolt `005-cv-tailoring-core` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/005-tailoring-plan-generation.md`
 - [x] **006-deterministic-validator** — Deterministic validator - Must - bolt `006-cv-tailoring-core` - ✅ GENERATED
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/006-deterministic-validator.md`
@@ -49,9 +49,9 @@
 
 #### 003-job-ad-capture
 
-- [x] **001-allowed-sites-management** — Allowed sites management - Must - bolt `007-job-ad-capture` - ✅ GENERATED
+- [x] **001-allowed-sites-management** — Allowed sites management - Must - bolt `007-job-ad-capture` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/003-job-ad-capture/stories/001-allowed-sites-management.md`
-- [x] **002-dynamic-content-scripts** — Dynamic content scripts - Must - bolt `007-job-ad-capture` - ✅ GENERATED
+- [x] **002-dynamic-content-scripts** — Dynamic content scripts - Must - bolt `007-job-ad-capture` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/003-job-ad-capture/stories/002-dynamic-content-scripts.md`
 - [x] **003-job-ad-detection** — Job ad detection - Must - bolt `008-job-ad-capture` - ✅ GENERATED
   `memory-bank/intents/001-one-click-tailored-cv/units/003-job-ad-capture/stories/003-job-ad-detection.md`
@@ -62,13 +62,13 @@
 
 #### 004-cv-pdf-renderer
 
-- [x] **001-cv-pdf-template** — CV PDF template - Must - bolt `009-cv-pdf-renderer` - ✅ GENERATED
+- [x] **001-cv-pdf-template** — CV PDF template - Must - bolt `009-cv-pdf-renderer` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/004-cv-pdf-renderer/stories/001-cv-pdf-template.md`
-- [x] **002-two-page-fit** — Two-page fit - Must - bolt `009-cv-pdf-renderer` - ✅ GENERATED
+- [x] **002-two-page-fit** — Two-page fit - Must - bolt `009-cv-pdf-renderer` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/004-cv-pdf-renderer/stories/002-two-page-fit.md`
-- [x] **003-pdf-download-and-naming** — PDF download and naming - Must - bolt `009-cv-pdf-renderer` - ✅ GENERATED
+- [x] **003-pdf-download-and-naming** — PDF download and naming - Must - bolt `009-cv-pdf-renderer` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/004-cv-pdf-renderer/stories/003-pdf-download-and-naming.md`
-- [x] **004-gdpr-consent-clause** — GDPR consent clause (klauzula RODO) - Should - bolt `009-cv-pdf-renderer` - ✅ GENERATED
+- [x] **004-gdpr-consent-clause** — GDPR consent clause (klauzula RODO) - Should - bolt `009-cv-pdf-renderer` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/004-cv-pdf-renderer/stories/004-gdpr-consent-clause.md`
 
 #### 005-tailored-cv-ui
@@ -97,6 +97,6 @@
 ## Stories by Status
 
 - **Planned**: 0
-- **Generated**: 24
+- **Generated**: 15
 - **In Progress**: 0
-- **Completed**: 8
+- **Completed**: 17

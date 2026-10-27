@@ -14,6 +14,23 @@ const sharedFixture = (name: "profile" | "requirements" | "plan") =>
     ),
   ) as Record<string, unknown>;
 
+/** The profile fixture as Claude now returns it: no IDs, bullets as plain lines. */
+function extractionOf(profile: Record<string, unknown>): unknown {
+  const stripIds = (value: unknown): unknown => {
+    if (Array.isArray(value)) return value.map(stripIds);
+    if (typeof value !== "object" || value === null) return value;
+    const entries = Object.entries(value).filter(([key]) => key !== "id");
+    const [onlyEntry] = entries;
+    if (entries.length === 1 && onlyEntry?.[0] === "text") return onlyEntry[1];
+    return Object.fromEntries(entries.map(([key, inner]) => [key, stripIds(inner)]));
+  };
+  const storageFields = new Set(["schemaVersion", "photoRef", "confirmedAt", "updatedAt"]);
+  const content = Object.fromEntries(
+    Object.entries(profile).filter(([key]) => !storageFields.has(key)),
+  );
+  return stripIds(content);
+}
+
 /** A Claude session that passes the lockdown check and answers with `output`. */
 const transcript = (output: unknown) =>
   [
@@ -79,8 +96,8 @@ const schemaArg = (call: RunProcessOptions | undefined) =>
   JSON.parse(call?.args[call.args.indexOf("--json-schema") + 1] ?? "null") as unknown;
 
 describe("ClaudeCodeProvider", () => {
-  it("creates a profile: progress, prompt on stdin, profile schema, validated result", async () => {
-    const { provider, calls } = providerAnswering(sharedFixture("profile"));
+  it("creates a profile: progress, prompt on stdin, ID-less schema, code-assigned IDs", async () => {
+    const { provider, calls } = providerAnswering(extractionOf(sharedFixture("profile")));
     const steps: ProgressStep[] = [];
 
     const profile = await provider.createProfile({ cvText: "Jan Testowy" }, options(steps));
@@ -91,6 +108,12 @@ describe("ClaudeCodeProvider", () => {
     expect(schemaArg(calls[0])).toEqual(toClaudeJsonSchema("profile"));
     expect(profile.contact.fullName).toBe("Jan Testowy");
     expect(profile).not.toHaveProperty("schemaVersion");
+    const firstJob = profile.experience[0];
+    expect(firstJob?.id).toMatch(/^exp_[0-9a-z]{10}$/);
+    expect(firstJob?.bullets.map((bullet) => bullet.id)).toEqual([
+      `${firstJob?.id ?? ""}_b1`,
+      `${firstJob?.id ?? ""}_b2`,
+    ]);
   });
 
   it("parses requirements with the requirements schema", async () => {
@@ -141,11 +164,9 @@ describe("ClaudeCodeProvider", () => {
     });
   });
 
-  it("rejects a profile with duplicate ids (checked after the CLI's schema validation)", async () => {
-    const profile = sharedFixture("profile");
-    const skills = profile.skills as { id: string }[];
-    if (skills[0]) skills[0].id = "exp_acme";
-    const { provider } = providerAnswering(profile);
+  it("rejects a profile answer that doesn't match the ID-less extraction schema", async () => {
+    // Bullets as {id, text} objects are not what the extraction schema asks for.
+    const { provider } = providerAnswering(sharedFixture("profile"));
 
     await expect(provider.createProfile({ cvText: "x" }, options())).rejects.toMatchObject({
       reason: "INVALID_OUTPUT",

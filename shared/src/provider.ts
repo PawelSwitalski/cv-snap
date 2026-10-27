@@ -1,5 +1,5 @@
 import type { CvProfile, CvProfileContent } from "./cv-profile.js";
-import type { JobRequirements } from "./job-requirements.js";
+import type { JobRequirements, StructuredAdFields } from "./job-requirements.js";
 import type { LanguageCode } from "./language.js";
 import type { ModelId } from "./models.js";
 import type { HealthReport, ProgressStep } from "./protocol.js";
@@ -25,6 +25,8 @@ export interface CreateProfileInput {
 export interface ParseRequirementsInput {
   adText: string;
   url: string | null;
+  /** schema.org JobPosting fields from the page (FR-7), when the page has them. */
+  structuredFields?: StructuredAdFields | null;
 }
 
 export interface TailorInput {

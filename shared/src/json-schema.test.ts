@@ -31,10 +31,12 @@ describe("toClaudeJsonSchema", () => {
 
   it("lets the model answer null for facts the ad may not state", () => {
     const schema = toClaudeJsonSchema("requirements") as {
-      properties: { company: { type: string[] } };
+      properties: Record<string, { anyOf?: { type?: string }[] }>;
     };
 
-    expect(schema.properties.company.type).toEqual(["string", "null"]);
+    for (const field of ["company", "location", "language"]) {
+      expect(schema.properties[field]?.anyOf?.map((option) => option.type)).toContain("null");
+    }
   });
 
   it("keeps the CLI argument small enough for the Windows command line", () => {
