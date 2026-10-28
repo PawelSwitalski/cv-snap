@@ -15,7 +15,7 @@ createRoot(rootElement).render(
 // exists. On this page, not the service worker: permissions.request needs a user gesture in a
 // document, and DevTools console commands count as one. Removed from production builds.
 if (import.meta.env.DEV) {
-  void import("@/features/allowed-sites/allowed-sites").then(({ createAllowedSites }) => {
-    Object.assign(globalThis, { cvSnapDev: { allowedSites: createAllowedSites() } });
+  void import("./dev-hook").then(({ createDevHook }) => {
+    Object.assign(globalThis, { cvSnapDev: createDevHook() });
   });
 }

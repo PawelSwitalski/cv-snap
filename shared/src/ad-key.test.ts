@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { adKeyFor, normalizeAdUrl } from "./ad-key.js";
 
+const sel = (text: string) => ({ kind: "selection" as const, text });
+const page = (text: string) => ({ kind: "page" as const, text });
+
 describe("normalizeAdUrl", () => {
   it("lower-cases the host, drops the fragment and tracking parameters, sorts the rest", () => {
     expect(
@@ -42,23 +45,49 @@ describe("adKeyFor", () => {
 
   it("adds a hash of a manual selection, so different selections don't share an entry", async () => {
     const url = "https://example.com/board";
-    const first = await adKeyFor(url, "Senior Java Developer. Wymagania: Java.");
-    const second = await adKeyFor(url, "Junior Python Developer. Wymagania: Python.");
+    const first = await adKeyFor(url, sel("Senior Java Developer. Wymagania: Java."));
+    const second = await adKeyFor(url, sel("Junior Python Developer. Wymagania: Python."));
 
     expect(first).toMatch(/^https:\/\/example\.com\/board#sel:[0-9a-f]{16}$/);
     expect(first).not.toBe(second);
   });
 
   it("ignores whitespace and case differences in the selection", async () => {
-    expect(await adKeyFor(null, "  Senior   JAVA\nDeveloper ")).toBe(
-      await adKeyFor(null, "senior java developer"),
+    expect(await adKeyFor(null, sel("  Senior   JAVA\nDeveloper "))).toBe(
+      await adKeyFor(null, sel("senior java developer")),
     );
   });
 
   it("never puts the selected text itself into the key", async () => {
-    const key = await adKeyFor(null, "Jan Testowy secret selection");
+    const key = await adKeyFor(null, sel("Jan Testowy secret selection"));
 
     expect(key).toMatch(/^sel:[0-9a-f]{16}$/);
     expect(key).not.toContain("Testowy");
+  });
+
+  it("separates different offers shown under one URL (justjoin.it-style boards)", async () => {
+    const url = "https://justjoin.it/";
+    const first = await adKeyFor(
+      url,
+      page("Senior Java Backend Developer. Requirements: Java 21."),
+    );
+    const second = await adKeyFor(url, page("Frontend Developer. Requirements: React."));
+
+    expect(first).toMatch(/^https:\/\/justjoin\.it\/#ad:[0-9a-f]{16}$/);
+    expect(first).not.toBe(second);
+  });
+
+  it("keeps one key for the same offer reached through tracking links", async () => {
+    const description = "Senior Java Backend Developer. Requirements: Java 21.";
+
+    expect(await adKeyFor("https://example.com/job/1?utm_source=a", page(description))).toBe(
+      await adKeyFor("https://example.com/job/1?fbclid=b", page(description)),
+    );
+  });
+
+  it("never mixes up a page fingerprint and a manual selection of the same text", async () => {
+    const text = "Senior Java Backend Developer";
+
+    expect(await adKeyFor(null, page(text))).not.toBe(await adKeyFor(null, sel(text)));
   });
 });

@@ -1,4 +1,9 @@
-import { CvSnapError, type CvProfileContent, type RequirementsCacheEntry } from "@cv-snap/shared";
+import {
+  adKeyFor,
+  CvSnapError,
+  type CvProfileContent,
+  type RequirementsCacheEntry,
+} from "@cv-snap/shared";
 import { describe, expect, it } from "vitest";
 import { smallPlan, smallProfile } from "../../../test/cv-fixtures";
 import {
@@ -132,7 +137,8 @@ describe("RequirementsResolution", () => {
       requirements: smallRequirements(),
       parsedAt: new Date(NOW.getTime() - 8 * DAY).toISOString(),
     };
-    const { cache, entries } = memoryCache({ "https://example.com/job/1": stale });
+    const key = await adKeyFor(ad().url, { kind: "page", text: ad().text });
+    const { cache, entries } = memoryCache({ [key]: stale });
     const fresh = { ...smallRequirements(), title: "Re-parsed" };
     const fake = fakeProvider({ requirements: [fresh] });
 
@@ -142,7 +148,22 @@ describe("RequirementsResolution", () => {
     );
 
     expect(result).toMatchObject({ fromCache: false, requirements: { title: "Re-parsed" } });
-    expect(entries.get("https://example.com/job/1")?.parsedAt).toBe(NOW.toISOString());
+    expect(entries.get(key)?.parsedAt).toBe(NOW.toISOString());
+  });
+
+  it("keeps two offers shown under one URL apart (justjoin.it-style boards)", async () => {
+    const { cache } = memoryCache({});
+    const fake = fakeProvider({
+      requirements: [smallRequirements(), { ...smallRequirements(), title: "Second offer" }],
+    });
+    const resolution = new RequirementsResolution(fake.provider, cache, () => NOW);
+    const first = ad({ url: "https://justjoin.it/", text: "Offer one. Requirements: Java." });
+    const second = ad({ url: "https://justjoin.it/", text: "Offer two. Requirements: React." });
+
+    await resolution.resolve(first, callOptions());
+    const result = await resolution.resolve(second, callOptions());
+
+    expect(result).toMatchObject({ fromCache: false, requirements: { title: "Second offer" } });
   });
 
   it("keys manual selections separately from the page", async () => {

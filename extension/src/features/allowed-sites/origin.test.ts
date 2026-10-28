@@ -3,7 +3,7 @@ import { isSitePattern, labelForPattern, patternMatchesUrl, sitePatternForUrl } 
 import { findPreset, presetForPattern, SITE_PRESETS } from "./presets";
 
 describe("SITE_PRESETS", () => {
-  it("offers the FR-6 boards plus StepStone, all HTTPS site patterns", () => {
+  it("offers the FR-6 boards plus StepStone and theprotocol.it, all HTTPS site patterns", () => {
     expect(SITE_PRESETS.map((preset) => preset.id)).toEqual([
       "linkedin",
       "indeed",
@@ -12,6 +12,7 @@ describe("SITE_PRESETS", () => {
       "nofluffjobs",
       "bulldogjob",
       "stepstone",
+      "theprotocol",
     ]);
     for (const preset of SITE_PRESETS) {
       expect(preset.patterns.every(isSitePattern)).toBe(true);

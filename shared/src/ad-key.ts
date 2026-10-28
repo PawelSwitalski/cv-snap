@@ -28,17 +28,26 @@ export function normalizeAdUrl(url: string): string {
 }
 
 /**
- * Cache key for an ad. With `selectedText` (manual selection, FR-8) the key also carries the
- * first 16 hex digits of the SHA-256 of the normalised selection, so different selections on one
- * page don't share an entry. The text itself never becomes part of the key.
+ * What identifies the ad besides its URL: a manual selection (FR-8), or the captured page's
+ * content. Some boards (justjoin.it) show different offers under one URL, so a URL alone is not a
+ * safe identity. For a page, pass a stable fingerprint: the JSON-LD description when the page has
+ * one, otherwise the extracted text.
  */
-export async function adKeyFor(url: string | null, selectedText?: string): Promise<AdKey> {
+export type AdContent = { kind: "selection"; text: string } | { kind: "page"; text: string };
+
+/**
+ * Cache key for an ad: the normalised URL plus the first 16 hex digits of the SHA-256 of the
+ * normalised content, so different selections or different offers at one URL don't share an
+ * entry. The text itself never becomes part of the key.
+ */
+export async function adKeyFor(url: string | null, content?: AdContent): Promise<AdKey> {
   const base = url ? normalizeAdUrl(url) : "";
-  if (selectedText === undefined) return base;
-  const normalized = selectedText.normalize("NFKC").replace(/\s+/g, " ").trim().toLowerCase();
+  if (content === undefined) return base;
+  const normalized = content.text.normalize("NFKC").replace(/\s+/g, " ").trim().toLowerCase();
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(normalized));
   const hex = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0"))
     .join("")
     .slice(0, 16);
-  return base ? `${base}#sel:${hex}` : `sel:${hex}`;
+  const tag = content.kind === "selection" ? "sel" : "ad";
+  return base ? `${base}#${tag}:${hex}` : `${tag}:${hex}`;
 }

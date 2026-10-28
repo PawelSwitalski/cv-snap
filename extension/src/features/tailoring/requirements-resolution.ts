@@ -38,7 +38,12 @@ export class RequirementsResolution {
   ) {}
 
   async resolve(ad: AdInput, options: ProviderCallOptions): Promise<ResolvedRequirements> {
-    const adKey = await adKeyFor(ad.url, ad.isManualSelection ? ad.text : undefined);
+    const adKey = await adKeyFor(
+      ad.url,
+      ad.isManualSelection
+        ? { kind: "selection", text: ad.text }
+        : { kind: "page", text: ad.structuredFields?.description ?? ad.text },
+    );
     const cached = await this.cache.get(adKey, this.now()).catch((error: unknown) => {
       logger.warn("requirements cache read failed; treated as a miss", error);
       return null;

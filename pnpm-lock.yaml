@@ -214,6 +214,9 @@ importers:
       '@cv-snap/shared':
         specifier: workspace:*
         version: link:../shared
+      '@mozilla/readability':
+        specifier: 0.6.0
+        version: 0.6.0
       '@react-pdf/renderer':
         specifier: 4.9.0
         version: 4.9.0(react@19.3.1)
@@ -223,6 +226,9 @@ importers:
       react-dom:
         specifier: ^19.3.1
         version: 19.3.1(react@19.3.1)
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@types/react':
         specifier: ^19.3.0
@@ -504,6 +510,10 @@ packages:
 
   '@mdn/browser-compat-data@8.1.4':
     resolution: {integrity: sha512-Cgp3OP3u9x57kT1sZPI115SP5H1IyaBhdDPnvnHRYZ1988kW83wuqcIdcMinLJXlMKOL5Y2cufWHzngh5cVtow==}
+
+  '@mozilla/readability@0.6.0':
+    resolution: {integrity: sha512-juG5VWh4qAivzTAeMzvY9xs9HY5rAcr2E4I7tiSSCokRFi7XIZCAu92ZkSTsIj1OPceCifL3cpfteP3pDT9/QQ==}
+    engines: {node: '>=14.0.0'}
 
   '@napi-rs/canvas-android-arm64@1.0.13':
     resolution: {integrity: sha512-trn7AaDzQ+yeeA0ezhkC7cB1ZDPtp4UYk0EvB5F8qtYL9jEVWtVrU30WOpI52DszoTxaTsCgf5PP4ZVaOlOIHQ==}
@@ -3152,6 +3162,8 @@ snapshots:
   '@keyv/serialize@1.1.1': {}
 
   '@mdn/browser-compat-data@8.1.4': {}
+
+  '@mozilla/readability@0.6.0': {}
 
   '@napi-rs/canvas-android-arm64@1.0.13':
     optional: true

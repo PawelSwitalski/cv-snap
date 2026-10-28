@@ -10,6 +10,7 @@ export const SITE_PRESETS = [
   { id: "nofluffjobs", label: "NoFluffJobs", patterns: ["https://nofluffjobs.com/*"] },
   { id: "bulldogjob", label: "Bulldogjob", patterns: ["https://bulldogjob.pl/*"] },
   { id: "stepstone", label: "StepStone", patterns: ["https://*.stepstone.de/*"] },
+  { id: "theprotocol", label: "theprotocol.it", patterns: ["https://theprotocol.it/*"] },
 ] as const;
 
 export type SitePreset = (typeof SITE_PRESETS)[number];
