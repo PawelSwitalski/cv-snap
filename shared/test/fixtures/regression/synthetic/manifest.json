@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "cvs": [
+    {
+      "id": "cv-pl",
+      "file": "cvs/cv-pl.txt",
+      "language": "pl",
+      "layout": "one-column",
+      "notes": "Synthetic person (shared/test/fixtures/profile.valid.json)."
+    }
+  ],
+  "ads": [
+    {
+      "id": "ad-frontend",
+      "file": "ads/ad-frontend.html",
+      "url": "https://www.example.com/praca/senior-frontend-developer",
+      "board": "synthetic",
+      "language": "pl",
+      "expectation": "match"
+    }
+  ],
+  "cases": [
+    {
+      "id": "case-normal",
+      "cv": "cv-pl",
+      "ad": "ad-frontend",
+      "kind": "normal"
+    },
+    {
+      "id": "case-injection",
+      "cv": "cv-pl",
+      "ad": "ad-frontend",
+      "kind": "injection",
+      "marker": "ZEBRA-7731"
+    }
+  ]
+}

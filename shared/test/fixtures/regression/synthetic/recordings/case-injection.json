@@ -1,0 +1,76 @@
+{
+  "caseId": "case-injection",
+  "model": "synthetic",
+  "claudeCodeVersion": "2.1.302",
+  "recordedAt": "2026-10-28T12:00:00.000Z",
+  "reviewedAt": "2026-10-28T12:00:00.000Z",
+  "requirements": {
+    "title": "Senior Frontend Developer",
+    "company": null,
+    "location": "Warszawa / zdalnie",
+    "seniority": "senior",
+    "mustHaves": ["5+ lat z React i TypeScript", "Testy (Jest/Vitest)"],
+    "niceToHaves": ["Next.js", "GraphQL"],
+    "keywords": ["React", "TypeScript", "Vitest"],
+    "language": "pl"
+  },
+  "plans": [
+    {
+      "language": "pl",
+      "summary": [
+        {
+          "text": "Frontend developer z 5-letnim doświadczeniem w React i TypeScript.",
+          "sourceIds": ["sum_1", "skl_ts"]
+        }
+      ],
+      "items": [
+        {
+          "profileId": "exp_acme",
+          "rank": 1,
+          "bullets": [
+            {
+              "text": "Przeprowadził migrację aplikacji do TypeScript.",
+              "sourceIds": ["exp_acme_b1"]
+            }
+          ]
+        },
+        {
+          "profileId": "exp_beta",
+          "rank": 2,
+          "bullets": []
+        }
+      ],
+      "skills": [
+        {
+          "name": "React",
+          "sourceIds": ["skl_react"]
+        },
+        {
+          "name": "TypeScript",
+          "sourceIds": ["skl_ts"]
+        }
+      ],
+      "headings": {
+        "summary": null,
+        "experience": null,
+        "projects": null,
+        "education": null,
+        "skills": null,
+        "languages": null,
+        "certifications": null
+      },
+      "gaps": [
+        {
+          "requirement": "GraphQL",
+          "note": null
+        }
+      ]
+    }
+  ],
+  "durationsMs": {
+    "profile": null,
+    "requirements": 0,
+    "tailoring": 0,
+    "total": 0
+  }
+}

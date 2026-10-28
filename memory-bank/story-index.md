@@ -2,9 +2,9 @@
 
 ## Overview
 - **Total stories**: 32
-- **Generated**: 15
-- **Completed**: 17
-- **Last updated**: 2026-10-27T19:03:07Z
+- **Generated**: 12
+- **Completed**: 20
+- **Last updated**: 2026-10-28T19:08:24Z
 
 ---
 
@@ -53,11 +53,11 @@
   `memory-bank/intents/001-one-click-tailored-cv/units/003-job-ad-capture/stories/001-allowed-sites-management.md`
 - [x] **002-dynamic-content-scripts** — Dynamic content scripts - Must - bolt `007-job-ad-capture` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/003-job-ad-capture/stories/002-dynamic-content-scripts.md`
-- [x] **003-job-ad-detection** — Job ad detection - Must - bolt `008-job-ad-capture` - ✅ GENERATED
+- [x] **003-job-ad-detection** — Job ad detection - Must - bolt `008-job-ad-capture` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/003-job-ad-capture/stories/003-job-ad-detection.md`
-- [x] **004-job-ad-text-extraction** — Job ad text extraction - Must - bolt `008-job-ad-capture` - ✅ GENERATED
+- [x] **004-job-ad-text-extraction** — Job ad text extraction - Must - bolt `008-job-ad-capture` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/003-job-ad-capture/stories/004-job-ad-text-extraction.md`
-- [x] **005-manual-selection-fallback** — Manual selection fallback - Must - bolt `008-job-ad-capture` - ✅ GENERATED
+- [x] **005-manual-selection-fallback** — Manual selection fallback - Must - bolt `008-job-ad-capture` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/003-job-ad-capture/stories/005-manual-selection-fallback.md`
 
 #### 004-cv-pdf-renderer
@@ -97,6 +97,6 @@
 ## Stories by Status
 
 - **Planned**: 0
-- **Generated**: 15
+- **Generated**: 12
 - **In Progress**: 0
-- **Completed**: 17
+- **Completed**: 20

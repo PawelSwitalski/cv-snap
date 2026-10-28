@@ -29,3 +29,12 @@ export * from "./protocol.js";
 export type * from "./provider.js";
 export * from "./requirements-cache.js";
 export * from "./tailoring-plan.js";
+export { MAX_FEEDBACK_LINES, toFeedback } from "./validation/feedback.js";
+export {
+  applyLineChanges,
+  planLines,
+  type LineChanges,
+  type PlanLineRef,
+} from "./validation/plan-lines.js";
+export * from "./validation/types.js";
+export { validatePlan, type ValidateOptions } from "./validation/validate-plan.js";

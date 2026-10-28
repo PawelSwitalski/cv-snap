@@ -17,6 +17,8 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:live": "pnpm build && node shared/test/regression/live.mjs",
+    "regression:review": "node shared/test/regression/live.mjs --review",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -24,7 +26,8 @@
       "eslint --max-warnings 0 --no-warn-ignored",
       "prettier --check"
     ],
-    "*.{json,md,yaml,yml,css,html}": "prettier --check"
+    "*.{json,md,yaml,yml,css,html}": "prettier --check",
+    "shared/test/fixtures/regression/**": "node shared/test/regression/privacy-check.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

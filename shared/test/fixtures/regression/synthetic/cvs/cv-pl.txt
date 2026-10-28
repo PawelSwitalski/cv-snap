@@ -1,0 +1,16 @@
+Jan Testowy
+Frontend Developer
+jan.testowy@example.com | Kraków
+
+Podsumowanie
+Frontend developer z 5-letnim doświadczeniem w React.
+
+Doświadczenie
+Acme Sp. z o.o. — Frontend Developer, Kraków, 03/2021 – obecnie
+- Migracja aplikacji z JavaScript do TypeScript.
+- Skrócenie czasu ładowania o 40%.
+Beta Soft — Junior Developer, 2019 – 02/2021
+- Utrzymanie paneli administracyjnych w Angular.
+
+Umiejętności: React, TypeScript
+Języki: angielski B2
