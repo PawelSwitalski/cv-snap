@@ -2,7 +2,7 @@
 unit: 005-tailored-cv-ui
 intent: 001-one-click-tailored-cv
 created: 2026-10-28T19:49:41Z
-last_updated: 2026-10-29T14:49:43Z
+last_updated: 2026-10-29T15:40:59Z
 ---
 
 # Construction Log: tailored-cv-ui
@@ -29,7 +29,7 @@ last_updated: 2026-10-29T14:49:43Z
 |---------|---------|--------|---------|
 | 010-tailored-cv-ui | 001-side-panel-shell-and-localization, 002-onboarding-and-privacy-notice, 003-cv-upload-and-profile-creation, 004-profile-review-editor | ✅ completed | - |
 | 011-tailored-cv-ui | 005-generate-flow-with-progress-and-cancel, 006-preview-and-editing, 007-error-messages-and-recovery | ✅ completed | - |
-| 012-tailored-cv-ui | 008-settings-panel, 009-profile-export-import | [ ] planned | - |
+| 012-tailored-cv-ui | 008-settings-panel, 009-profile-export-import | ✅ completed | - |
 
 ## Execution History
 
@@ -43,6 +43,10 @@ last_updated: 2026-10-29T14:49:43Z
 | 2026-10-29T13:11:29Z | 011-tailored-cv-ui | stage-complete | plan → implement (decision: `activeTab` for "Add this site") |
 | 2026-10-29T13:36:17Z | 011-tailored-cv-ui | stage-complete | implement → test |
 | 2026-10-29T14:49:43Z | 011-tailored-cv-ui | completed | All 3 stages done (874/874 tests, manual Chrome check passed; scope addition: last result kept in session storage) |
+| 2026-10-29T14:57:35Z | 012-tailored-cv-ui | started | Stage 1: plan |
+| 2026-10-29T15:07:51Z | 012-tailored-cv-ui | stage-complete | plan → implement |
+| 2026-10-29T15:20:19Z | 012-tailored-cv-ui | stage-complete | implement → test |
+| 2026-10-29T15:40:59Z | 012-tailored-cv-ui | completed | All 3 stages done (922/922 tests, manual Chrome check passed) |
 
 ## Execution Summary
 
@@ -50,9 +54,9 @@ last_updated: 2026-10-29T14:49:43Z
 |--------|-------|
 | Original bolts planned | 3 |
 | Current bolt count | 3 |
-| Bolts completed | 2 |
+| Bolts completed | 3 |
 | Bolts in progress | 0 |
-| Bolts remaining | 1 |
+| Bolts remaining | 0 |
 | Replanning events | 0 |
 
 ## Notes

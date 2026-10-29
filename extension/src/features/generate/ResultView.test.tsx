@@ -11,6 +11,7 @@ import {
 import { I18nProvider } from "@/lib/i18n/i18n";
 import { formatMessage, type MessageKey } from "@/lib/i18n/messages";
 import { createMemoryStore } from "@/lib/storage/local-store";
+import { DEFAULT_GDPR_CLAUSE_SETTINGS } from "@/features/cv-pdf/gdpr-clause";
 import ResultView from "./ResultView";
 import { createGenerateStore } from "./store";
 
@@ -27,6 +28,7 @@ function setup(result = generationResult()) {
         result={result}
         profile={smallProfile()}
         photo={() => Promise.resolve(undefined)}
+        gdprClause={DEFAULT_GDPR_CLAUSE_SETTINGS}
         render={renderer.render}
         download={download}
       />
@@ -113,6 +115,7 @@ describe("ResultView", () => {
           result={generationResult()}
           profile={smallProfile()}
           photo={() => Promise.resolve(undefined)}
+          gdprClause={DEFAULT_GDPR_CLAUSE_SETTINGS}
           render={() => Promise.reject(new Error("font missing"))}
         />
       </I18nProvider>,

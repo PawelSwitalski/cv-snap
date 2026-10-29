@@ -114,6 +114,24 @@ export class ChromeStorageProfileRepository implements ProfileRepository {
     await this.store.remove(STORAGE_KEYS.draftProfile);
     return profile;
   }
+
+  /**
+   * Restores a profile from a backup (story 009) as the active profile. It was reviewed and
+   * confirmed when it was exported, so it keeps `confirmedAt`; an unfinished draft is discarded.
+   */
+  async importActive(
+    imported: CvProfile,
+    options: { photoRef: string | null },
+  ): Promise<CvProfile> {
+    const profile = CvProfileSchema.parse({
+      ...imported,
+      photoRef: options.photoRef,
+      updatedAt: this.now().toISOString(),
+    });
+    await this.store.set(STORAGE_KEYS.activeProfile, profile);
+    await this.store.remove(STORAGE_KEYS.draftProfile);
+    return profile;
+  }
 }
 
 const StoredDraftShape = z.object({ content: z.unknown(), basedOn: z.string().nullable() });

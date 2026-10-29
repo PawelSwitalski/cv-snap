@@ -1,7 +1,11 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { createNativeHostClient, type NativePort } from "@/lib/native-host-client";
+import {
+  createNativeHostClient,
+  type NativeHostClient,
+  type NativePort,
+} from "@/lib/native-host-client";
 import { createMemoryFileStore } from "@/lib/storage/file-store";
 import { createMemoryStore, STORAGE_KEYS } from "@/lib/storage/local-store";
 import { formatMessage } from "@/lib/i18n/messages";
@@ -14,7 +18,8 @@ import {
   fakeRender,
   generationResult,
 } from "../../../test/generate-fixtures";
-import { draftContent, HEALTHY, healthClient } from "../../../test/panel-fixtures";
+import { draftContent, HEALTHY, healthClient, pdfFile } from "../../../test/panel-fixtures";
+import { fakeAllowedSites } from "../../../test/settings-fixtures";
 import { App, type AppDeps } from "./App";
 
 /** A host connection that never answers (the setup check stays in "checking"). */
@@ -52,6 +57,7 @@ function deps(overrides: Partial<AppDeps> = {}): AppDeps {
       },
       addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
     },
+    allowedSites: fakeAllowedSites(),
     ...overrides,
   };
 }
@@ -113,7 +119,7 @@ describe("App", () => {
     expect(await screen.findByRole("heading", { name: en("privacy_title") })).toBeTruthy();
   });
 
-  it("reopens the notice from the header and returns to home", async () => {
+  it("reopens the notice from settings and returns there, then home", async () => {
     const user = userEvent.setup();
     const store = createMemoryStore({
       ...acknowledged,
@@ -122,9 +128,12 @@ describe("App", () => {
     render(<App deps={deps({ store })} />);
     await screen.findByRole("heading", { name: en("home_title") });
 
-    await user.click(screen.getByRole("button", { name: en("privacy_link") }));
+    await user.click(screen.getByRole("button", { name: en("settings_title") }));
+    await user.click(await screen.findByRole("button", { name: en("settings_privacy_show") }));
     expect(await screen.findByRole("heading", { name: en("privacy_title") })).toBeTruthy();
     await user.click(screen.getByRole("button", { name: en("privacy_close") }));
+    expect(await screen.findByRole("heading", { name: en("settings_title") })).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: en("settings_back") }));
 
     expect(await screen.findByRole("heading", { name: en("home_title") })).toBeTruthy();
   });
@@ -201,5 +210,103 @@ describe("App", () => {
     render(<App deps={panelDeps} />);
 
     expect(await screen.findByRole("article", { name: en("preview_label") })).toBeTruthy();
+  });
+
+  describe("settings in use (story 008)", () => {
+    const withProfile = () =>
+      createMemoryStore({ ...acknowledged, [STORAGE_KEYS.activeProfile]: smallProfile() });
+
+    async function chooseModel(user: ReturnType<typeof userEvent.setup>, name: string) {
+      await user.click(await screen.findByRole("button", { name: en("settings_title") }));
+      await user.click(await screen.findByRole("radio", { name }));
+      await user.click(screen.getByRole("button", { name: en("settings_back") }));
+    }
+
+    it("generates with the model chosen in settings", async () => {
+      const user = userEvent.setup();
+      const connector = fakeConnector();
+      render(
+        <App
+          deps={deps({
+            store: withProfile(),
+            generate: {
+              connect: connector.connect,
+              pageStateApis: fakePageStateApis(adPageFacts()).apis,
+              addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
+              render: fakeRender().render,
+            },
+          })}
+        />,
+      );
+
+      await chooseModel(user, en("settings_model_haiku"));
+      await user.click(await screen.findByRole("button", { name: en("generate_button") }));
+
+      expect(connector.last().posted[0]).toMatchObject({ model: "claude-haiku-5-5" });
+    });
+
+    it("creates the profile from an uploaded CV with the chosen model", async () => {
+      const user = userEvent.setup();
+      const requests: { type: string; model?: string }[] = [];
+      const client: NativeHostClient = {
+        request: (payload) => {
+          requests.push(payload);
+          if (payload.type === "extractPdfText") {
+            return Promise.resolve({
+              text: "Jan Testowy, frontend developer.",
+              pageCount: 1,
+            } as never);
+          }
+          return new Promise(() => undefined);
+        },
+        disconnect: () => undefined,
+      };
+      render(<App deps={deps({ store: withProfile(), hostClient: () => client })} />);
+
+      await chooseModel(user, en("settings_model_opus"));
+      await user.click(await screen.findByRole("button", { name: en("home_upload_new") }));
+      const input = document.querySelector<HTMLInputElement>('input[type="file"]');
+      if (!input) throw new Error("no file input");
+      fireEvent.change(input, { target: { files: [pdfFile()] } });
+
+      await waitFor(() => {
+        expect(requests.map((request) => request.type)).toContain("createProfile");
+      });
+      expect(requests.find((request) => request.type === "createProfile")?.model).toBe(
+        "claude-opus-5-5",
+      );
+    });
+
+    it("prints the GDPR clause from settings in the preview", async () => {
+      const user = userEvent.setup();
+      const connector = fakeConnector();
+      const store = withProfile();
+      await store.set(STORAGE_KEYS.gdprClause, {
+        mode: "always",
+        textPl: "Moja klauzula testowa.",
+        textEn: "My test clause.",
+      });
+      render(
+        <App
+          deps={deps({
+            store,
+            generate: {
+              connect: connector.connect,
+              pageStateApis: fakePageStateApis(adPageFacts()).apis,
+              addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
+              render: fakeRender().render,
+            },
+          })}
+        />,
+      );
+
+      await user.click(await screen.findByRole("button", { name: en("generate_button") }));
+      act(() => {
+        connector.last().emit({ type: "result", result: generationResult() });
+      });
+
+      const preview = await screen.findByRole("article", { name: en("preview_label") });
+      expect(within(preview).getByText("Moja klauzula testowa.")).toBeTruthy();
+    });
   });
 });

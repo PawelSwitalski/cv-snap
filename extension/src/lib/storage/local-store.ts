@@ -69,4 +69,6 @@ export const STORAGE_KEYS = {
   privacyNoticeVersion: "onboarding.privacyNoticeVersion",
   activeProfile: "profile.active",
   draftProfile: "profile.draft",
+  model: "settings.model",
+  gdprClause: "settings.gdprClause",
 } as const;

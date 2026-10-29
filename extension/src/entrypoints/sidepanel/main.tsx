@@ -31,6 +31,7 @@ createRoot(rootElement).render(
           addSite: (url) => allowedSites.addCurrentTab(url),
           session: chromeSessionStore,
         },
+        allowedSites,
       }}
     />
   </StrictMode>,

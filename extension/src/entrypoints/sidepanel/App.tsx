@@ -1,10 +1,10 @@
-import { DEFAULT_MODEL } from "@cv-snap/shared";
 import { Loader2 } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useStore } from "zustand";
 import { CvUpload } from "@/features/cv-upload/CvUpload";
 import type { CreateProfileDeps } from "@/features/cv-upload/create-profile-flow";
-import type { AddSiteResult } from "@/features/allowed-sites/allowed-sites";
+import type { AddSiteResult, AllowedSitesStore } from "@/features/allowed-sites/allowed-sites";
+import { downloadPdf } from "@/features/cv-pdf/download";
 import type { ConnectGeneration } from "@/features/generate/generation-client";
 import type { GenerateViewDeps } from "@/features/generate/GenerateView";
 import type { PageStateApis } from "@/features/generate/page-state";
@@ -19,6 +19,8 @@ import {
 import { SetupCheck } from "@/features/onboarding/SetupCheck";
 import { ChromeStorageProfileRepository } from "@/features/profile/profile-repository";
 import { createProfileStore } from "@/features/profile/store";
+import type { SettingsViewDeps } from "@/features/settings/SettingsView";
+import { createSettingsStore } from "@/features/settings/store";
 import { ErrorBoundary } from "@/features/shell/ErrorBoundary";
 import { HomeView } from "@/features/shell/HomeView";
 import { PanelError } from "@/features/shell/PanelError";
@@ -34,6 +36,8 @@ import type { LocalStore } from "@/lib/storage/local-store";
 
 /** The editor is the largest view; it loads only when a draft is opened (≤ 500 ms panel start). */
 const ProfileEditor = lazy(() => import("@/features/profile/editor/ProfileEditor"));
+/** Settings are opened rarely: loaded on first open. */
+const SettingsView = lazy(() => import("@/features/settings/SettingsView"));
 
 export interface AppDeps {
   store: LocalStore;
@@ -52,6 +56,13 @@ export interface AppDeps {
     session?: LocalStore;
     render?: RenderFitted;
   };
+  /** Allowed sites in settings (bolt 007's store over Chrome's permissions). */
+  allowedSites: Pick<
+    AllowedSitesStore,
+    "listSites" | "addPreset" | "addCurrentTab" | "removeSite" | "subscribe"
+  >;
+  /** Saves a file (profile export); tests record it. */
+  download?: (file: Blob, fileName: string) => void;
 }
 
 /** Side panel root: error boundary → i18n → view router (story 001). */
@@ -70,13 +81,16 @@ export function App({ deps }: { deps: AppDeps }) {
 function Panel({ deps }: { deps: AppDeps }) {
   const t = useT();
   const repository = useMemo(() => new ChromeStorageProfileRepository(deps.store), [deps.store]);
+  const settingsStore = useMemo(() => createSettingsStore(deps.store), [deps.store]);
   const generateStore = useMemo(
     () =>
       createGenerateStore({
         connect: deps.generate.connect,
+        // Read per run, so a model chosen in settings applies to the next generation (story 008).
+        model: () => settingsStore.getState().model,
         ...(deps.generate.session ? { session: deps.generate.session } : {}),
       }),
-    [deps.generate.connect, deps.generate.session],
+    [deps.generate.connect, deps.generate.session, settingsStore],
   );
   const profileStore = useMemo(
     () =>
@@ -96,16 +110,43 @@ function Panel({ deps }: { deps: AppDeps }) {
       pageStateApis: deps.generate.pageStateApis,
       addSite: deps.generate.addSite,
       photo: () => profileStore.getState().photo(),
+      settings: settingsStore,
+      openSettings: () => {
+        setIsSettingsOpen(true);
+      },
       ...(deps.generate.render ? { render: deps.generate.render } : {}),
     }),
-    [generateStore, deps.generate, profileStore],
+    [generateStore, deps.generate, profileStore, settingsStore],
+  );
+  const settingsDeps = useMemo<SettingsViewDeps>(
+    () => ({
+      settings: settingsStore,
+      sites: { allowedSites: deps.allowedSites, pageStateApis: deps.generate.pageStateApis },
+      backup: {
+        profiles: profileStore,
+        isGenerating: () => generateStore.getState().status.kind === "running",
+        subscribeGenerating: (listener) => generateStore.subscribe(listener),
+        download: deps.download ?? downloadPdf,
+      },
+    }),
+    [
+      settingsStore,
+      deps.allowedSites,
+      deps.generate.pageStateApis,
+      deps.download,
+      profileStore,
+      generateStore,
+    ],
   );
   const profileStatus = useStore(profileStore, (state) => state.status);
   const draft = useStore(profileStore, (state) => state.draft);
   const active = useStore(profileStore, (state) => state.active);
+  const settingsStatus = useStore(settingsStore, (state) => state.status);
+  const model = useStore(settingsStore, (state) => state.model);
 
   const [noticeVersion, setNoticeVersion] = useState<number | null>(null);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSetupPassed, setIsSetupPassed] = useState(false);
   const [isUploadRequested, setIsUploadRequested] = useState(false);
 
@@ -113,6 +154,12 @@ function Panel({ deps }: { deps: AppDeps }) {
     readAcknowledgedNoticeVersion(deps.store)
       .catch(() => 0)
       .then(setNoticeVersion, () => undefined);
+    settingsStore
+      .getState()
+      .load()
+      .catch((error: unknown) => {
+        logger.error("settings not loaded", error instanceof Error ? error.name : "unknown");
+      });
     // The last CV of this browser session, if the panel was closed after generating.
     void generateStore.getState().restoreSession();
     profileStore
@@ -129,7 +176,7 @@ function Panel({ deps }: { deps: AppDeps }) {
     return () => {
       window.removeEventListener("pagehide", flush);
     };
-  }, [deps.store, profileStore, generateStore]);
+  }, [deps.store, profileStore, generateStore, settingsStore]);
 
   const uploadDeps = useMemo<CreateProfileDeps>(
     () => ({
@@ -143,9 +190,11 @@ function Panel({ deps }: { deps: AppDeps }) {
   );
 
   const view = deriveView({
-    isLoaded: noticeVersion !== null && profileStatus === "ready",
+    // Settings first: the model must be known before anything can call Claude.
+    isLoaded: noticeVersion !== null && profileStatus === "ready" && settingsStatus === "ready",
     isNoticeAcknowledged: noticeVersion !== null && isNoticeAcknowledged(noticeVersion),
     isPrivacyOpen,
+    isSettingsOpen,
     hasDraft: draft !== null,
     hasActive: active !== null,
     isSetupPassed,
@@ -155,9 +204,13 @@ function Panel({ deps }: { deps: AppDeps }) {
   return (
     <div className="flex min-h-screen flex-col">
       <PanelHeader
-        onShowPrivacy={() => {
-          setIsPrivacyOpen(true);
-        }}
+        {...(noticeVersion !== null && isNoticeAcknowledged(noticeVersion) && !isSettingsOpen
+          ? {
+              onShowSettings: () => {
+                setIsSettingsOpen(true);
+              },
+            }
+          : {})}
       />
       <main className="flex flex-col gap-3 p-4">
         {view === "loading" ? (
@@ -177,6 +230,25 @@ function Panel({ deps }: { deps: AppDeps }) {
             }}
           />
         ) : null}
+        {view === "settings" ? (
+          <Suspense
+            fallback={
+              <p aria-live="polite" className="text-sm">
+                {t("loading")}
+              </p>
+            }
+          >
+            <SettingsView
+              deps={settingsDeps}
+              onBack={() => {
+                setIsSettingsOpen(false);
+              }}
+              onShowPrivacy={() => {
+                setIsPrivacyOpen(true);
+              }}
+            />
+          </Suspense>
+        ) : null}
         {view === "setup" ? (
           <SetupCheck
             createClient={deps.createHostClient}
@@ -188,7 +260,7 @@ function Panel({ deps }: { deps: AppDeps }) {
         {view === "upload" ? (
           <CvUpload
             deps={uploadDeps}
-            model={DEFAULT_MODEL}
+            model={model}
             hasActiveProfile={active !== null}
             onDraftCreated={(newDraft) => {
               setIsUploadRequested(false);

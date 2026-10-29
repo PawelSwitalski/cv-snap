@@ -27,7 +27,7 @@ import { downloadPdf } from "@/features/cv-pdf/download";
 import { buildCvFileName } from "@/features/cv-pdf/file-name";
 import type { DroppedContent } from "@/features/cv-pdf/fit-to-pages";
 import { registerCvFonts } from "@/features/cv-pdf/fonts";
-import { DEFAULT_GDPR_CLAUSE_SETTINGS, selectClause } from "@/features/cv-pdf/gdpr-clause";
+import { selectClause, type GdprClauseSettings } from "@/features/cv-pdf/gdpr-clause";
 import { renderFittedCv } from "@/features/cv-pdf/render";
 import type { GenerationResult } from "@/features/generation/generation-result";
 import { useLanguage, useT } from "@/lib/i18n/i18n";
@@ -53,6 +53,8 @@ export interface ResultViewProps {
   /** The confirmed profile the result was generated from. */
   profile: CvProfile;
   photo: () => Promise<Blob | undefined>;
+  /** The GDPR clause settings (story 008); a change re-renders the preview and the PDF. */
+  gdprClause: GdprClauseSettings;
   render?: RenderFitted;
   download?: (pdf: Blob, fileName: string) => void;
 }
@@ -67,6 +69,7 @@ export default function ResultView({
   result,
   profile,
   photo,
+  gdprClause,
   render = renderInExtension,
   download = downloadPdf,
 }: ResultViewProps) {
@@ -74,11 +77,7 @@ export default function ResultView({
   const changes = useStore(store, (state) => state.changes);
   const photoDataUrl = usePhotoDataUrl(photo);
 
-  const clause = selectClause(
-    DEFAULT_GDPR_CLAUSE_SETTINGS,
-    result.requirements.language,
-    result.outputLanguage.code,
-  );
+  const clause = selectClause(gdprClause, result.requirements.language, result.outputLanguage.code);
   const preview = useMemo(
     () => buildPreviewModel(result.plan, profile, changes, { photoDataUrl, clause }),
     [result.plan, profile, changes, photoDataUrl, clause],

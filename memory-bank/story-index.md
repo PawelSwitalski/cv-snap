@@ -2,9 +2,9 @@
 
 ## Overview
 - **Total stories**: 32
-- **Generated**: 2
-- **Completed**: 30
-- **Last updated**: 2026-10-29T14:49:43Z
+- **Generated**: 0
+- **Completed**: 32
+- **Last updated**: 2026-10-29T15:40:59Z
 
 ---
 
@@ -87,9 +87,9 @@
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/006-preview-and-editing.md`
 - [x] **007-error-messages-and-recovery** — Error messages and recovery - Must - bolt `011-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/007-error-messages-and-recovery.md`
-- [ ] **008-settings-panel** — Settings panel - Must - bolt `012-tailored-cv-ui` - ✅ GENERATED
+- [x] **008-settings-panel** — Settings panel - Must - bolt `012-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/008-settings-panel.md`
-- [ ] **009-profile-export-import** — Profile export and import - Should - bolt `012-tailored-cv-ui` - ✅ GENERATED
+- [x] **009-profile-export-import** — Profile export and import - Should - bolt `012-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/009-profile-export-import.md`
 
 ---
@@ -97,6 +97,6 @@
 ## Stories by Status
 
 - **Planned**: 0
-- **Generated**: 2
+- **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 30
+- **Completed**: 32

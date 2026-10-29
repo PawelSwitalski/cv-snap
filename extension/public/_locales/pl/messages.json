@@ -20,9 +20,6 @@
   "language_pl": {
     "message": "Polski"
   },
-  "privacy_link": {
-    "message": "Prywatność"
-  },
   "privacy_title": {
     "message": "Zanim zaczniesz: Twoje dane"
   },
@@ -587,7 +584,7 @@
     "message": "Zaktualizuj Claude Code (uruchom „claude update”), a potem kliknij „Spróbuj ponownie”."
   },
   "fix_MODEL_UNAVAILABLE": {
-    "message": "Sprawdź, czy Twój plan Claude obejmuje ten model, a potem kliknij „Spróbuj ponownie”."
+    "message": "Wybierz inny model w ustawieniach lub sprawdź, czy obejmuje go Twój plan Claude."
   },
   "fix_PDF_PARSE_FAILED": {
     "message": "Wgraj PDF z tekstem, bez hasła."
@@ -793,5 +790,188 @@
   },
   "panel_error_retry": {
     "message": "Spróbuj ponownie"
+  },
+  "settings_title": {
+    "message": "Ustawienia"
+  },
+  "settings_back": {
+    "message": "Wstecz"
+  },
+  "settings_model": {
+    "message": "Model Claude"
+  },
+  "settings_model_sonnet": {
+    "message": "Sonnet 5.5 (zalecany)"
+  },
+  "settings_model_sonnet_note": {
+    "message": "Dobra jakość przy umiarkowanej szybkości i zużyciu planu."
+  },
+  "settings_model_opus": {
+    "message": "Opus 5.5"
+  },
+  "settings_model_opus_note": {
+    "message": "Najbardziej zaawansowany; wolniejszy i zużywa więcej Twojego planu Claude."
+  },
+  "settings_model_haiku": {
+    "message": "Haiku 5.5"
+  },
+  "settings_model_haiku_note": {
+    "message": "Najszybszy i najlżejszy; dopasowanie może być mniej precyzyjne."
+  },
+  "settings_model_applies": {
+    "message": "Używany przy każdym wywołaniu Claude: tworzeniu profilu i generowaniu CV."
+  },
+  "settings_language": {
+    "message": "Język"
+  },
+  "settings_language_note": {
+    "message": "Język samego cv-snap. CV jest w języku ogłoszenia."
+  },
+  "settings_sites": {
+    "message": "Dozwolone strony"
+  },
+  "settings_sites_note": {
+    "message": "cv-snap czyta tylko te strony. Usunięcie strony cofa też dostęp w Chrome."
+  },
+  "settings_sites_empty": {
+    "message": "Nie dodano jeszcze żadnej strony."
+  },
+  "settings_sites_list": {
+    "message": "Dozwolone strony"
+  },
+  "settings_sites_remove": {
+    "message": "Usuń $SITE$",
+    "placeholders": {
+      "site": {
+        "content": "$1"
+      }
+    }
+  },
+  "settings_sites_remove_short": {
+    "message": "Usuń"
+  },
+  "settings_sites_presets": {
+    "message": "Portale z ofertami pracy"
+  },
+  "settings_sites_add_preset": {
+    "message": "Dodaj $SITE$",
+    "placeholders": {
+      "site": {
+        "content": "$1"
+      }
+    }
+  },
+  "settings_sites_denied": {
+    "message": "Strona nie została dodana, bo nie udzielono dostępu."
+  },
+  "settings_gdpr": {
+    "message": "Klauzula RODO"
+  },
+  "settings_gdpr_note": {
+    "message": "Drukowana na końcu CV, dokładnie tak, jak tu wpisano."
+  },
+  "settings_gdpr_mode": {
+    "message": "Dodawaj klauzulę"
+  },
+  "settings_gdpr_mode_polishAdsOnly": {
+    "message": "Tylko do polskich ogłoszeń"
+  },
+  "settings_gdpr_mode_always": {
+    "message": "Zawsze"
+  },
+  "settings_gdpr_mode_never": {
+    "message": "Nigdy"
+  },
+  "settings_gdpr_text_pl": {
+    "message": "Treść dla CV po polsku"
+  },
+  "settings_gdpr_text_en": {
+    "message": "Treść dla CV w innych językach"
+  },
+  "settings_gdpr_blank_note": {
+    "message": "Zostaw treść pustą, aby w danym języku nie drukować klauzuli."
+  },
+  "settings_gdpr_restore": {
+    "message": "Przywróć domyślne treści"
+  },
+  "settings_privacy": {
+    "message": "Prywatność"
+  },
+  "settings_privacy_note": {
+    "message": "Co cv-snap wysyła do Claude, a co zostaje na tym komputerze."
+  },
+  "settings_privacy_show": {
+    "message": "Pokaż informację o prywatności"
+  },
+  "settings_backup": {
+    "message": "Kopia profilu"
+  },
+  "settings_backup_note": {
+    "message": "Zapisz zatwierdzony profil do pliku lub go przywróć, np. na innym komputerze."
+  },
+  "backup_include_photo": {
+    "message": "Dołącz zdjęcie"
+  },
+  "backup_export": {
+    "message": "Eksportuj profil"
+  },
+  "backup_import": {
+    "message": "Importuj profil"
+  },
+  "backup_no_profile": {
+    "message": "Najpierw zatwierdź profil, aby go wyeksportować."
+  },
+  "backup_blocked_generating": {
+    "message": "Import będzie dostępny po zakończeniu generowania."
+  },
+  "backup_exported": {
+    "message": "Profil wyeksportowany."
+  },
+  "backup_imported": {
+    "message": "Profil zaimportowany. Jest teraz Twoim aktywnym profilem."
+  },
+  "backup_error_export": {
+    "message": "Nie udało się wyeksportować profilu. Spróbuj ponownie."
+  },
+  "backup_error_import": {
+    "message": "Nie udało się zaimportować profilu. Obecny profil się nie zmienił."
+  },
+  "backup_error_too_large": {
+    "message": "Plik jest większy niż 5 MB, więc nie jest kopią profilu cv-snap."
+  },
+  "backup_error_not_a_backup": {
+    "message": "Ten plik nie jest kopią profilu cv-snap. Wybierz plik wyeksportowany z cv-snap."
+  },
+  "backup_error_newer_version": {
+    "message": "Ta kopia pochodzi z nowszej wersji cv-snap. Zaktualizuj cv-snap i zaimportuj ją ponownie."
+  },
+  "backup_error_invalid": {
+    "message": "Ta kopia jest uszkodzona lub niekompletna, więc nie można jej zaimportować."
+  },
+  "backup_error_bad_photo": {
+    "message": "Zdjęcie w tej kopii nie jest plikiem JPG ani PNG o rozmiarze do 2 MB."
+  },
+  "backup_confirm_title": {
+    "message": "Zastąpić Twój profil?"
+  },
+  "backup_confirm_description": {
+    "message": "Profil $NAME$ z pliku zastąpi Twój obecny profil i zdjęcie.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "backup_confirm_draft": {
+    "message": "Niezapisane zmiany w profilu zostaną odrzucone."
+  },
+  "backup_confirm_keep": {
+    "message": "Zachowaj mój profil"
+  },
+  "backup_confirm_replace": {
+    "message": "Zastąp"
+  },
+  "error_action_open_settings": {
+    "message": "Wybierz inny model"
   }
 }

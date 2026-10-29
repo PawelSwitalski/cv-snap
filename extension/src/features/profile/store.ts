@@ -41,6 +41,8 @@ export interface ProfileState {
   setPhoto: (file: Blob) => Promise<PhotoProblem | null>;
   removePhoto: () => Promise<void>;
   photo: () => Promise<Blob | undefined>;
+  /** Makes a profile from a backup the active one, with its photo or none (story 009). */
+  importProfile: (profile: CvProfile, photo: Blob | null) => Promise<void>;
 }
 
 export type ProfileStore = StoreApi<ProfileState>;
@@ -183,6 +185,27 @@ export function createProfileStore(deps: ProfileStoreDeps): ProfileStore {
 
       photo() {
         return deps.files.get(FILE_KEYS.photo);
+      },
+
+      async importProfile(profile, photo) {
+        clearTimeout(saveTimer);
+        saveTimer = undefined;
+        await pendingSave;
+        // Profile first: if storing it fails, the current photo is left untouched.
+        const active = await deps.repository.importActive(profile, {
+          photoRef: photo ? FILE_KEYS.photo : null,
+        });
+        if (photo) await deps.files.set(FILE_KEYS.photo, photo);
+        else await deps.files.delete(FILE_KEYS.photo);
+        set({
+          active,
+          draft: null,
+          isEditingActive: false,
+          undoSnapshot: null,
+          saveState: "saved",
+          hasPhoto: photo !== null,
+        });
+        deps.onActiveChanged?.(active);
       },
     };
   });

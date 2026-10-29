@@ -20,6 +20,7 @@ import { I18nProvider } from "@/lib/i18n/i18n";
 import { formatMessage, type MessageKey } from "@/lib/i18n/messages";
 import { createMemoryStore } from "@/lib/storage/local-store";
 import { GenerateView } from "./GenerateView";
+import { createSettingsStore } from "@/features/settings/store";
 import { createGenerateStore } from "./store";
 
 const en = (key: MessageKey, ...subs: string[]) => formatMessage("en", key, subs);
@@ -57,6 +58,7 @@ function setup(
           pageStateApis: page.apis,
           addSite,
           photo: () => Promise.resolve(undefined),
+          settings: createSettingsStore(createMemoryStore()),
           render: renderer.render,
         }}
       />,
@@ -278,6 +280,7 @@ describe("GenerateView", () => {
             pageStateApis: page.apis,
             addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
             photo: () => Promise.resolve(undefined),
+            settings: createSettingsStore(createMemoryStore()),
             render: renderer.render,
           }}
         />,

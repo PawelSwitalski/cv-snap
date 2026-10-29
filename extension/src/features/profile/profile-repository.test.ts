@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createMemoryStore, STORAGE_KEYS } from "@/lib/storage/local-store";
+import { smallProfile } from "../../../test/cv-fixtures";
 import { draftContent } from "../../../test/panel-fixtures";
 import { ChromeStorageProfileRepository, ProfileInvalidError } from "./profile-repository";
 
@@ -11,6 +12,24 @@ function setup(initial: Record<string, unknown> = {}) {
 }
 
 describe("ChromeStorageProfileRepository", () => {
+  it("imports a backed-up profile as active, keeping its confirmation, and drops the draft", async () => {
+    const { store, repository } = setup({
+      [STORAGE_KEYS.draftProfile]: { content: draftContent(), basedOn: null },
+    });
+    const imported = smallProfile();
+
+    const active = await repository.importActive(imported, { photoRef: null });
+
+    expect(active).toMatchObject({
+      id: imported.id,
+      confirmedAt: imported.confirmedAt,
+      updatedAt: NOW.toISOString(),
+      photoRef: null,
+    });
+    expect(await repository.getActive()).toEqual(active);
+    expect(store.data.has(STORAGE_KEYS.draftProfile)).toBe(false);
+  });
+
   it("has no profile and no draft on first run", async () => {
     const { repository } = setup();
 

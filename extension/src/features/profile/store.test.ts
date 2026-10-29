@@ -2,6 +2,7 @@ import "fake-indexeddb/auto";
 import { describe, expect, it } from "vitest";
 import { createMemoryFileStore, FILE_KEYS } from "@/lib/storage/file-store";
 import { createMemoryStore } from "@/lib/storage/local-store";
+import { smallProfile } from "../../../test/cv-fixtures";
 import { bytesFile, draftContent, PNG_HEAD } from "../../../test/panel-fixtures";
 import { removeItem, updateItem } from "./editing";
 import { ChromeStorageProfileRepository } from "./profile-repository";
@@ -43,6 +44,40 @@ describe("profile store", () => {
 
     expect(result).toEqual({ ok: true });
     expect(confirmed).toEqual([draftContent().contact.fullName]);
+  });
+
+  it("imports a profile with its photo, replacing the photo and an open draft", async () => {
+    const files = createMemoryFileStore();
+    await files.set(FILE_KEYS.photo, bytesFile(PNG_HEAD, "old.png", "image/png"));
+    const changed: string[] = [];
+    const store = createProfileStore({
+      repository: new ChromeStorageProfileRepository(createMemoryStore()),
+      files,
+      onActiveChanged: (profile) => changed.push(profile.id),
+    });
+    await store.getState().load();
+    store.getState().setNewDraft(draftContent());
+    const newPhoto = bytesFile(PNG_HEAD, "new.png", "image/png");
+
+    await store.getState().importProfile(smallProfile(), newPhoto);
+
+    expect(store.getState()).toMatchObject({ draft: null, hasPhoto: true });
+    expect(store.getState().active?.photoRef).toBe(FILE_KEYS.photo);
+    expect(files.files.get(FILE_KEYS.photo)).toBe(newPhoto);
+    expect(changed).toEqual([smallProfile().id]);
+  });
+
+  it("removes the stored photo when the imported profile has none", async () => {
+    const files = createMemoryFileStore();
+    await files.set(FILE_KEYS.photo, bytesFile(PNG_HEAD, "old.png", "image/png"));
+    const { store } = setup(createMemoryStore(), files);
+    await store.getState().load();
+
+    await store.getState().importProfile(smallProfile(), null);
+
+    expect(files.files.has(FILE_KEYS.photo)).toBe(false);
+    expect(store.getState()).toMatchObject({ hasPhoto: false });
+    expect(store.getState().active?.photoRef).toBeNull();
   });
 
   it("restores a deleted item with Undo", async () => {

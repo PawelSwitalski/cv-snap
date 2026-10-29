@@ -5,6 +5,7 @@ import {
   MousePointerClick,
   PlugZap,
   RotateCcw,
+  Settings,
   WifiOff,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -13,7 +14,7 @@ import { errorFixKey, errorMessageKey } from "@/lib/i18n/error-messages";
 import { useT } from "@/lib/i18n/i18n";
 
 /** The one recovery action offered for an error (story 007). */
-export type ErrorAction = "reconnect" | "retry" | "select-text" | "none";
+export type ErrorAction = "reconnect" | "retry" | "select-text" | "open-settings" | "none";
 
 const ACTIONS: Record<ErrorCode, ErrorAction> = {
   HOST_DISCONNECTED: "reconnect",
@@ -21,7 +22,7 @@ const ACTIONS: Record<ErrorCode, ErrorAction> = {
   CLAUDE_NOT_FOUND: "retry",
   CLAUDE_NOT_AUTHENTICATED: "retry",
   CLAUDE_VERSION_UNSUPPORTED: "retry",
-  MODEL_UNAVAILABLE: "retry",
+  MODEL_UNAVAILABLE: "open-settings",
   GENERATION_TIMEOUT: "retry",
   GENERATION_FAILED: "retry",
   MESSAGE_TOO_LARGE: "none",
@@ -49,12 +50,14 @@ export function GenerationError({
   hasResult,
   onRetry,
   onDismiss,
+  onOpenSettings,
 }: {
   error: ErrorPayload;
   isOffline: boolean;
   hasResult: boolean;
   onRetry: () => void;
   onDismiss: () => void;
+  onOpenSettings?: () => void;
 }) {
   const t = useT();
   const action = errorAction(error);
@@ -81,6 +84,18 @@ export function GenerationError({
           ) : null}
           {action === "retry" ? (
             <Button size="sm" onClick={onRetry}>
+              <RotateCcw aria-hidden="true" />
+              {t("error_action_retry")}
+            </Button>
+          ) : null}
+          {action === "open-settings" && onOpenSettings ? (
+            <Button size="sm" onClick={onOpenSettings}>
+              <Settings aria-hidden="true" />
+              {t("error_action_open_settings")}
+            </Button>
+          ) : null}
+          {action === "open-settings" ? (
+            <Button size="sm" variant="outline" onClick={onRetry}>
               <RotateCcw aria-hidden="true" />
               {t("error_action_retry")}
             </Button>

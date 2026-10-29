@@ -2,6 +2,7 @@ import type { CvProfile } from "@cv-snap/shared";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useStore } from "zustand";
 import type { AddSiteResult } from "@/features/allowed-sites/allowed-sites";
+import type { SettingsStore } from "@/features/settings/store";
 import { useT } from "@/lib/i18n/i18n";
 import { GenerateButton } from "./GenerateButton";
 import { GenerationError } from "./GenerationError";
@@ -19,6 +20,10 @@ export interface GenerateViewDeps {
   /** "Add this site" for the current tab (bolt 007); calls `permissions.request` synchronously. */
   addSite: (url: string) => Promise<AddSiteResult>;
   photo: () => Promise<Blob | undefined>;
+  /** Model and GDPR clause settings (story 008). */
+  settings: SettingsStore;
+  /** Opens the settings screen (e.g. to choose another model after MODEL_UNAVAILABLE). */
+  openSettings?: () => void;
   /** Tests replace react-pdf rendering. */
   render?: RenderFitted;
 }
@@ -31,6 +36,7 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
   const t = useT();
   const status = useStore(deps.store, (state) => state.status);
   const result = useStore(deps.store, (state) => state.result);
+  const gdprClause = useStore(deps.settings, (state) => state.gdprClause);
   const [pageState, setPageState] = useState<PageState>({ kind: "no-tab" });
 
   useEffect(() => watchPageState(deps.pageStateApis, setPageState), [deps.pageStateApis]);
@@ -61,6 +67,7 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
           error={status.error}
           isOffline={status.isOffline}
           hasResult={result !== null}
+          {...(deps.openSettings ? { onOpenSettings: deps.openSettings } : {})}
           onRetry={() => {
             deps.store.getState().retry();
           }}
@@ -82,6 +89,7 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
             result={result}
             profile={profile}
             photo={deps.photo}
+            gdprClause={gdprClause}
             {...(deps.render ? { render: deps.render } : {})}
           />
         </Suspense>
