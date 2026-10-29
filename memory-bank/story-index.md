@@ -1,10 +1,11 @@
 # Global Story Index
 
 ## Overview
-- **Total stories**: 32
+- **Total stories**: 46
+- **Planned**: 14
 - **Generated**: 0
 - **Completed**: 32
-- **Last updated**: 2026-10-29T15:40:59Z
+- **Last updated**: 2026-10-29T16:09:41Z
 
 ---
 
@@ -92,11 +93,51 @@
 - [x] **009-profile-export-import** — Profile export and import - Should - bolt `012-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/009-profile-export-import.md`
 
+### 002-release-readiness
+
+
+#### 001-store-ready-extension
+
+- [ ] **001-release-build-without-key** — Release build without the dev key - Must - bolt `013-store-ready-extension` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/001-release-build-without-key.md`
+- [ ] **002-store-extension-id** — Store extension ID trusted by the host - Must - bolt `013-store-ready-extension` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/002-store-extension-id.md`
+- [ ] **003-extension-icons** — Extension icons - Must - bolt `013-store-ready-extension` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/003-extension-icons.md`
+
+#### 002-host-package
+
+- [ ] **001-bundled-host-package** — Bundled host package - Must - bolt `014-host-package` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/002-host-package/stories/001-bundled-host-package.md`
+- [ ] **002-cli-command-routing** — One command for users and Chrome - Must - bolt `014-host-package` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/002-host-package/stories/002-cli-command-routing.md`
+- [ ] **003-stable-install-location** — Install to a stable location - Must - bolt `014-host-package` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/002-host-package/stories/003-stable-install-location.md`
+- [ ] **004-macos-linux-registration** — Registration on macOS and Linux - Must - bolt `015-host-package` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/002-host-package/stories/004-macos-linux-registration.md`
+- [ ] **005-doctor-command** — doctor command - Should - bolt `015-host-package` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/002-host-package/stories/005-doctor-command.md`
+- [ ] **006-release-pack-and-version-check** — Release packing and version check - Should - bolt `015-host-package` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/002-host-package/stories/006-release-pack-and-version-check.md`
+
+#### 003-ci-and-release-docs
+
+- [ ] **001-ci-three-os** — CI on three operating systems - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/001-ci-three-os.md`
+- [ ] **002-mit-license** — MIT license - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/002-mit-license.md`
+- [ ] **003-end-user-readme** — End-user README - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/003-end-user-readme.md`
+- [ ] **004-privacy-policy-page** — Privacy policy page - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/004-privacy-policy-page.md`
+- [ ] **005-store-listing-texts** — Chrome Web Store listing texts - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+  `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/005-store-listing-texts.md`
+
 ---
 
 ## Stories by Status
 
-- **Planned**: 0
+- **Planned**: 14
 - **Generated**: 0
 - **In Progress**: 0
 - **Completed**: 32
