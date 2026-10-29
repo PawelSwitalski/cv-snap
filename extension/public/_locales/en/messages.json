@@ -449,9 +449,6 @@
   "generate_confirm_first": {
     "message": "Confirm your profile first."
   },
-  "generate_coming_soon": {
-    "message": "Generating tailored CVs arrives in the next version."
-  },
   "home_title": {
     "message": "Your profile is ready"
   },
@@ -477,5 +474,324 @@
   },
   "panel_error_reload": {
     "message": "Reload panel"
+  },
+  "progress_extracting_pdf_text": {
+    "message": "Reading your PDF"
+  },
+  "progress_creating_profile": {
+    "message": "Creating your profile"
+  },
+  "progress_reading_job_ad": {
+    "message": "Reading the job ad"
+  },
+  "progress_parsing_requirements": {
+    "message": "Analysing the requirements"
+  },
+  "progress_tailoring": {
+    "message": "Tailoring your CV"
+  },
+  "progress_validating": {
+    "message": "Checking every line against your profile"
+  },
+  "progress_retrying": {
+    "message": "Fixing lines that didn't match your profile"
+  },
+  "progress_rendering": {
+    "message": "Preparing the preview…"
+  },
+  "progress_steps": {
+    "message": "Generation steps"
+  },
+  "progress_done": {
+    "message": "(done)"
+  },
+  "progress_current": {
+    "message": "(in progress)"
+  },
+  "progress_pending": {
+    "message": "(waiting)"
+  },
+  "progress_retrying_note": {
+    "message": "Claude is correcting a few lines. This takes a little longer."
+  },
+  "generate_cancel": {
+    "message": "Cancel"
+  },
+  "generate_add_site": {
+    "message": "Add this site"
+  },
+  "generate_add_site_note": {
+    "message": "cv-snap reads only sites you add. Chrome will ask you to allow this one."
+  },
+  "generate_add_denied": {
+    "message": "The site wasn't added because access wasn't allowed. Click Add this site to try again."
+  },
+  "generate_add_failed": {
+    "message": "This page can't be added. Only https:// sites are supported."
+  },
+  "generate_select_hint": {
+    "message": "No job ad detected here. Select the ad text on the page, then click Generate CV."
+  },
+  "generate_click_icon": {
+    "message": "To use cv-snap on this page, click the cv-snap icon in the toolbar while the page is open."
+  },
+  "generate_unsupported_page": {
+    "message": "cv-snap works on https:// web pages only. Open the job ad in this tab."
+  },
+  "generate_no_tab": {
+    "message": "Open the job ad in a tab next to this panel."
+  },
+  "error_JOB_AD_NOT_DETECTED": {
+    "message": "No job ad was found on this page."
+  },
+  "error_SELECTION_TOO_SHORT": {
+    "message": "The selected text is too short to be a job ad."
+  },
+  "error_SITE_NOT_ALLOWED": {
+    "message": "cv-snap can't read this page yet."
+  },
+  "error_INVALID_MESSAGE": {
+    "message": "cv-snap sent a request that couldn't be understood."
+  },
+  "error_offline_hint": {
+    "message": "You seem to be offline. Check your internet connection and that Claude is available, then try again."
+  },
+  "error_action_reconnect": {
+    "message": "Reconnect"
+  },
+  "error_action_retry": {
+    "message": "Try again"
+  },
+  "error_action_selected": {
+    "message": "Text selected: generate"
+  },
+  "error_action_back_to_result": {
+    "message": "Back to the CV"
+  },
+  "error_action_back": {
+    "message": "Close"
+  },
+  "fix_HOST_NOT_INSTALLED": {
+    "message": "In the cv-snap folder run “pnpm run install-host”, then click Try again."
+  },
+  "fix_HOST_DISCONNECTED": {
+    "message": "Click Reconnect. If it keeps happening, run “pnpm run install-host” again."
+  },
+  "fix_CLAUDE_NOT_FOUND": {
+    "message": "Install Claude Code (claude.com/claude-code), then click Try again."
+  },
+  "fix_CLAUDE_NOT_AUTHENTICATED": {
+    "message": "Open a terminal, run “claude” and log in, then click Try again."
+  },
+  "fix_CLAUDE_VERSION_UNSUPPORTED": {
+    "message": "Update Claude Code (run “claude update”), then click Try again."
+  },
+  "fix_MODEL_UNAVAILABLE": {
+    "message": "Check that your Claude plan includes this model, then click Try again."
+  },
+  "fix_PDF_PARSE_FAILED": {
+    "message": "Upload a text-based PDF without a password."
+  },
+  "fix_JOB_AD_NOT_DETECTED": {
+    "message": "Select the ad text on the page (at least a few sentences), then click the button below."
+  },
+  "fix_SELECTION_TOO_SHORT": {
+    "message": "Select the whole ad, including the requirements, then click the button below."
+  },
+  "fix_SITE_NOT_ALLOWED": {
+    "message": "Click Add this site above, allow access, then generate again."
+  },
+  "fix_PROFILE_NOT_CONFIRMED": {
+    "message": "Open Edit profile, check your profile and confirm it."
+  },
+  "fix_INVALID_MESSAGE": {
+    "message": "Click Try again. If it keeps happening, reload the panel and run “pnpm run install-host” again."
+  },
+  "fix_MESSAGE_TOO_LARGE": {
+    "message": "Use a shorter job ad (select only the ad text) or a smaller file."
+  },
+  "fix_GENERATION_TIMEOUT": {
+    "message": "Claude may be busy. Click Try again; if it keeps happening, check that Claude is available."
+  },
+  "fix_GENERATION_FAILED": {
+    "message": "Click Try again. A new attempt usually works."
+  },
+  "fix_CANCELLED": {
+    "message": "Click Generate CV to start again."
+  },
+  "preview_label": {
+    "message": "CV preview"
+  },
+  "preview_edit_label": {
+    "message": "Line text"
+  },
+  "preview_save": {
+    "message": "Save"
+  },
+  "preview_cancel_edit": {
+    "message": "Cancel"
+  },
+  "preview_unverified": {
+    "message": "Unverified: not found in your profile. Edit or remove it."
+  },
+  "preview_user_edited": {
+    "message": "Edited by you (not checked)"
+  },
+  "preview_edit_line": {
+    "message": "Edit: $TEXT$",
+    "placeholders": {
+      "text": {
+        "content": "$1"
+      }
+    }
+  },
+  "preview_remove_line": {
+    "message": "Remove: $TEXT$",
+    "placeholders": {
+      "text": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_title": {
+    "message": "CV for: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_title_company": {
+    "message": "CV for: $TITLE$ at $COMPANY$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      },
+      "company": {
+        "content": "$2"
+      }
+    }
+  },
+  "result_unverified_count": {
+    "message": "Unverified lines: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_unverified_explained": {
+    "message": "These lines contain facts not found in your profile. Check them before you send the CV."
+  },
+  "result_show_first_unverified": {
+    "message": "Show the first one"
+  },
+  "result_all_verified": {
+    "message": "Every line was checked against your profile."
+  },
+  "result_download": {
+    "message": "Download PDF"
+  },
+  "result_render_failed": {
+    "message": "The PDF couldn't be prepared. Edit a line or regenerate to try again."
+  },
+  "result_all_unverified_title": {
+    "message": "No line of this CV is verified"
+  },
+  "result_all_unverified_description": {
+    "message": "None of the lines could be checked against your profile. They may contain facts that aren't true. Review the CV before you send it."
+  },
+  "result_all_unverified_review": {
+    "message": "Review the lines"
+  },
+  "result_all_unverified_download": {
+    "message": "Download anyway"
+  },
+  "result_must_haves": {
+    "message": "Must-haves"
+  },
+  "result_nice_to_haves": {
+    "message": "Nice-to-haves"
+  },
+  "result_keywords": {
+    "message": "Keywords"
+  },
+  "result_requirements": {
+    "message": "What the CV was matched against"
+  },
+  "result_requirements_cached": {
+    "message": "Read earlier from the same ad (saved for 7 days)."
+  },
+  "result_gaps": {
+    "message": "Requirements you don't meet: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_gaps_explained": {
+    "message": "They are not written into the CV."
+  },
+  "result_cv_language": {
+    "message": "CV language"
+  },
+  "result_cv_language_auto": {
+    "message": "Automatic (language of the ad)"
+  },
+  "result_cv_language_current": {
+    "message": "This CV is in: $LANGUAGE$",
+    "placeholders": {
+      "language": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_regenerate": {
+    "message": "Regenerate"
+  },
+  "result_removed": {
+    "message": "Removed lines: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_restore": {
+    "message": "Restore"
+  },
+  "result_dropped": {
+    "message": "Left out to fit two pages: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_dropped_explained": {
+    "message": "The least relevant entries were left out first."
+  },
+  "result_dropped_item": {
+    "message": "$TITLE$ (whole entry)",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_dropped_bullet": {
+    "message": "$TITLE$: $TEXT$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      },
+      "text": {
+        "content": "$2"
+      }
+    }
+  },
+  "panel_error_retry": {
+    "message": "Try again"
   }
 }

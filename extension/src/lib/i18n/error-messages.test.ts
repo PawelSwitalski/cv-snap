@@ -1,6 +1,6 @@
 import { CvSnapError, ERROR_CODES } from "@cv-snap/shared";
 import { describe, expect, it } from "vitest";
-import { errorMessageKey, messageKeyFor } from "./error-messages";
+import { errorFixKey, errorMessageKey, messageKeyFor } from "./error-messages";
 import { formatMessage } from "./messages";
 
 describe("error messages", () => {
@@ -29,6 +29,48 @@ describe("error messages", () => {
         expect(formatMessage(language, key).trim().length).toBeGreaterThan(0);
       }
     }
+  });
+
+  it("has a real message and fix hint in both languages for every error code (story 007)", () => {
+    for (const code of ERROR_CODES) {
+      for (const key of [errorMessageKey(code), errorFixKey(code)]) {
+        for (const language of ["en", "pl"] as const) {
+          const text = formatMessage(language, key);
+          expect(text, `${language} ${code} → ${key}`).not.toBe(key);
+          expect(text.trim().length).toBeGreaterThan(0);
+        }
+      }
+      // The fix says what to do, not the problem again.
+      expect(errorFixKey(code)).not.toBe(errorMessageKey(code));
+    }
+  });
+
+  it("names the install command for a missing or lost host", () => {
+    for (const code of ["HOST_NOT_INSTALLED", "HOST_DISCONNECTED"] as const) {
+      for (const language of ["en", "pl"] as const) {
+        expect(formatMessage(language, errorFixKey(code))).toContain("pnpm run install-host");
+      }
+    }
+  });
+
+  it.each([
+    [
+      "JOB_AD_NOT_DETECTED",
+      "SELECTION_TOO_SHORT",
+      "error_SELECTION_TOO_SHORT",
+      "fix_SELECTION_TOO_SHORT",
+    ],
+    ["JOB_AD_NOT_DETECTED", "SITE_NOT_ALLOWED", "error_SITE_NOT_ALLOWED", "fix_SITE_NOT_ALLOWED"],
+    [
+      "GENERATION_FAILED",
+      "PROFILE_NOT_CONFIRMED",
+      "generate_confirm_first",
+      "fix_PROFILE_NOT_CONFIRMED",
+    ],
+    ["GENERATION_FAILED", "INVALID_OUTPUT", "error_GENERATION_FAILED", "fix_GENERATION_FAILED"],
+  ] as const)("maps %s/%s to its own message and fix", (code, reason, message, fix) => {
+    expect(errorMessageKey(code, reason)).toBe(message);
+    expect(errorFixKey(code, reason)).toBe(fix);
   });
 
   it("never shows internal details of unknown errors", () => {

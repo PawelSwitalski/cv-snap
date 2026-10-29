@@ -1,6 +1,6 @@
 import type { CvProfile } from "@cv-snap/shared";
-import { FileUp, PencilLine, Sparkles } from "lucide-react";
-import { useId } from "react";
+import { FileUp, PencilLine } from "lucide-react";
+import { useStore } from "zustand";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,23 +10,26 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { GenerateView, type GenerateViewDeps } from "@/features/generate/GenerateView";
 import { useT } from "@/lib/i18n/i18n";
 
 /**
- * Home with a confirmed profile. The Generate flow itself arrives in bolt 011; until then the
- * button is shown disabled with a note, so the layout is final.
+ * Home with a confirmed profile: the generate flow (bolt 011) and the profile actions. Editing or
+ * replacing the profile is disabled while a generation runs, so the facts can't change under it.
  */
 export function HomeView({
   profile,
+  generate,
   onEditProfile,
   onUploadNew,
 }: {
   profile: CvProfile;
+  generate: GenerateViewDeps;
   onEditProfile: () => void;
   onUploadNew: () => void;
 }) {
   const t = useT();
-  const noteId = useId();
+  const isRunning = useStore(generate.store, (state) => state.status.kind === "running");
   return (
     <Card aria-labelledby="home-title">
       <CardHeader>
@@ -34,20 +37,14 @@ export function HomeView({
         <CardDescription>{t("home_profile_ready", profile.contact.fullName)}</CardDescription>
       </CardHeader>
       <CardContent>
-        <Button disabled aria-describedby={noteId}>
-          <Sparkles aria-hidden="true" />
-          {t("generate_button")}
-        </Button>
-        <p id={noteId} className="text-xs text-muted-foreground">
-          {t("generate_coming_soon")}
-        </p>
+        <GenerateView deps={generate} profile={profile} />
       </CardContent>
       <CardFooter>
-        <Button variant="outline" onClick={onEditProfile}>
+        <Button variant="outline" disabled={isRunning} onClick={onEditProfile}>
           <PencilLine aria-hidden="true" />
           {t("home_edit_profile")}
         </Button>
-        <Button variant="ghost" onClick={onUploadNew}>
+        <Button variant="ghost" disabled={isRunning} onClick={onUploadNew}>
           <FileUp aria-hidden="true" />
           {t("home_upload_new")}
         </Button>

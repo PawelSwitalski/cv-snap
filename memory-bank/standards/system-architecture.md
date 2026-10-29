@@ -104,7 +104,8 @@ cv-snap is a local-only system with two processes: a **WXT/React Chrome extensio
 - On listed sites, cv-snap may **detect job ads proactively** (e.g. a badge on the icon) without a click.
 - Settings offer one-click presets for common job boards (LinkedIn, Indeed, Pracuj.pl, justjoin.it, …) and let the user remove sites (which also revokes the Chrome permission). Users can also revoke access in `chrome://extensions`.
 
-**Permissions** (required): `storage`, `unlimitedStorage`, `nativeMessaging`, `scripting`, `sidePanel`. No `<all_urls>`, no `activeTab` dependency.
+**Permissions** (required): `storage`, `unlimitedStorage`, `nativeMessaging`, `scripting`, `sidePanel`, `activeTab`. No `<all_urls>`.
+- `activeTab` (no install warning) is used **only** to read the address of the tab where the user clicked the cv-snap icon, so "Add this site" knows which origin to request (bolt 011 decision). Reading and generating still require a granted site; on other unlisted tabs the panel asks the user to click the icon there.
 
 **Native host hardening**
 - Host manifest `allowed_origins` contains only the cv-snap extension ID.

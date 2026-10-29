@@ -1,10 +1,17 @@
 import { forgetPatterns } from "@/features/allowed-sites/allowed-sites";
 import { browserApis } from "@/features/allowed-sites/chrome-apis";
 import { clearJobAdStatus, showJobAdStatus } from "@/features/job-ad/badge";
-import { badgeApis } from "@/features/job-ad/browser-apis";
+import { createCaptureAd } from "@/features/generation/capture-ad";
+import { GenerationPipeline } from "@/features/generation/generation-pipeline";
+import { serveGenerationPort } from "@/features/generation/generation-port";
+import { GENERATION_PORT_NAME } from "@/features/generation/messages";
+import { badgeApis, captureApis } from "@/features/job-ad/browser-apis";
 import { injectIntoOpenTabs, reconcileRegistrations } from "@/features/job-ad/content-registration";
 import { JobAdStatusMessageSchema } from "@/features/job-ad/messages";
+import { ChromeStorageProfileRepository } from "@/features/profile/profile-repository";
+import { createTailoringServices } from "@/features/tailoring/services";
 import { logger } from "@/lib/logger";
+import { chromeLocalStore } from "@/lib/storage/local-store";
 
 export default defineBackground(() => {
   const apis = browserApis();
@@ -31,6 +38,34 @@ export default defineBackground(() => {
   });
   browser.tabs.onRemoved.addListener((tabId) => {
     clearBadge(tabId);
+  });
+
+  // Generation (story 005): one long-lived port per side panel; closing the panel cancels the run.
+  // The pipeline and its native-host connection are created on the first run only.
+  let pipeline: GenerationPipeline | undefined;
+  const generationPipeline = () => {
+    if (!pipeline) {
+      const services = createTailoringServices();
+      pipeline = new GenerationPipeline({
+        profiles: new ChromeStorageProfileRepository(chromeLocalStore),
+        requirements: services.requirementsResolution,
+        tailoring: services.tailoring,
+      });
+    }
+    return pipeline;
+  };
+  const captureAd = createCaptureAd(captureApis());
+  browser.runtime.onConnect.addListener((port) => {
+    if (port.name !== GENERATION_PORT_NAME || port.sender?.id !== browser.runtime.id) return;
+    // Only extension pages (the side panel) may generate; content scripts run in web pages.
+    if (port.sender.tab !== undefined) {
+      port.disconnect();
+      return;
+    }
+    serveGenerationPort(port, {
+      pipeline: { run: (request) => generationPipeline().run(request) },
+      captureAd,
+    });
   });
 
   // Open the side panel when the toolbar icon is clicked.

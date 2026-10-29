@@ -5,9 +5,16 @@ import { formatMessage, resolveLanguage } from "@/lib/i18n/messages";
 
 /**
  * Error boundary fallback. It can't rely on the i18n context (that may be what failed), so it
- * resolves the browser language itself.
+ * resolves the browser language itself. "Try again" re-renders the panel from stored state (story
+ * 007-error-messages: a recovery screen, never a blank panel); "Reload" is the fallback.
  */
-export function PanelError({ browserLanguage }: { browserLanguage: string | undefined }) {
+export function PanelError({
+  browserLanguage,
+  onRetry,
+}: {
+  browserLanguage: string | undefined;
+  onRetry?: () => void;
+}) {
   const language = resolveLanguage("auto", browserLanguage);
   return (
     <main className="p-4">
@@ -18,15 +25,22 @@ export function PanelError({ browserLanguage }: { browserLanguage: string | unde
         </AlertTitle>
         <AlertDescription className="flex flex-col items-start gap-2">
           {formatMessage(language, "panel_error_description")}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              location.reload();
-            }}
-          >
-            {formatMessage(language, "panel_error_reload")}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            {onRetry ? (
+              <Button size="sm" onClick={onRetry}>
+                {formatMessage(language, "panel_error_retry")}
+              </Button>
+            ) : null}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                location.reload();
+              }}
+            >
+              {formatMessage(language, "panel_error_reload")}
+            </Button>
+          </div>
         </AlertDescription>
       </Alert>
     </main>

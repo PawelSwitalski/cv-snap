@@ -449,9 +449,6 @@
   "generate_confirm_first": {
     "message": "Najpierw zatwierdź profil."
   },
-  "generate_coming_soon": {
-    "message": "Generowanie dopasowanych CV pojawi się w kolejnej wersji."
-  },
   "home_title": {
     "message": "Twój profil jest gotowy"
   },
@@ -477,5 +474,324 @@
   },
   "panel_error_reload": {
     "message": "Przeładuj panel"
+  },
+  "progress_extracting_pdf_text": {
+    "message": "Odczytywanie PDF-a"
+  },
+  "progress_creating_profile": {
+    "message": "Tworzenie profilu"
+  },
+  "progress_reading_job_ad": {
+    "message": "Odczytywanie ogłoszenia"
+  },
+  "progress_parsing_requirements": {
+    "message": "Analiza wymagań"
+  },
+  "progress_tailoring": {
+    "message": "Dopasowywanie CV"
+  },
+  "progress_validating": {
+    "message": "Sprawdzanie każdej linii z profilem"
+  },
+  "progress_retrying": {
+    "message": "Poprawianie linii niezgodnych z profilem"
+  },
+  "progress_rendering": {
+    "message": "Przygotowywanie podglądu…"
+  },
+  "progress_steps": {
+    "message": "Etapy generowania"
+  },
+  "progress_done": {
+    "message": "(gotowe)"
+  },
+  "progress_current": {
+    "message": "(w toku)"
+  },
+  "progress_pending": {
+    "message": "(oczekuje)"
+  },
+  "progress_retrying_note": {
+    "message": "Claude poprawia kilka linii. To potrwa trochę dłużej."
+  },
+  "generate_cancel": {
+    "message": "Anuluj"
+  },
+  "generate_add_site": {
+    "message": "Dodaj tę stronę"
+  },
+  "generate_add_site_note": {
+    "message": "cv-snap czyta tylko dodane przez Ciebie strony. Chrome poprosi o zgodę na tę stronę."
+  },
+  "generate_add_denied": {
+    "message": "Strona nie została dodana, bo nie udzielono dostępu. Kliknij „Dodaj tę stronę”, aby spróbować ponownie."
+  },
+  "generate_add_failed": {
+    "message": "Tej strony nie można dodać. Obsługiwane są tylko strony https://."
+  },
+  "generate_select_hint": {
+    "message": "Nie wykryto tu ogłoszenia. Zaznacz tekst ogłoszenia na stronie i kliknij „Generuj CV”."
+  },
+  "generate_click_icon": {
+    "message": "Aby użyć cv-snap na tej stronie, kliknij ikonę cv-snap na pasku narzędzi, gdy strona jest otwarta."
+  },
+  "generate_unsupported_page": {
+    "message": "cv-snap działa tylko na stronach https://. Otwórz ogłoszenie w tej karcie."
+  },
+  "generate_no_tab": {
+    "message": "Otwórz ogłoszenie w karcie obok tego panelu."
+  },
+  "error_JOB_AD_NOT_DETECTED": {
+    "message": "Nie znaleziono ogłoszenia na tej stronie."
+  },
+  "error_SELECTION_TOO_SHORT": {
+    "message": "Zaznaczony tekst jest za krótki jak na ogłoszenie."
+  },
+  "error_SITE_NOT_ALLOWED": {
+    "message": "cv-snap nie może jeszcze czytać tej strony."
+  },
+  "error_INVALID_MESSAGE": {
+    "message": "cv-snap wysłał żądanie, którego nie udało się zrozumieć."
+  },
+  "error_offline_hint": {
+    "message": "Wygląda na to, że nie masz połączenia. Sprawdź internet i dostępność Claude, a potem spróbuj ponownie."
+  },
+  "error_action_reconnect": {
+    "message": "Połącz ponownie"
+  },
+  "error_action_retry": {
+    "message": "Spróbuj ponownie"
+  },
+  "error_action_selected": {
+    "message": "Tekst zaznaczony: generuj"
+  },
+  "error_action_back_to_result": {
+    "message": "Wróć do CV"
+  },
+  "error_action_back": {
+    "message": "Zamknij"
+  },
+  "fix_HOST_NOT_INSTALLED": {
+    "message": "W folderze cv-snap uruchom „pnpm run install-host”, a potem kliknij „Spróbuj ponownie”."
+  },
+  "fix_HOST_DISCONNECTED": {
+    "message": "Kliknij „Połącz ponownie”. Jeśli to się powtarza, uruchom ponownie „pnpm run install-host”."
+  },
+  "fix_CLAUDE_NOT_FOUND": {
+    "message": "Zainstaluj Claude Code (claude.com/claude-code), a potem kliknij „Spróbuj ponownie”."
+  },
+  "fix_CLAUDE_NOT_AUTHENTICATED": {
+    "message": "Otwórz terminal, uruchom „claude” i zaloguj się, a potem kliknij „Spróbuj ponownie”."
+  },
+  "fix_CLAUDE_VERSION_UNSUPPORTED": {
+    "message": "Zaktualizuj Claude Code (uruchom „claude update”), a potem kliknij „Spróbuj ponownie”."
+  },
+  "fix_MODEL_UNAVAILABLE": {
+    "message": "Sprawdź, czy Twój plan Claude obejmuje ten model, a potem kliknij „Spróbuj ponownie”."
+  },
+  "fix_PDF_PARSE_FAILED": {
+    "message": "Wgraj PDF z tekstem, bez hasła."
+  },
+  "fix_JOB_AD_NOT_DETECTED": {
+    "message": "Zaznacz tekst ogłoszenia na stronie (co najmniej kilka zdań), a potem kliknij przycisk poniżej."
+  },
+  "fix_SELECTION_TOO_SHORT": {
+    "message": "Zaznacz całe ogłoszenie razem z wymaganiami, a potem kliknij przycisk poniżej."
+  },
+  "fix_SITE_NOT_ALLOWED": {
+    "message": "Kliknij „Dodaj tę stronę” powyżej, zezwól na dostęp i wygeneruj ponownie."
+  },
+  "fix_PROFILE_NOT_CONFIRMED": {
+    "message": "Otwórz „Edytuj profil”, sprawdź profil i go zatwierdź."
+  },
+  "fix_INVALID_MESSAGE": {
+    "message": "Kliknij „Spróbuj ponownie”. Jeśli to się powtarza, przeładuj panel i uruchom ponownie „pnpm run install-host”."
+  },
+  "fix_MESSAGE_TOO_LARGE": {
+    "message": "Użyj krótszego ogłoszenia (zaznacz tylko jego tekst) lub mniejszego pliku."
+  },
+  "fix_GENERATION_TIMEOUT": {
+    "message": "Claude może być przeciążony. Kliknij „Spróbuj ponownie”; jeśli to się powtarza, sprawdź dostępność Claude."
+  },
+  "fix_GENERATION_FAILED": {
+    "message": "Kliknij „Spróbuj ponownie”. Kolejna próba zwykle się udaje."
+  },
+  "fix_CANCELLED": {
+    "message": "Kliknij „Generuj CV”, aby zacząć od nowa."
+  },
+  "preview_label": {
+    "message": "Podgląd CV"
+  },
+  "preview_edit_label": {
+    "message": "Treść linii"
+  },
+  "preview_save": {
+    "message": "Zapisz"
+  },
+  "preview_cancel_edit": {
+    "message": "Anuluj"
+  },
+  "preview_unverified": {
+    "message": "Niezweryfikowane: brak w Twoim profilu. Edytuj lub usuń."
+  },
+  "preview_user_edited": {
+    "message": "Edytowane przez Ciebie (niesprawdzane)"
+  },
+  "preview_edit_line": {
+    "message": "Edytuj: $TEXT$",
+    "placeholders": {
+      "text": {
+        "content": "$1"
+      }
+    }
+  },
+  "preview_remove_line": {
+    "message": "Usuń: $TEXT$",
+    "placeholders": {
+      "text": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_title": {
+    "message": "CV na stanowisko: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_title_company": {
+    "message": "CV na stanowisko: $TITLE$ ($COMPANY$)",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      },
+      "company": {
+        "content": "$2"
+      }
+    }
+  },
+  "result_unverified_count": {
+    "message": "Niezweryfikowane linie: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_unverified_explained": {
+    "message": "Te linie zawierają fakty, których nie ma w Twoim profilu. Sprawdź je przed wysłaniem CV."
+  },
+  "result_show_first_unverified": {
+    "message": "Pokaż pierwszą"
+  },
+  "result_all_verified": {
+    "message": "Każda linia została sprawdzona z Twoim profilem."
+  },
+  "result_download": {
+    "message": "Pobierz PDF"
+  },
+  "result_render_failed": {
+    "message": "Nie udało się przygotować PDF-a. Edytuj linię lub wygeneruj ponownie."
+  },
+  "result_all_unverified_title": {
+    "message": "Żadna linia tego CV nie jest zweryfikowana"
+  },
+  "result_all_unverified_description": {
+    "message": "Żadnej linii nie udało się sprawdzić z Twoim profilem. Mogą zawierać nieprawdziwe fakty. Przejrzyj CV przed wysłaniem."
+  },
+  "result_all_unverified_review": {
+    "message": "Przejrzyj linie"
+  },
+  "result_all_unverified_download": {
+    "message": "Pobierz mimo to"
+  },
+  "result_must_haves": {
+    "message": "Wymagania obowiązkowe"
+  },
+  "result_nice_to_haves": {
+    "message": "Mile widziane"
+  },
+  "result_keywords": {
+    "message": "Słowa kluczowe"
+  },
+  "result_requirements": {
+    "message": "Do czego dopasowano CV"
+  },
+  "result_requirements_cached": {
+    "message": "Odczytane wcześniej z tego samego ogłoszenia (zapisane na 7 dni)."
+  },
+  "result_gaps": {
+    "message": "Wymagania, których nie spełniasz: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_gaps_explained": {
+    "message": "Nie zostały wpisane do CV."
+  },
+  "result_cv_language": {
+    "message": "Język CV"
+  },
+  "result_cv_language_auto": {
+    "message": "Automatycznie (język ogłoszenia)"
+  },
+  "result_cv_language_current": {
+    "message": "Język tego CV: $LANGUAGE$",
+    "placeholders": {
+      "language": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_regenerate": {
+    "message": "Wygeneruj ponownie"
+  },
+  "result_removed": {
+    "message": "Usunięte linie: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_restore": {
+    "message": "Przywróć"
+  },
+  "result_dropped": {
+    "message": "Pominięte, by zmieścić się na dwóch stronach: $COUNT$",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_dropped_explained": {
+    "message": "Najpierw pominięto najmniej istotne pozycje."
+  },
+  "result_dropped_item": {
+    "message": "$TITLE$ (cała pozycja)",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "result_dropped_bullet": {
+    "message": "$TITLE$: $TEXT$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      },
+      "text": {
+        "content": "$2"
+      }
+    }
+  },
+  "panel_error_retry": {
+    "message": "Spróbuj ponownie"
   }
 }

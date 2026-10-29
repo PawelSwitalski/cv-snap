@@ -2,11 +2,11 @@
 id: 007-error-messages-and-recovery
 unit: 005-tailored-cv-ui
 intent: 001-one-click-tailored-cv
-status: draft
+status: complete
 priority: must
-created: 2026-10-25T12:00:00Z
+created: '2026-10-25T12:00:00Z'
 assigned_bolt: 011-tailored-cv-ui
-implemented: false
+implemented: true
 ---
 
 # Story: 007-error-messages-and-recovery

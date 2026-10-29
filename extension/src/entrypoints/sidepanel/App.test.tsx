@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { createNativeHostClient, type NativePort } from "@/lib/native-host-client";
@@ -7,6 +7,13 @@ import { createMemoryStore, STORAGE_KEYS } from "@/lib/storage/local-store";
 import { formatMessage } from "@/lib/i18n/messages";
 import { PRIVACY_NOTICE_VERSION } from "@/features/onboarding/privacy-notice";
 import { smallProfile } from "../../../test/cv-fixtures";
+import {
+  adPageFacts,
+  fakeConnector,
+  fakePageStateApis,
+  fakeRender,
+  generationResult,
+} from "../../../test/generate-fixtures";
 import { draftContent, HEALTHY, healthClient } from "../../../test/panel-fixtures";
 import { App, type AppDeps } from "./App";
 
@@ -33,6 +40,18 @@ function deps(overrides: Partial<AppDeps> = {}): AppDeps {
     hostClient: () => client,
     createHostClient: silentClient,
     browserLanguage: "en-US",
+    generate: {
+      connect: () => {
+        throw new Error("no background in this test");
+      },
+      pageStateApis: {
+        activeTab: () => Promise.resolve(null),
+        grantedPatterns: () => Promise.resolve([]),
+        jobAdStatus: () => Promise.resolve(null),
+        subscribe: () => () => undefined,
+      },
+      addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
+    },
     ...overrides,
   };
 }
@@ -118,5 +137,69 @@ describe("App", () => {
     render(<App deps={deps({ store })} />);
 
     expect(await screen.findByRole("heading", { name: en("editor_title_review") })).toBeTruthy();
+  });
+
+  it("generates from home in one click and locks the profile while it runs", async () => {
+    const user = userEvent.setup();
+    const connector = fakeConnector();
+    const store = createMemoryStore({
+      ...acknowledged,
+      [STORAGE_KEYS.activeProfile]: smallProfile(),
+    });
+    render(
+      <App
+        deps={deps({
+          store,
+          generate: {
+            connect: connector.connect,
+            pageStateApis: fakePageStateApis(adPageFacts()).apis,
+            addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
+            render: fakeRender().render,
+          },
+        })}
+      />,
+    );
+
+    await user.click(await screen.findByRole("button", { name: en("generate_button") }));
+    const editProfile = screen.getByRole("button", { name: en("home_edit_profile") });
+    expect((editProfile as HTMLButtonElement).disabled).toBe(true);
+
+    act(() => {
+      connector.last().emit({ type: "result", result: generationResult() });
+    });
+
+    expect(await screen.findByRole("article", { name: en("preview_label") })).toBeTruthy();
+    expect((editProfile as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it("shows the last CV again after the panel is closed and reopened", async () => {
+    const user = userEvent.setup();
+    const connector = fakeConnector();
+    const session = createMemoryStore();
+    const store = createMemoryStore({
+      ...acknowledged,
+      [STORAGE_KEYS.activeProfile]: smallProfile(),
+    });
+    const panelDeps = deps({
+      store,
+      generate: {
+        connect: connector.connect,
+        pageStateApis: fakePageStateApis(adPageFacts()).apis,
+        addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
+        render: fakeRender().render,
+        session,
+      },
+    });
+    const first = render(<App deps={panelDeps} />);
+    await user.click(await screen.findByRole("button", { name: en("generate_button") }));
+    act(() => {
+      connector.last().emit({ type: "result", result: generationResult() });
+    });
+    await screen.findByRole("article", { name: en("preview_label") });
+
+    first.unmount();
+    render(<App deps={panelDeps} />);
+
+    expect(await screen.findByRole("article", { name: en("preview_label") })).toBeTruthy();
   });
 });

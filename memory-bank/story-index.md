@@ -2,9 +2,9 @@
 
 ## Overview
 - **Total stories**: 32
-- **Generated**: 5
-- **Completed**: 27
-- **Last updated**: 2026-10-29T08:08:55Z
+- **Generated**: 2
+- **Completed**: 30
+- **Last updated**: 2026-10-29T14:49:43Z
 
 ---
 
@@ -81,15 +81,15 @@
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/003-cv-upload-and-profile-creation.md`
 - [x] **004-profile-review-editor** — Profile review editor - Must - bolt `010-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/004-profile-review-editor.md`
-- [x] **005-generate-flow-with-progress-and-cancel** — Generate flow with progress and cancel - Must - bolt `011-tailored-cv-ui` - ✅ GENERATED
+- [x] **005-generate-flow-with-progress-and-cancel** — Generate flow with progress and cancel - Must - bolt `011-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/005-generate-flow-with-progress-and-cancel.md`
-- [x] **006-preview-and-editing** — Preview and editing - Must - bolt `011-tailored-cv-ui` - ✅ GENERATED
+- [x] **006-preview-and-editing** — Preview and editing - Must - bolt `011-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/006-preview-and-editing.md`
-- [x] **007-error-messages-and-recovery** — Error messages and recovery - Must - bolt `011-tailored-cv-ui` - ✅ GENERATED
+- [x] **007-error-messages-and-recovery** — Error messages and recovery - Must - bolt `011-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/007-error-messages-and-recovery.md`
-- [x] **008-settings-panel** — Settings panel - Must - bolt `012-tailored-cv-ui` - ✅ GENERATED
+- [ ] **008-settings-panel** — Settings panel - Must - bolt `012-tailored-cv-ui` - ✅ GENERATED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/008-settings-panel.md`
-- [x] **009-profile-export-import** — Profile export and import - Should - bolt `012-tailored-cv-ui` - ✅ GENERATED
+- [ ] **009-profile-export-import** — Profile export and import - Should - bolt `012-tailored-cv-ui` - ✅ GENERATED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/009-profile-export-import.md`
 
 ---
@@ -97,6 +97,6 @@
 ## Stories by Status
 
 - **Planned**: 0
-- **Generated**: 5
+- **Generated**: 2
 - **In Progress**: 0
-- **Completed**: 27
+- **Completed**: 30

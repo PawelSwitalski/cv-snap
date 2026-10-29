@@ -21,6 +21,29 @@ export const chromeLocalStore: LocalStore = {
   },
 };
 
+/**
+ * The same port over `chrome.storage.session`: kept in memory only (never written to disk), cleared
+ * when Chrome closes, and not readable by content scripts (default access level).
+ */
+export const chromeSessionStore: LocalStore = {
+  async get(key) {
+    const items = await browser.storage.session.get(key);
+    return items[key];
+  },
+  async set(key, value) {
+    await browser.storage.session.set({ [key]: value });
+  },
+  async remove(key) {
+    await browser.storage.session.remove(key);
+  },
+};
+
+/** Keys in `chrome.storage.session` (besides the job-ad badge state of bolt 008). */
+export const SESSION_KEYS = {
+  /** The last generation result with the user's preview edits (bolt 011). */
+  lastGeneration: "generate.lastResult",
+} as const;
+
 /** In-memory store for tests and previews. */
 export function createMemoryStore(initial: Record<string, unknown> = {}): LocalStore & {
   data: Map<string, unknown>;

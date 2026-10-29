@@ -1,12 +1,17 @@
 import "@/assets/tailwind.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { createAllowedSites } from "@/features/allowed-sites/allowed-sites";
+import { connectGeneration } from "@/features/generate/generation-client";
+import { browserPageStateApis } from "@/features/generate/page-state";
 import { createNativeHostClient } from "@/lib/native-host-client";
 import { logger } from "@/lib/logger";
 import { panelHostClient } from "@/lib/panel-host";
 import { indexedDbFileStore } from "@/lib/storage/file-store";
-import { chromeLocalStore } from "@/lib/storage/local-store";
+import { chromeLocalStore, chromeSessionStore } from "@/lib/storage/local-store";
 import { App } from "./App";
+
+const allowedSites = createAllowedSites();
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Side panel root element missing");
@@ -20,6 +25,12 @@ createRoot(rootElement).render(
         hostClient: panelHostClient,
         createHostClient: () => createNativeHostClient(),
         browserLanguage: browser.i18n.getUILanguage(),
+        generate: {
+          connect: connectGeneration,
+          pageStateApis: browserPageStateApis(),
+          addSite: (url) => allowedSites.addCurrentTab(url),
+          session: chromeSessionStore,
+        },
       }}
     />
   </StrictMode>,

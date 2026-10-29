@@ -28,6 +28,23 @@ describe("profile store", () => {
     expect(store.getState().saveState).toBe("saved");
   });
 
+  it("reports a newly confirmed profile, so a CV generated from the old one is dropped", async () => {
+    const memory = createMemoryStore();
+    const confirmed: string[] = [];
+    const store = createProfileStore({
+      repository: new ChromeStorageProfileRepository(memory),
+      files: createMemoryFileStore(),
+      onActiveChanged: (profile) => confirmed.push(profile.contact.fullName),
+    });
+    await store.getState().load();
+    store.getState().setNewDraft(draftContent());
+
+    const result = await store.getState().confirm();
+
+    expect(result).toEqual({ ok: true });
+    expect(confirmed).toEqual([draftContent().contact.fullName]);
+  });
+
   it("restores a deleted item with Undo", async () => {
     const { store } = setup();
     await store.getState().load();

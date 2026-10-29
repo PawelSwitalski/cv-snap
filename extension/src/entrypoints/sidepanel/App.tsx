@@ -4,6 +4,12 @@ import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useStore } from "zustand";
 import { CvUpload } from "@/features/cv-upload/CvUpload";
 import type { CreateProfileDeps } from "@/features/cv-upload/create-profile-flow";
+import type { AddSiteResult } from "@/features/allowed-sites/allowed-sites";
+import type { ConnectGeneration } from "@/features/generate/generation-client";
+import type { GenerateViewDeps } from "@/features/generate/GenerateView";
+import type { PageStateApis } from "@/features/generate/page-state";
+import { createGenerateStore } from "@/features/generate/store";
+import type { RenderFitted } from "@/features/generate/use-fitted-cv";
 import { PrivacyNotice } from "@/features/onboarding/PrivacyNotice";
 import {
   acknowledgeNotice,
@@ -37,12 +43,23 @@ export interface AppDeps {
   /** A fresh connection per setup check, so "Check again" finds a newly installed host. */
   createHostClient: () => NativeHostClient;
   browserLanguage: string | undefined;
+  /** The generate flow (bolt 011): background port, page state and "Add this site". */
+  generate: {
+    connect: ConnectGeneration;
+    pageStateApis: PageStateApis;
+    addSite: (url: string) => Promise<AddSiteResult>;
+    /** `chrome.storage.session`: the last result survives closing the panel (bolt 011). */
+    session?: LocalStore;
+    render?: RenderFitted;
+  };
 }
 
 /** Side panel root: error boundary → i18n → view router (story 001). */
 export function App({ deps }: { deps: AppDeps }) {
   return (
-    <ErrorBoundary fallback={() => <PanelError browserLanguage={deps.browserLanguage} />}>
+    <ErrorBoundary
+      fallback={(reset) => <PanelError browserLanguage={deps.browserLanguage} onRetry={reset} />}
+    >
       <I18nProvider store={deps.store} browserLanguage={deps.browserLanguage}>
         <Panel deps={deps} />
       </I18nProvider>
@@ -53,9 +70,35 @@ export function App({ deps }: { deps: AppDeps }) {
 function Panel({ deps }: { deps: AppDeps }) {
   const t = useT();
   const repository = useMemo(() => new ChromeStorageProfileRepository(deps.store), [deps.store]);
+  const generateStore = useMemo(
+    () =>
+      createGenerateStore({
+        connect: deps.generate.connect,
+        ...(deps.generate.session ? { session: deps.generate.session } : {}),
+      }),
+    [deps.generate.connect, deps.generate.session],
+  );
   const profileStore = useMemo(
-    () => createProfileStore({ repository, files: deps.files }),
-    [repository, deps.files],
+    () =>
+      createProfileStore({
+        repository,
+        files: deps.files,
+        // A CV generated from the previous profile no longer matches its facts.
+        onActiveChanged: () => {
+          generateStore.getState().clearResult();
+        },
+      }),
+    [repository, deps.files, generateStore],
+  );
+  const generate = useMemo<GenerateViewDeps>(
+    () => ({
+      store: generateStore,
+      pageStateApis: deps.generate.pageStateApis,
+      addSite: deps.generate.addSite,
+      photo: () => profileStore.getState().photo(),
+      ...(deps.generate.render ? { render: deps.generate.render } : {}),
+    }),
+    [generateStore, deps.generate, profileStore],
   );
   const profileStatus = useStore(profileStore, (state) => state.status);
   const draft = useStore(profileStore, (state) => state.draft);
@@ -70,6 +113,8 @@ function Panel({ deps }: { deps: AppDeps }) {
     readAcknowledgedNoticeVersion(deps.store)
       .catch(() => 0)
       .then(setNoticeVersion, () => undefined);
+    // The last CV of this browser session, if the panel was closed after generating.
+    void generateStore.getState().restoreSession();
     profileStore
       .getState()
       .load()
@@ -84,7 +129,7 @@ function Panel({ deps }: { deps: AppDeps }) {
     return () => {
       window.removeEventListener("pagehide", flush);
     };
-  }, [deps.store, profileStore]);
+  }, [deps.store, profileStore, generateStore]);
 
   const uploadDeps = useMemo<CreateProfileDeps>(
     () => ({
@@ -172,6 +217,7 @@ function Panel({ deps }: { deps: AppDeps }) {
         {view === "home" && active ? (
           <HomeView
             profile={active}
+            generate={generate}
             onEditProfile={() => {
               void profileStore.getState().editActive();
             }}

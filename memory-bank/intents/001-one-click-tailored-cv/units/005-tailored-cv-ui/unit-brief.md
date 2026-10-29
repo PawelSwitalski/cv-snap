@@ -2,11 +2,11 @@
 unit: 005-tailored-cv-ui
 intent: 001-one-click-tailored-cv
 phase: inception
-status: ready
+status: in-progress
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 created: 2026-10-25T12:00:00Z
-updated: 2026-10-25T12:00:00Z
+updated: 2026-10-29T13:03:10Z
 ---
 
 # Unit Brief: 005-tailored-cv-ui
