@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 46
-- **Planned**: 8
+- **Planned**: 5
 - **Generated**: 0
-- **Completed**: 38
-- **Last updated**: 2026-10-29T18:10:00Z
+- **Completed**: 41
+- **Last updated**: 2026-10-29T19:55:00Z
 
 ---
 
@@ -113,11 +113,11 @@
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/002-cli-command-routing.md`
 - [x] **003-stable-install-location** — Install to a stable location - Must - bolt `014-host-package` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/003-stable-install-location.md`
-- [ ] **004-macos-linux-registration** — Registration on macOS and Linux - Must - bolt `015-host-package` - ⏳ PLANNED
+- [x] **004-macos-linux-registration** — Registration on macOS and Linux - Must - bolt `015-host-package` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/004-macos-linux-registration.md`
-- [ ] **005-doctor-command** — doctor command - Should - bolt `015-host-package` - ⏳ PLANNED
+- [x] **005-doctor-command** — doctor command - Should - bolt `015-host-package` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/005-doctor-command.md`
-- [ ] **006-release-pack-and-version-check** — Release packing and version check - Should - bolt `015-host-package` - ⏳ PLANNED
+- [x] **006-release-pack-and-version-check** — Release packing and version check - Should - bolt `015-host-package` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/006-release-pack-and-version-check.md`
 
 #### 003-ci-and-release-docs
@@ -137,7 +137,7 @@
 
 ## Stories by Status
 
-- **Planned**: 8
+- **Planned**: 5
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 38
+- **Completed**: 41

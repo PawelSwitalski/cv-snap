@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
 import {
+  cpSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -13,7 +14,7 @@ import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import { installHost } from "../src/install/install.js";
-import { resolvePdfjsRoot, stageRuntime } from "../src/install/runtime.js";
+import { stageRuntime } from "../src/install/runtime.js";
 import { HOST_VERSION } from "../src/version.js";
 import { frame, parseFrames } from "./frames.js";
 import { buildPdf, column } from "./pdf-fixtures.js";
@@ -220,13 +221,11 @@ describe("installed runtime (end to end)", () => {
   it("serves Chrome, PDF extraction included, after the package it came from is deleted", async () => {
     const root = tempDir("cv snap Zażółć runtime ");
     // A copy of the package, like the npx cache; removed before Chrome "starts" the host.
-    const source = join(root, "npx-cache", "cv-snap-host", "dist", "cv-snap-host.mjs");
-    mkdirSync(join(source, ".."), { recursive: true });
-    writeFileSync(source, readFileSync(MAIN));
+    const source = join(root, "npx-cache", "cv-snap-host", "dist");
+    cpSync(join(MAIN, ".."), source, { recursive: true });
     const { entryPath } = stageRuntime({
       hostDir: join(root, "host"),
-      bundlePath: source,
-      pdfjsRoot: resolvePdfjsRoot(import.meta.url),
+      sourceDir: source,
       version: HOST_VERSION,
     });
     rmSync(join(root, "npx-cache"), { recursive: true });
@@ -275,7 +274,9 @@ describe.runIf(process.platform === "win32")(
           isAborted: false,
           spawnErrorCode: null,
         });
-      const { wrapperPath } = await installHost({
+      const { launcherPath: wrapperPath } = await installHost({
+        platform: "win32",
+        manifestDir: null,
         hostDir: join(root, "host"),
         mainScriptPath: stub,
         nodePath: process.execPath,

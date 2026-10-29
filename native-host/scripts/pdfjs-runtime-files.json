@@ -1,0 +1,9 @@
+[
+  "package.json",
+  "LICENSE",
+  "legacy/build/pdf.mjs",
+  "legacy/build/pdf.worker.mjs",
+  "cmaps",
+  "standard_fonts",
+  "wasm"
+]

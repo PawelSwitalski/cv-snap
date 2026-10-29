@@ -12,19 +12,20 @@ if (route.kind === "host") {
   const { runNativeHost } = await import("./host-main.js");
   await runNativeHost();
 } else {
-  const [{ runCommand }, { resolvePdfjsRoot }, { fileURLToPath }] = await Promise.all([
-    import("./cli/commands.js"),
-    import("./install/runtime.js"),
-    import("node:url"),
-  ]);
-  const bundlePath = fileURLToPath(import.meta.url);
+  const [{ runCommand }, { currentPlatform, toHostPlatform }, { dirname }, { fileURLToPath }] =
+    await Promise.all([
+      import("./cli/commands.js"),
+      import("./install/platform.js"),
+      import("node:path"),
+      import("node:url"),
+    ]);
   try {
     process.exitCode = await runCommand(route, {
-      platform: process.platform,
-      env: process.env,
-      bundlePath,
-      resolvePdfjsRoot: () => resolvePdfjsRoot(bundlePath),
+      context: toHostPlatform(process.platform) === null ? null : currentPlatform(),
+      // This file is dist/cv-snap-host.mjs; its directory is the runtime to install.
+      sourceDir: dirname(fileURLToPath(import.meta.url)),
       nodePath: process.execPath,
+      nodeVersion: process.versions.node,
       print: (line) => process.stdout.write(`${line}\n`),
       printError: (line) => process.stderr.write(`${line}\n`),
     });

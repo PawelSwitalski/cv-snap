@@ -1,17 +1,24 @@
-import { homedir } from "node:os";
-import { join } from "node:path";
+import {
+  currentPlatform,
+  dataDir,
+  hostDir,
+  joinFor,
+  type PlatformContext,
+} from "../install/platform.js";
 
-/** Per-user data directory of cv-snap: `%LOCALAPPDATA%\cv-snap` on Windows. */
-export function appDataDir(env: NodeJS.ProcessEnv = process.env): string {
-  const base = env.LOCALAPPDATA ?? join(homedir(), ".local", "share");
-  return join(base, "cv-snap");
+/**
+ * Per-user data directory of cv-snap: `%LOCALAPPDATA%\cv-snap` on Windows,
+ * `~/Library/Application Support/cv-snap` on macOS, `~/.local/share/cv-snap` on Linux.
+ */
+export function appDataDir(context: PlatformContext = currentPlatform()): string {
+  return dataDir(context);
 }
 
-export function logDir(env: NodeJS.ProcessEnv = process.env): string {
-  return join(appDataDir(env), "logs");
+export function logDir(context: PlatformContext = currentPlatform()): string {
+  return joinFor(context, dataDir(context), "logs");
 }
 
-/** Where `install-host` puts the `.cmd` wrapper and the native-messaging manifest. */
-export function hostInstallDir(env: NodeJS.ProcessEnv = process.env): string {
-  return join(appDataDir(env), "host");
+/** Where `install` puts the runtime, the launcher and (on Windows) the host manifest. */
+export function hostInstallDir(context: PlatformContext = currentPlatform()): string {
+  return hostDir(context);
 }

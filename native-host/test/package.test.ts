@@ -11,8 +11,12 @@ import { HOST_VERSION } from "../src/version.js";
  * global-setup bundled it, unpacked into a temp directory.
  */
 const HOST_DIR = fileURLToPath(new URL("..", import.meta.url));
-/** NFR-3: the unpacked package stays small (pdfjs-dist, installed by npm, is not counted). */
+/** NFR-3: the unpacked package, pdf.js included, stays small. */
 const MAX_UNPACKED_BYTES = 15 * 1024 * 1024;
+/** The part of pdf.js `scripts/bundle.mjs` vendors into dist/vendor/pdfjs-dist. */
+const PDFJS_RUNTIME_FILES = JSON.parse(
+  readFileSync(join(HOST_DIR, "scripts", "pdfjs-runtime-files.json"), "utf8"),
+) as string[];
 
 let workDir = "";
 let packageDir = "";
@@ -52,7 +56,8 @@ describe("cv-snap-host npm package", () => {
       repository: { type: "git", directory: "native-host" },
     });
     expect(pkg.private).toBeUndefined();
-    expect(pkg.dependencies).toEqual({ "pdfjs-dist": "6.4.299" });
+    // pdf.js ships inside dist/vendor (bolt 015), so npm downloads nothing else.
+    expect(pkg.dependencies).toBeUndefined();
   });
 
   it("has no workspace dependency left (shared is bundled)", () => {
@@ -64,13 +69,22 @@ describe("cv-snap-host npm package", () => {
     );
   });
 
-  it("holds only the bundle, package.json and the docs", () => {
+  it("holds only the bundle, the allowlisted pdf.js files, package.json and the docs", () => {
     const allowed = new Set(["package.json", "README.md", "LICENSE", "dist/cv-snap-host.mjs"]);
+    const vendor = "dist/vendor/pdfjs-dist/";
+    const isAllowedPdfjs = (file: string) =>
+      file.startsWith(vendor) &&
+      PDFJS_RUNTIME_FILES.some((entry) => {
+        const path = file.slice(vendor.length);
+        return path === entry || path.startsWith(`${entry}/`);
+      });
 
     const files = listFiles(packageDir);
 
     expect(files).toContain("dist/cv-snap-host.mjs");
-    expect(files.filter((file) => !allowed.has(file))).toEqual([]);
+    expect(files).toContain(`${vendor}legacy/build/pdf.worker.mjs`);
+    expect(files.filter((file) => !allowed.has(file) && !isAllowedPdfjs(file))).toEqual([]);
+    expect(files.some((file) => file.endsWith(".map"))).toBe(false);
   });
 
   it("stays within 15 MB unpacked", () => {

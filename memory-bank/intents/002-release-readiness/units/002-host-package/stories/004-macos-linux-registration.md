@@ -2,11 +2,11 @@
 id: 004-macos-linux-registration
 unit: 002-host-package
 intent: 002-release-readiness
-status: draft
+status: complete
 priority: must
-created: 2026-10-29T16:09:23Z
+created: '2026-10-29T16:09:23Z'
 assigned_bolt: 015-host-package
-implemented: false
+implemented: true
 ---
 
 # Story: 004-macos-linux-registration

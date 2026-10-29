@@ -22,6 +22,7 @@ const ACTIONS: Record<ErrorCode, ErrorAction> = {
   CLAUDE_NOT_FOUND: "retry",
   CLAUDE_NOT_AUTHENTICATED: "retry",
   CLAUDE_VERSION_UNSUPPORTED: "retry",
+  HOST_VERSION_MISMATCH: "retry",
   MODEL_UNAVAILABLE: "open-settings",
   GENERATION_TIMEOUT: "retry",
   GENERATION_FAILED: "retry",

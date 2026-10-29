@@ -1,24 +1,39 @@
-import { rmSync } from "node:fs";
-import { DEV_EXTENSION_ID, isStoreIdSet, STORE_EXTENSION_ID } from "@cv-snap/shared";
-import { installHost, uninstallHost } from "../install/install.js";
+import { existsSync, readFileSync, rmSync } from "node:fs";
+import {
+  allowedExtensionOrigins,
+  DEV_EXTENSION_ID,
+  isStoreIdSet,
+  STORE_EXTENSION_ID,
+  type HealthReport,
+} from "@cv-snap/shared";
+import { checkHealth } from "../health/check-health.js";
+import { installHost, queryRegisteredManifest, uninstallHost } from "../install/install.js";
+import {
+  chromeManifestDir,
+  dataDir,
+  displayPath,
+  hostDir,
+  type PlatformContext,
+} from "../install/platform.js";
 import { HostInUseError, isFileLockError, stageRuntime } from "../install/runtime.js";
 import type { ProcessRunner } from "../lib/run-process.js";
-import { appDataDir, hostInstallDir } from "../lib/paths.js";
 import { HOST_VERSION } from "../version.js";
+import { doctorExitCode, formatDoctor, runDoctor } from "./doctor.js";
 import { USAGE, type CliRoute } from "./route.js";
 
 /** The user commands of `cv-snap-host` (everything except serving Chrome). */
 
 export interface CommandDeps {
-  platform: NodeJS.Platform;
-  env: NodeJS.ProcessEnv;
-  /** The bundle being run; `install` copies it into the stable runtime directory. */
-  bundlePath: string;
-  resolvePdfjsRoot: () => string;
+  /** null on an OS cv-snap doesn't support (only Windows, macOS and Linux are). */
+  context: PlatformContext | null;
+  /** The package's `dist/` (bundle + vendored pdf.js); `install` copies it as the runtime. */
+  sourceDir: string;
   nodePath: string;
+  nodeVersion: string;
   print: (line: string) => void;
   printError: (line: string) => void;
   run?: ProcessRunner;
+  health?: () => Promise<HealthReport>;
 }
 
 const HOST_IN_USE_HINT =
@@ -41,15 +56,24 @@ export async function runCommand(
       return 2;
     case "install":
     case "uninstall":
+    case "doctor":
       break;
   }
 
-  if (deps.platform !== "win32") {
-    deps.printError("cv-snap host registration is only automated on Windows for now.");
+  const { context } = deps;
+  if (context === null) {
+    deps.printError("cv-snap supports Windows, macOS and Linux only.");
     return 1;
   }
   try {
-    return route.kind === "install" ? await install(deps) : await uninstall(route.purge, deps);
+    switch (route.kind) {
+      case "install":
+        return await install(context, deps);
+      case "uninstall":
+        return await uninstall(context, route.purge, deps);
+      case "doctor":
+        return await doctor(context, deps);
+    }
   } catch (error) {
     if (error instanceof HostInUseError || isFileLockError(error)) {
       deps.printError(`The cv-snap host is running. ${HOST_IN_USE_HINT}`);
@@ -59,25 +83,27 @@ export async function runCommand(
   }
 }
 
-async function install(deps: CommandDeps): Promise<number> {
-  const hostDir = hostInstallDir(deps.env);
+async function install(context: PlatformContext, deps: CommandDeps): Promise<number> {
+  const show = (path: string) => displayPath(context, path);
+  const installDir = hostDir(context);
   const { entryPath } = stageRuntime({
-    hostDir,
-    bundlePath: deps.bundlePath,
-    pdfjsRoot: deps.resolvePdfjsRoot(),
+    hostDir: installDir,
+    sourceDir: deps.sourceDir,
     version: HOST_VERSION,
   });
   const result = await installHost({
-    hostDir,
+    platform: context.platform,
+    hostDir: installDir,
+    manifestDir: chromeManifestDir(context),
     mainScriptPath: entryPath,
     nodePath: deps.nodePath,
     ...(deps.run ? { run: deps.run } : {}),
   });
   deps.print(`cv-snap native host ${HOST_VERSION} installed`);
-  deps.print(`  runtime:   ${entryPath}`);
-  deps.print(`  manifest:  ${result.manifestPath}`);
-  deps.print(`  launcher:  ${result.wrapperPath}`);
-  deps.print(`  registry:  ${result.registryKey}`);
+  deps.print(`  runtime:   ${show(entryPath)}`);
+  deps.print(`  launcher:  ${show(result.launcherPath)} (Node: ${show(deps.nodePath)})`);
+  deps.print(`  manifest:  ${show(result.manifestPath)}`);
+  if (result.registryKey !== null) deps.print(`  registry:  ${result.registryKey}`);
   deps.print(`  trusts:    ${DEV_EXTENSION_ID} (development build)`);
   if (isStoreIdSet()) deps.print(`             ${STORE_EXTENSION_ID} (Chrome Web Store)`);
   else
@@ -88,18 +114,50 @@ async function install(deps: CommandDeps): Promise<number> {
   return 0;
 }
 
-async function uninstall(purge: boolean, deps: CommandDeps): Promise<number> {
-  const hostDir = hostInstallDir(deps.env);
-  const result = await uninstallHost({ hostDir, ...(deps.run ? { run: deps.run } : {}) });
+async function uninstall(
+  context: PlatformContext,
+  purge: boolean,
+  deps: CommandDeps,
+): Promise<number> {
+  const show = (path: string) => displayPath(context, path);
+  const installDir = hostDir(context);
+  const result = await uninstallHost({
+    platform: context.platform,
+    hostDir: installDir,
+    manifestDir: chromeManifestDir(context),
+    ...(deps.run ? { run: deps.run } : {}),
+  });
   deps.print("cv-snap native host removed");
-  deps.print(`  registry:  ${result.registryKey} (deleted if present)`);
-  deps.print(`  directory: ${hostDir} (deleted)`);
+  deps.print(`  registration: ${show(result.registration)} (deleted if present)`);
+  deps.print(`  directory:    ${show(installDir)} (deleted)`);
   if (purge) {
-    const dataDir = appDataDir(deps.env);
-    rmSync(dataDir, { recursive: true, force: true });
-    deps.print(`  data:      ${dataDir} (deleted, including logs)`);
+    const data = dataDir(context);
+    rmSync(data, { recursive: true, force: true });
+    deps.print(`  data:         ${show(data)} (deleted, including logs)`);
   } else {
-    deps.print("  logs:      kept (run `cv-snap-host uninstall --purge` to delete them too)");
+    deps.print("  logs:         kept (run `cv-snap-host uninstall --purge` to delete them too)");
   }
   return 0;
+}
+
+async function doctor(context: PlatformContext, deps: CommandDeps): Promise<number> {
+  const checks = await runDoctor({
+    context,
+    nodeVersion: deps.nodeVersion,
+    hostVersion: HOST_VERSION,
+    expectedOrigins: allowedExtensionOrigins(),
+    readFile: (path) => {
+      try {
+        return readFileSync(path, "utf8");
+      } catch {
+        return null;
+      }
+    },
+    exists: existsSync,
+    queryRegistry: () => queryRegisteredManifest(undefined, deps.run),
+    health: deps.health ?? (() => checkHealth(deps.run ? { run: deps.run } : {})),
+  });
+  deps.print(`cv-snap-host ${HOST_VERSION} doctor`);
+  for (const line of formatDoctor(checks)) deps.print(line);
+  return doctorExitCode(checks);
 }

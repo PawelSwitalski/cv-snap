@@ -22,11 +22,9 @@
     "build": "node scripts/bundle.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {
-    "pdfjs-dist": "6.4.299"
-  },
   "devDependencies": {
     "@cv-snap/shared": "workspace:*",
+    "pdfjs-dist": "6.4.299",
     "rolldown": "1.2.15",
     "zod": "^4.6.7"
   }

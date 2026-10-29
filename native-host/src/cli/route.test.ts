@@ -15,6 +15,7 @@ describe("routeArgs", () => {
 
   it.each([
     [["install"], { kind: "install" }],
+    [["doctor"], { kind: "doctor" }],
     [["uninstall"], { kind: "uninstall", purge: false }],
     [["uninstall", "--purge"], { kind: "uninstall", purge: true }],
     [["--version"], { kind: "version" }],
@@ -34,15 +35,14 @@ describe("routeArgs", () => {
     [["instal"], "instal"],
     [["install", "--purge"], "--purge"],
     [["uninstall", "--force"], "--force"],
-    [["doctor"], "doctor"],
+    [["doctor", "--fix"], "--fix"],
   ])("names the unknown argument in %j", (args, unknown) => {
     expect(routeArgs(args)).toEqual({ kind: "usage", problem: `Unknown argument: ${unknown}` });
   });
 
-  it("lists only the commands that exist", () => {
-    expect(USAGE).toContain("install");
-    expect(USAGE).toContain("uninstall [--purge]");
-    expect(USAGE).toContain("--version");
-    expect(USAGE).not.toContain("doctor");
+  it("lists every command", () => {
+    for (const command of ["install", "uninstall [--purge]", "doctor", "--version", "--help"]) {
+      expect(USAGE).toContain(command);
+    }
   });
 });

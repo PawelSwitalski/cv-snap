@@ -17,6 +17,7 @@ const FIX_HINTS: Partial<Record<ErrorCode, MessageKey>> = {
   CLAUDE_NOT_FOUND: "hint_CLAUDE_NOT_FOUND",
   CLAUDE_NOT_AUTHENTICATED: "hint_CLAUDE_NOT_AUTHENTICATED",
   CLAUDE_VERSION_UNSUPPORTED: "hint_CLAUDE_VERSION_UNSUPPORTED",
+  HOST_VERSION_MISMATCH: "hint_HOST_VERSION_MISMATCH",
 };
 
 type CheckState = { status: "checking" } | { status: "done"; result: SetupCheckResult };

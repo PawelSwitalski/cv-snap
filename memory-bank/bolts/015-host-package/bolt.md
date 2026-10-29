@@ -3,22 +3,28 @@ id: 015-host-package
 unit: 002-host-package
 intent: 002-release-readiness
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 004-macos-linux-registration
   - 005-doctor-command
   - 006-release-pack-and-version-check
-created: 2026-10-29T16:09:23Z
-started: null
-completed: null
+created: '2026-10-29T16:09:23Z'
+started: '2026-10-29T18:20:00Z'
+completed: '2026-10-29T18:43:50Z'
 current_stage: null
-stages_completed: []
-
-requires_bolts: [014-host-package]
-enables_bolts: [016-ci-and-release-docs]
+stages_completed:
+  - name: plan
+    completed: '2026-10-29T18:25:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-10-29T19:20:00Z'
+    artifact: implementation-walkthrough.md
+requires_bolts:
+  - 014-host-package
+enables_bolts:
+  - 016-ci-and-release-docs
 requires_units: []
 blocks: true
-
 complexity:
   avg_complexity: 2
   avg_uncertainty: 2
@@ -49,9 +55,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md
+- [x] **3. test**: Complete → tests + test-walkthrough.md
 
 ## Dependencies
 
@@ -63,7 +69,7 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] Tests passing
-- [ ] Code reviewed
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] Tests passing
+- [x] Code reviewed

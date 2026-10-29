@@ -11,6 +11,7 @@
     "dev": "pnpm --filter @cv-snap/shared build && pnpm --filter @cv-snap/extension dev",
     "install-host": "pnpm --filter @cv-snap/shared build && pnpm --filter cv-snap-host build && node native-host/dist/cv-snap-host.mjs install",
     "uninstall-host": "pnpm --filter @cv-snap/shared build && pnpm --filter cv-snap-host build && node native-host/dist/cv-snap-host.mjs uninstall",
+    "release:pack": "node scripts/release-pack.mjs",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",

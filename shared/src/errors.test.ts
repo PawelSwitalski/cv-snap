@@ -2,13 +2,14 @@ import { describe, expect, it } from "vitest";
 import { CvSnapError, ERROR_CODES, ErrorPayloadSchema, toErrorPayload } from "./errors.js";
 
 describe("ERROR_CODES", () => {
-  it("contains every code named in the requirements and the spike additions", () => {
+  it("contains every code named in the requirements, the spike additions and the release checks", () => {
     const required = [
       "HOST_NOT_INSTALLED",
       "HOST_DISCONNECTED",
       "CLAUDE_NOT_FOUND",
       "CLAUDE_NOT_AUTHENTICATED",
       "CLAUDE_VERSION_UNSUPPORTED",
+      "HOST_VERSION_MISMATCH",
       "MODEL_UNAVAILABLE",
       "PDF_PARSE_FAILED",
       "JOB_AD_NOT_DETECTED",

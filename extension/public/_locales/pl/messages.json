@@ -77,6 +77,9 @@
   "hint_CLAUDE_VERSION_UNSUPPORTED": {
     "message": "Możesz kontynuować, ale zalecana jest aktualizacja Claude Code („claude update”)."
   },
+  "hint_HOST_VERSION_MISMATCH": {
+    "message": "Możesz kontynuować, ale wersje hosta cv-snap i rozszerzenia się różnią. Uruchom „npx cv-snap-host install”, aby zaktualizować hosta."
+  },
   "error_HOST_NOT_INSTALLED": {
     "message": "Host cv-snap nie jest zainstalowany."
   },
@@ -91,6 +94,9 @@
   },
   "error_CLAUDE_VERSION_UNSUPPORTED": {
     "message": "Twój Claude Code jest starszy niż testowana wersja."
+  },
+  "error_HOST_VERSION_MISMATCH": {
+    "message": "Wersja hosta cv-snap nie pasuje do tego rozszerzenia."
   },
   "error_MODEL_UNAVAILABLE": {
     "message": "Wybrany model nie jest dostępny w Twoim planie Claude."
@@ -582,6 +588,9 @@
   },
   "fix_CLAUDE_VERSION_UNSUPPORTED": {
     "message": "Zaktualizuj Claude Code (uruchom „claude update”), a potem kliknij „Spróbuj ponownie”."
+  },
+  "fix_HOST_VERSION_MISMATCH": {
+    "message": "Uruchom „npx cv-snap-host install”, aby zaktualizować hosta, a potem kliknij „Spróbuj ponownie”."
   },
   "fix_MODEL_UNAVAILABLE": {
     "message": "Wybierz inny model w ustawieniach lub sprawdź, czy obejmuje go Twój plan Claude."

@@ -16,14 +16,30 @@ export interface HealthIssue {
  * Turns a host health report into the problems the UI must show, most fundamental first.
  * A missing CLI hides the login/version issues, which can't be checked without it.
  */
-export function getHealthIssues(report: HealthReport): HealthIssue[] {
-  if (!report.claudeFound) return [{ code: "CLAUDE_NOT_FOUND", severity: "error" }];
+export function getHealthIssues(report: HealthReport, extensionVersion?: string): HealthIssue[] {
+  const versionIssues: HealthIssue[] =
+    extensionVersion !== undefined && !isSameMajorMinor(report.hostVersion, extensionVersion)
+      ? [{ code: "HOST_VERSION_MISMATCH", severity: "warning" }]
+      : [];
+  if (!report.claudeFound) {
+    return [{ code: "CLAUDE_NOT_FOUND", severity: "error" }, ...versionIssues];
+  }
   const issues: HealthIssue[] = [];
   if (!report.isAuthenticated) issues.push({ code: "CLAUDE_NOT_AUTHENTICATED", severity: "error" });
   if (!report.isVersionSupported) {
     issues.push({ code: "CLAUDE_VERSION_UNSUPPORTED", severity: "warning" });
   }
-  return issues;
+  return [...issues, ...versionIssues];
+}
+
+/**
+ * Host and extension are released together (story 006); a patch difference is fine, a major or
+ * minor one may mean a protocol change. Unparseable versions count as different.
+ */
+export function isSameMajorMinor(a: string, b: string): boolean {
+  const majorMinor = (value: string) => /^\s*v?(\d+)\.(\d+)/.exec(value)?.slice(1, 3).join(".");
+  const left = majorMinor(a);
+  return left !== undefined && left === majorMinor(b);
 }
 
 /**

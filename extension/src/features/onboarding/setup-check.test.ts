@@ -29,6 +29,27 @@ describe("runSetupCheck", () => {
     expect(isSetupBlocked(result)).toBe(false);
   });
 
+  it("warns, without blocking, when the host's major or minor version differs", async () => {
+    const result = await runSetupCheck(
+      () => healthClient({ report: { ...HEALTHY, hostVersion: "0.2.0" } }),
+      undefined,
+      "0.1.0",
+    );
+
+    expect(result.issues).toEqual([{ code: "HOST_VERSION_MISMATCH", severity: "warning" }]);
+    expect(isSetupBlocked(result)).toBe(false);
+  });
+
+  it("accepts a host that differs only in the patch version", async () => {
+    const result = await runSetupCheck(
+      () => healthClient({ report: { ...HEALTHY, hostVersion: "0.1.4" } }),
+      undefined,
+      "0.1.0",
+    );
+
+    expect(result.issues).toEqual([]);
+  });
+
   it("reports HOST_NOT_INSTALLED when Chrome can't find the host", async () => {
     const result = await runSetupCheck(() =>
       healthClient({ lastError: "Specified native messaging host not found." }),

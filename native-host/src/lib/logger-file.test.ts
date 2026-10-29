@@ -68,10 +68,14 @@ describe("teeSinks", () => {
 
 describe("paths", () => {
   it("keeps all cv-snap data under %LOCALAPPDATA%\\cv-snap", () => {
-    const env = { LOCALAPPDATA: "C:\\Users\\jan\\AppData\\Local" };
+    const context = {
+      platform: "win32" as const,
+      env: { LOCALAPPDATA: "C:\\Users\\jan\\AppData\\Local" },
+      home: "C:\\Users\\jan",
+    };
 
-    expect(appDataDir(env)).toBe(join(env.LOCALAPPDATA, "cv-snap"));
-    expect(logDir(env)).toBe(join(env.LOCALAPPDATA, "cv-snap", "logs"));
-    expect(hostInstallDir(env)).toBe(join(env.LOCALAPPDATA, "cv-snap", "host"));
+    expect(appDataDir(context)).toBe("C:\\Users\\jan\\AppData\\Local\\cv-snap");
+    expect(logDir(context)).toBe("C:\\Users\\jan\\AppData\\Local\\cv-snap\\logs");
+    expect(hostInstallDir(context)).toBe("C:\\Users\\jan\\AppData\\Local\\cv-snap\\host");
   });
 });

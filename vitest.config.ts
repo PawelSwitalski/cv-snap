@@ -21,6 +21,14 @@ export default defineConfig({
           testTimeout: 20_000,
         },
       },
+      {
+        test: {
+          name: "scripts",
+          root: "./scripts",
+          include: ["**/*.test.mjs"],
+          environment: "node",
+        },
+      },
       "./extension/vitest.config.ts",
     ],
     coverage: {

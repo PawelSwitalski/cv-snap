@@ -295,14 +295,13 @@ importers:
         version: 0.21.4(eslint@9.39.4(jiti@2.7.0)(supports-color@7.2.0))(rolldown@1.2.15)(typescript@6.0.3)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))(web-ext@10.8.0(jiti@2.7.0)(supports-color@7.2.0))
 
   native-host:
-    dependencies:
-      pdfjs-dist:
-        specifier: 6.4.299
-        version: 6.4.299
     devDependencies:
       '@cv-snap/shared':
         specifier: workspace:*
         version: link:../shared
+      pdfjs-dist:
+        specifier: 6.4.299
+        version: 6.4.299
       rolldown:
         specifier: 1.2.15
         version: 1.2.15

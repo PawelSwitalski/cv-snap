@@ -1,32 +1,34 @@
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import type { HealthReport } from "@cv-snap/shared";
 import { afterEach, describe, expect, it } from "vitest";
-import { PDFJS_RUNTIME_FILES } from "../install/runtime.js";
+import type { HostPlatform } from "../install/platform.js";
 import type { RunProcessOptions, RunProcessResult } from "../lib/run-process.js";
 import { HOST_VERSION } from "../version.js";
 import { runCommand, type CommandDeps } from "./commands.js";
 import { USAGE } from "./route.js";
 
-const PDFJS_DIRS: readonly string[] = ["cmaps", "standard_fonts", "wasm"];
+const HEALTHY: HealthReport = {
+  hostVersion: HOST_VERSION,
+  claudeFound: true,
+  claudeVersion: "2.1.302",
+  isAuthenticated: true,
+  isVersionSupported: true,
+};
 const dirs: string[] = [];
 afterEach(() => {
   for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
 });
 
-/** Isolated app data, a source package to install from, a fake reg.exe and captured output. */
-function harness(overrides: Partial<CommandDeps> = {}) {
-  const root = mkdtempSync(join(tmpdir(), "cv snap cli "));
-  dirs.push(root);
-  const bundlePath = join(root, "pkg", "dist", "cv-snap-host.mjs");
-  mkdirSync(join(bundlePath, ".."), { recursive: true });
-  writeFileSync(bundlePath, "// bundle\n");
-  const pdfjsRoot = join(root, "pkg", "node_modules", "pdfjs-dist");
-  for (const file of PDFJS_RUNTIME_FILES) {
-    const target = PDFJS_DIRS.includes(file) ? `${file}/x` : file;
-    mkdirSync(join(pdfjsRoot, target, ".."), { recursive: true });
-    writeFileSync(join(pdfjsRoot, target), file);
-  }
+/** An isolated home, a package `dist/` to install from, a fake reg.exe and captured output. */
+function harness(platform: HostPlatform = "win32", overrides: Partial<CommandDeps> = {}) {
+  const home = mkdtempSync(join(tmpdir(), "cv snap cli "));
+  dirs.push(home);
+  const sourceDir = join(home, "npx-cache", "dist");
+  mkdirSync(join(sourceDir, "vendor"), { recursive: true });
+  writeFileSync(join(sourceDir, "cv-snap-host.mjs"), "// bundle\n");
+  writeFileSync(join(sourceDir, "vendor", "pdf.mjs"), "pdf.js");
   const out: string[] = [];
   const err: string[] = [];
   const regCalls: (readonly string[])[] = [];
@@ -41,19 +43,28 @@ function harness(overrides: Partial<CommandDeps> = {}) {
       spawnErrorCode: null,
     });
   };
+  const env = platform === "win32" ? { LOCALAPPDATA: join(home, "AppData", "Local") } : {};
+  const nodePath = join(home, "node", "node.exe");
+  mkdirSync(join(nodePath, ".."), { recursive: true });
+  writeFileSync(nodePath, "");
   const deps: CommandDeps = {
-    platform: "win32",
-    env: { LOCALAPPDATA: join(root, "AppData") },
-    bundlePath,
-    resolvePdfjsRoot: () => pdfjsRoot,
-    nodePath: "C:\\Program Files\\nodejs\\node.exe",
+    context: { platform, env, home },
+    sourceDir,
+    nodePath,
+    health: () => Promise.resolve(HEALTHY),
+    nodeVersion: "26.12.1",
     print: (line) => out.push(line),
     printError: (line) => err.push(line),
     run,
     ...overrides,
   };
-  const dataDir = join(root, "AppData", "cv-snap");
-  return { deps, out, err, regCalls, dataDir, hostDir: join(dataDir, "host"), bundlePath };
+  const dataDir =
+    platform === "win32"
+      ? join(home, "AppData", "Local", "cv-snap")
+      : platform === "darwin"
+        ? join(home, "Library", "Application Support", "cv-snap")
+        : join(home, ".local", "share", "cv-snap");
+  return { deps, out, err, regCalls, home, dataDir, hostDir: join(dataDir, "host") };
 }
 
 describe("runCommand: information", () => {
@@ -80,34 +91,38 @@ describe("runCommand: information", () => {
     expect(out).toEqual([]);
     expect(err).toEqual(["Unknown argument: x", USAGE, USAGE]);
   });
+
+  it("refuses an unsupported OS", async () => {
+    const { deps, err } = harness("win32", { context: null });
+
+    expect(await runCommand({ kind: "install" }, deps)).toBe(1);
+    expect(err).toEqual(["cv-snap supports Windows, macOS and Linux only."]);
+  });
 });
 
 describe("runCommand: install", () => {
-  it("copies the runtime to the host directory and points the launcher there", async () => {
+  it("copies the runtime to the host directory and points the launcher there (Windows)", async () => {
     const { deps, out, hostDir, regCalls } = harness();
 
     expect(await runCommand({ kind: "install" }, deps)).toBe(0);
 
     const entry = join(hostDir, "runtime", "cv-snap-host.mjs");
     expect(readFileSync(entry, "utf8")).toBe("// bundle\n");
+    expect(existsSync(join(hostDir, "runtime", "vendor", "pdf.mjs"))).toBe(true);
     expect(readFileSync(join(hostDir, "cv-snap-host.cmd"), "utf8")).toContain(`"${entry}" %*`);
     expect(regCalls[0]?.[0]).toBe("add");
     expect(out[0]).toBe(`cv-snap native host ${HOST_VERSION} installed`);
-    expect(out).toContain(`  runtime:   ${entry}`);
     expect(out.at(-1)).toBe("Reload the extension in chrome://extensions to connect.");
   });
 
   it("asks to close the side panel when the running host locks its files", async () => {
-    const { deps, err, hostDir } = harness();
-    await runCommand({ kind: "install" }, deps);
-    const lockedDeps: CommandDeps = {
-      ...deps,
-      resolvePdfjsRoot: () => {
+    const { deps, err, hostDir } = harness("win32", {
+      run: () => {
         throw Object.assign(new Error("EBUSY: resource busy"), { code: "EBUSY" });
       },
-    };
+    });
 
-    expect(await runCommand({ kind: "install" }, lockedDeps)).toBe(1);
+    expect(await runCommand({ kind: "install" }, deps)).toBe(1);
     expect(err).toEqual([
       expect.stringContaining(
         "Close the cv-snap side panel (or Chrome), then run the command again",
@@ -117,27 +132,17 @@ describe("runCommand: install", () => {
   });
 
   it("rethrows other failures", async () => {
-    const { deps } = harness({
-      resolvePdfjsRoot: () => {
-        throw new Error("Cannot find module 'pdfjs-dist/package.json'");
-      },
+    const { deps } = harness("win32", {
+      run: () => Promise.reject(new Error("reg.exe is missing")),
     });
 
-    await expect(runCommand({ kind: "install" }, deps)).rejects.toThrow("pdfjs-dist");
-  });
-
-  it("refuses outside Windows until macOS and Linux registration exists (bolt 015)", async () => {
-    const { deps, err, dataDir } = harness({ platform: "linux" });
-
-    expect(await runCommand({ kind: "install" }, deps)).toBe(1);
-    expect(err).toEqual(["cv-snap host registration is only automated on Windows for now."]);
-    expect(existsSync(dataDir)).toBe(false);
+    await expect(runCommand({ kind: "install" }, deps)).rejects.toThrow("reg.exe is missing");
   });
 });
 
 describe("runCommand: uninstall", () => {
-  async function installedWithLogs() {
-    const h = harness();
+  async function installedWithLogs(platform: HostPlatform = "win32") {
+    const h = harness(platform);
     await runCommand({ kind: "install" }, h.deps);
     mkdirSync(join(h.dataDir, "logs"), { recursive: true });
     writeFileSync(join(h.dataDir, "logs", "host.log"), "{}\n");
@@ -162,6 +167,51 @@ describe("runCommand: uninstall", () => {
     expect(await runCommand({ kind: "uninstall", purge: true }, deps)).toBe(0);
 
     expect(existsSync(dataDir)).toBe(false);
-    expect(out.at(-1)).toBe(`  data:      ${dataDir} (deleted, including logs)`);
+    expect(out.at(-1)).toContain("(deleted, including logs)");
+  });
+});
+
+describe("runCommand: macOS and Linux", () => {
+  it.each([
+    ["linux", [".config", "google-chrome", "NativeMessagingHosts"]],
+    ["darwin", ["Library", "Application Support", "Google", "Chrome", "NativeMessagingHosts"]],
+  ] as const)(
+    "installs on %s into Chrome's manifest directory, no registry",
+    async (platform, dir) => {
+      const { deps, home, hostDir, regCalls, out } = harness(platform);
+
+      expect(await runCommand({ kind: "install" }, deps)).toBe(0);
+
+      expect(existsSync(join(home, ...dir, "com.cvsnap.host.json"))).toBe(true);
+      expect(existsSync(join(hostDir, "cv-snap-host"))).toBe(true);
+      expect(existsSync(join(hostDir, "runtime", "cv-snap-host.mjs"))).toBe(true);
+      expect(regCalls).toEqual([]);
+      expect(out.some((line) => line.startsWith("  registry:"))).toBe(false);
+
+      expect(await runCommand({ kind: "uninstall", purge: false }, deps)).toBe(0);
+      expect(existsSync(join(home, ...dir, "com.cvsnap.host.json"))).toBe(false);
+      expect(existsSync(hostDir)).toBe(false);
+    },
+  );
+});
+
+describe("runCommand: doctor", () => {
+  it("passes right after install and exits 0", async () => {
+    const { deps, out } = harness("linux");
+    await runCommand({ kind: "install" }, deps);
+    out.length = 0;
+
+    expect(await runCommand({ kind: "doctor" }, deps)).toBe(0);
+    expect(out[0]).toBe(`cv-snap-host ${HOST_VERSION} doctor`);
+    expect(out.filter((line) => line.startsWith("✓"))).toHaveLength(7);
+    expect(out.at(-1)).toBe("cv-snap is ready.");
+  });
+
+  it("lists the problems and exits 1 when nothing is installed", async () => {
+    const { deps, out } = harness("linux");
+
+    expect(await runCommand({ kind: "doctor" }, deps)).toBe(1);
+    expect(out.some((line) => line.startsWith("✗ Registration"))).toBe(true);
+    expect(out.at(-1)).toMatch(/problem\(s\) to fix\.$/);
   });
 });

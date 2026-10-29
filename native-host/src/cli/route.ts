@@ -7,6 +7,7 @@ export type CliRoute =
   | { kind: "host" }
   | { kind: "install" }
   | { kind: "uninstall"; purge: boolean }
+  | { kind: "doctor" }
   | { kind: "version" }
   | { kind: "help" }
   | { kind: "usage"; problem: string | null };
@@ -31,6 +32,10 @@ export function routeArgs(args: readonly string[]): CliRoute {
         ? { kind: "uninstall", purge: rest.includes("--purge") }
         : unknownArgument(unknown);
     }
+    case "doctor": {
+      const unknown = extra([]);
+      return unknown === undefined ? { kind: "doctor" } : unknownArgument(unknown);
+    }
     case "--version":
     case "-v":
       return { kind: "version" };
@@ -54,6 +59,7 @@ export const USAGE = [
   "Commands:",
   "  install              Connect the cv-snap Chrome extension to your Claude Code (this user only)",
   "  uninstall [--purge]  Remove the connection again; --purge also deletes cv-snap's logs",
+  "  doctor               Check the setup and show how to fix each problem",
   "  --version            Print the version",
   "  --help               Show this help",
   "",

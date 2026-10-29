@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { getHealthIssues, isVersionAtLeast, MIN_CLAUDE_CODE_VERSION } from "./health.js";
+import {
+  getHealthIssues,
+  isSameMajorMinor,
+  isVersionAtLeast,
+  MIN_CLAUDE_CODE_VERSION,
+} from "./health.js";
 import type { HealthReport } from "./protocol.js";
 
 const healthy: HealthReport = {
@@ -57,5 +62,41 @@ describe("isVersionAtLeast", () => {
 
   it("records the version tested in spike 001 as the minimum", () => {
     expect(MIN_CLAUDE_CODE_VERSION).toBe("2.1.302");
+  });
+});
+
+describe("host and extension versions (bolt 015)", () => {
+  it.each([
+    ["0.1.0", "0.1.0"],
+    ["0.1.0", "0.1.7"],
+    ["1.2.3", "v1.2.0"],
+  ])("accepts host %s with extension %s (same major and minor)", (host, extension) => {
+    expect(isSameMajorMinor(host, extension)).toBe(true);
+    expect(getHealthIssues({ ...healthy, hostVersion: host }, extension)).toEqual([]);
+  });
+
+  it.each([
+    ["0.1.0", "0.2.0"],
+    ["1.0.0", "2.0.0"],
+    ["0.10.0", "0.1.0"],
+    ["dev", "0.1.0"],
+  ])("warns for host %s with extension %s", (host, extension) => {
+    expect(isSameMajorMinor(host, extension)).toBe(false);
+    expect(getHealthIssues({ ...healthy, hostVersion: host }, extension)).toEqual([
+      { code: "HOST_VERSION_MISMATCH", severity: "warning" },
+    ]);
+  });
+
+  it("keeps the mismatch warning after the Claude Code issues, never instead of them", () => {
+    const report = { ...healthy, hostVersion: "0.2.0", claudeFound: false };
+
+    expect(getHealthIssues(report, "0.1.0")).toEqual([
+      { code: "CLAUDE_NOT_FOUND", severity: "error" },
+      { code: "HOST_VERSION_MISMATCH", severity: "warning" },
+    ]);
+  });
+
+  it("skips the comparison when the extension version is unknown", () => {
+    expect(getHealthIssues({ ...healthy, hostVersion: "9.9.9" })).toEqual([]);
   });
 });
