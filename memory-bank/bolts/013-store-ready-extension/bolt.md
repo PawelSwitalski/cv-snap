@@ -3,22 +3,27 @@ id: 013-store-ready-extension
 unit: 001-store-ready-extension
 intent: 002-release-readiness
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 001-release-build-without-key
   - 002-store-extension-id
   - 003-extension-icons
-created: 2026-10-29T16:09:23Z
-started: null
-completed: null
+created: '2026-10-29T16:09:23Z'
+started: '2026-10-29T16:12:48Z'
+completed: '2026-10-29T17:29:08Z'
 current_stage: null
-stages_completed: []
-
+stages_completed:
+  - name: plan
+    completed: '2026-10-29T16:14:30Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-10-29T16:18:25Z'
+    artifact: implementation-walkthrough.md
 requires_bolts: []
-enables_bolts: [014-host-package]
+enables_bolts:
+  - 014-host-package
 requires_units: []
 blocks: true
-
 complexity:
   avg_complexity: 1
   avg_uncertainty: 1
@@ -49,9 +54,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md
+- [x] **3. test**: Complete → tests + test-walkthrough.md
 
 ## Dependencies
 
@@ -63,7 +68,7 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] Tests passing
-- [ ] Code reviewed
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] Tests passing
+- [x] Code reviewed

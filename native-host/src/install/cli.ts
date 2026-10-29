@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { EXTENSION_ID } from "@cv-snap/shared";
+import { DEV_EXTENSION_ID, isStoreIdSet, STORE_EXTENSION_ID } from "@cv-snap/shared";
 import { hostInstallDir } from "../lib/paths.js";
 import { installHost, uninstallHost } from "./install.js";
 
@@ -22,7 +22,12 @@ async function main(command: string | undefined): Promise<number> {
     print(`  manifest:  ${result.manifestPath}`);
     print(`  launcher:  ${result.wrapperPath}`);
     print(`  registry:  ${result.registryKey}`);
-    print(`  extension: ${EXTENSION_ID}`);
+    print(`  trusts:    ${DEV_EXTENSION_ID} (development build)`);
+    if (isStoreIdSet()) print(`             ${STORE_EXTENSION_ID} (Chrome Web Store)`);
+    else
+      print(
+        "  note:      the Chrome Web Store ID isn't set yet; only the development build can connect",
+      );
     print("Reload the extension in chrome://extensions to connect.");
     return 0;
   }

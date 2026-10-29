@@ -2,11 +2,11 @@
 unit: 001-store-ready-extension
 intent: 002-release-readiness
 phase: inception
-status: ready
+status: complete
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
-created: 2026-10-29T16:09:23Z
-updated: 2026-10-29T16:09:23Z
+created: '2026-10-29T16:09:23Z'
+updated: '2026-10-29T16:09:23Z'
 ---
 
 # Unit Brief: 001-store-ready-extension

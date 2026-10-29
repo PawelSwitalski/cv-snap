@@ -1,6 +1,6 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { EXTENSION_ORIGIN, NATIVE_HOST_NAME } from "@cv-snap/shared";
+import { allowedExtensionOrigins, NATIVE_HOST_NAME } from "@cv-snap/shared";
 import { runProcess, type ProcessRunner } from "../lib/run-process.js";
 
 /**
@@ -17,7 +17,8 @@ export interface InstallOptions {
   /** Absolute path of `node.exe`; Chrome's PATH may not contain Node. */
   nodePath: string;
   hostName?: string;
-  extensionOrigin?: string;
+  /** Defaults to the dev build plus the store build once its ID is set (bolt 013). */
+  extensionOrigins?: readonly string[];
   run?: ProcessRunner;
 }
 
@@ -45,13 +46,17 @@ export function buildWrapper(nodePath: string, mainScriptPath: string): string {
   ].join("\r\n");
 }
 
-export function buildManifest(hostName: string, wrapperPath: string, extensionOrigin: string) {
+export function buildManifest(
+  hostName: string,
+  wrapperPath: string,
+  extensionOrigins: readonly string[],
+) {
   return {
     name: hostName,
     description: "cv-snap native host (runs Claude Code locally)",
     path: wrapperPath,
     type: "stdio",
-    allowed_origins: [extensionOrigin],
+    allowed_origins: [...extensionOrigins],
   };
 }
 
@@ -68,7 +73,7 @@ export async function installHost(options: InstallOptions): Promise<InstallResul
   const manifest = buildManifest(
     hostName,
     wrapperPath,
-    options.extensionOrigin ?? EXTENSION_ORIGIN,
+    options.extensionOrigins ?? allowedExtensionOrigins(),
   );
   writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 

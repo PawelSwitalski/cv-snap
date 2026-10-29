@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
+  <!-- cv-snap mark: a CV (document) that has been verified (check). Source of public/icon/*.png;
+       re-render with the extension package script "icons". Colour = job-ad badge accent. -->
+  <rect width="96" height="96" rx="22" fill="#1F6FEB"/>
+  <path d="M28 12h28l18 18v50a4 4 0 0 1-4 4H28a4 4 0 0 1-4-4V16a4 4 0 0 1 4-4z" fill="#FFFFFF"/>
+  <path d="M56 12v14a4 4 0 0 0 4 4h14z" fill="#BFD4FB"/>
+  <rect x="32" y="26" width="17" height="5" rx="2.5" fill="#BFD4FB"/>
+  <path d="M34 55l10 10 19-21" fill="none" stroke="#1F6FEB" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

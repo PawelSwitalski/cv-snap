@@ -7,6 +7,9 @@
     "dev": "wxt",
     "build": "wxt build",
     "zip": "wxt zip",
+    "build:release": "wxt build --mode release",
+    "zip:release": "wxt zip --mode release",
+    "icons": "node scripts/render-icons.mjs",
     "typecheck": "tsc --noEmit",
     "postinstall": "wxt prepare"
   },
@@ -27,6 +30,7 @@
     "zustand": "5.0.16"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "2.6.2",
     "@tailwindcss/vite": "4.3.3",
     "@testing-library/react": "16.3.3",
     "@testing-library/user-event": "14.6.8",

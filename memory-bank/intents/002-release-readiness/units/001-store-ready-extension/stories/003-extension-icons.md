@@ -2,11 +2,11 @@
 id: 003-extension-icons
 unit: 001-store-ready-extension
 intent: 002-release-readiness
-status: draft
+status: complete
 priority: must
-created: 2026-10-29T16:09:23Z
+created: '2026-10-29T16:09:23Z'
 assigned_bolt: 013-store-ready-extension
-implemented: false
+implemented: true
 ---
 
 # Story: 003-extension-icons

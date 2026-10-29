@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 46
-- **Planned**: 14
+- **Planned**: 11
 - **Generated**: 0
-- **Completed**: 32
-- **Last updated**: 2026-10-29T16:09:41Z
+- **Completed**: 35
+- **Last updated**: 2026-10-29T16:40:00Z
 
 ---
 
@@ -98,11 +98,11 @@
 
 #### 001-store-ready-extension
 
-- [ ] **001-release-build-without-key** — Release build without the dev key - Must - bolt `013-store-ready-extension` - ⏳ PLANNED
+- [x] **001-release-build-without-key** — Release build without the dev key - Must - bolt `013-store-ready-extension` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/001-release-build-without-key.md`
-- [ ] **002-store-extension-id** — Store extension ID trusted by the host - Must - bolt `013-store-ready-extension` - ⏳ PLANNED
+- [x] **002-store-extension-id** — Store extension ID trusted by the host - Must - bolt `013-store-ready-extension` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/002-store-extension-id.md`
-- [ ] **003-extension-icons** — Extension icons - Must - bolt `013-store-ready-extension` - ⏳ PLANNED
+- [x] **003-extension-icons** — Extension icons - Must - bolt `013-store-ready-extension` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/003-extension-icons.md`
 
 #### 002-host-package
@@ -137,7 +137,7 @@
 
 ## Stories by Status
 
-- **Planned**: 14
+- **Planned**: 11
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 32
+- **Completed**: 35

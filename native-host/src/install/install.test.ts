@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { EXTENSION_ORIGIN } from "@cv-snap/shared";
+import { allowedExtensionOrigins, DEV_EXTENSION_ID, originOf } from "@cv-snap/shared";
 import { afterEach, describe, expect, it } from "vitest";
 import type { RunProcessOptions, RunProcessResult } from "../lib/run-process.js";
 import {
@@ -55,16 +55,28 @@ describe("buildWrapper", () => {
 });
 
 describe("buildManifest", () => {
-  it("allows only the cv-snap extension origin", () => {
+  it("allows exactly the given cv-snap origins (dev and store builds)", () => {
+    const store = originOf("abcdefghijklmnopabcdefghijklmnop");
+    const manifest = buildManifest("com.cvsnap.host", "C:\\host\\cv-snap-host.cmd", [
+      originOf(DEV_EXTENSION_ID),
+      store,
+    ]);
+
+    expect(manifest).toMatchObject({ name: "com.cvsnap.host", type: "stdio" });
+    expect(manifest.allowed_origins).toEqual([originOf(DEV_EXTENSION_ID), store]);
+  });
+
+  it("defaults to the allowed origins from shared", () => {
     const manifest = buildManifest(
       "com.cvsnap.host",
       "C:\\host\\cv-snap-host.cmd",
-      EXTENSION_ORIGIN,
+      allowedExtensionOrigins(),
     );
 
-    expect(manifest).toMatchObject({ name: "com.cvsnap.host", type: "stdio" });
-    expect(manifest.allowed_origins).toEqual([EXTENSION_ORIGIN]);
-    expect(EXTENSION_ORIGIN).toMatch(/^chrome-extension:\/\/[a-p]{32}\/$/);
+    expect(manifest.allowed_origins).toContain(originOf(DEV_EXTENSION_ID));
+    for (const origin of manifest.allowed_origins) {
+      expect(origin).toMatch(/^chrome-extension:\/\/[a-p]{32}\/$/);
+    }
   });
 });
 
