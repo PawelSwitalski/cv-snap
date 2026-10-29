@@ -296,12 +296,16 @@ importers:
 
   native-host:
     dependencies:
-      '@cv-snap/shared':
-        specifier: workspace:*
-        version: link:../shared
       pdfjs-dist:
         specifier: 6.4.299
         version: 6.4.299
+    devDependencies:
+      '@cv-snap/shared':
+        specifier: workspace:*
+        version: link:../shared
+      rolldown:
+        specifier: 1.2.15
+        version: 1.2.15
       zod:
         specifier: ^4.6.7
         version: 4.6.7

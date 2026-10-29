@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 46
-- **Planned**: 11
+- **Planned**: 8
 - **Generated**: 0
-- **Completed**: 35
-- **Last updated**: 2026-10-29T16:40:00Z
+- **Completed**: 38
+- **Last updated**: 2026-10-29T18:10:00Z
 
 ---
 
@@ -107,11 +107,11 @@
 
 #### 002-host-package
 
-- [ ] **001-bundled-host-package** — Bundled host package - Must - bolt `014-host-package` - ⏳ PLANNED
+- [x] **001-bundled-host-package** — Bundled host package - Must - bolt `014-host-package` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/001-bundled-host-package.md`
-- [ ] **002-cli-command-routing** — One command for users and Chrome - Must - bolt `014-host-package` - ⏳ PLANNED
+- [x] **002-cli-command-routing** — One command for users and Chrome - Must - bolt `014-host-package` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/002-cli-command-routing.md`
-- [ ] **003-stable-install-location** — Install to a stable location - Must - bolt `014-host-package` - ⏳ PLANNED
+- [x] **003-stable-install-location** — Install to a stable location - Must - bolt `014-host-package` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/003-stable-install-location.md`
 - [ ] **004-macos-linux-registration** — Registration on macOS and Linux - Must - bolt `015-host-package` - ⏳ PLANNED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/004-macos-linux-registration.md`
@@ -137,7 +137,7 @@
 
 ## Stories by Status
 
-- **Planned**: 11
+- **Planned**: 8
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 35
+- **Completed**: 38

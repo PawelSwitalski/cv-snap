@@ -1,18 +1,33 @@
 {
-  "name": "@cv-snap/native-host",
+  "name": "cv-snap-host",
   "version": "0.1.0",
-  "private": true,
+  "description": "Native messaging host for the cv-snap Chrome extension: tailors your CV to a job ad with your local Claude Code",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OWNER/cv-snap.git",
+    "directory": "native-host"
+  },
   "type": "module",
   "bin": {
-    "cv-snap-host": "./dist/main.js"
+    "cv-snap-host": "dist/cv-snap-host.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=24"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "node scripts/bundle.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "pdfjs-dist": "6.4.299"
+  },
+  "devDependencies": {
     "@cv-snap/shared": "workspace:*",
-    "pdfjs-dist": "6.4.299",
+    "rolldown": "1.2.15",
     "zod": "^4.6.7"
   }
 }

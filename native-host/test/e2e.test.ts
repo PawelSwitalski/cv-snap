@@ -13,15 +13,17 @@ import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import { installHost } from "../src/install/install.js";
+import { resolvePdfjsRoot, stageRuntime } from "../src/install/runtime.js";
+import { HOST_VERSION } from "../src/version.js";
 import { frame, parseFrames } from "./frames.js";
 import { buildPdf, column } from "./pdf-fixtures.js";
 
 /**
- * End-to-end: the built host (`dist/main.js`, built by global-setup) as a real child process.
+ * End-to-end: the bundled host (`dist/cv-snap-host.mjs`, built by global-setup) as a real child process.
  * The environment hides Claude Code (empty PATH, temp app-data dirs), so the real `claude` CLI is
  * never run, and logs go to a temp directory.
  */
-const MAIN = fileURLToPath(new URL("../dist/main.js", import.meta.url));
+const MAIN = fileURLToPath(new URL("../dist/cv-snap-host.mjs", import.meta.url));
 const CHROME_ORIGIN_ARG = "chrome-extension://mmchmbhcfcoeopinlclfbgaekeocdmnf/";
 
 const dirs: string[] = [];
@@ -131,7 +133,7 @@ describe("built native host (end to end)", () => {
 
     const result = await exchange(
       process.execPath,
-      [MAIN],
+      [MAIN, CHROME_ORIGIN_ARG],
       isolatedEnv(home),
       [frame({ type: "createProfile", requestId: "c1", model: "nope", cvText: "Jan Testowy" })],
       1,
@@ -151,7 +153,7 @@ describe("built native host (end to end)", () => {
 
     const result = await exchange(
       process.execPath,
-      [MAIN],
+      [MAIN, CHROME_ORIGIN_ARG],
       isolatedEnv(tempDir("cvsnap-e2e-")),
       [
         frame({ type: "extractPdfText", requestId: "p1", pdfBase64: textPdf.toString("base64") }),
@@ -186,7 +188,7 @@ describe("built native host (end to end)", () => {
   it("exits cleanly when the extension disconnects without sending anything", async () => {
     const result = await exchange(
       process.execPath,
-      [MAIN],
+      [MAIN, CHROME_ORIGIN_ARG],
       isolatedEnv(tempDir("cvsnap-e2e-")),
       [],
       0,
@@ -194,6 +196,65 @@ describe("built native host (end to end)", () => {
 
     expect(result.exitCode).toBe(0);
     expect(result.stdout.length).toBe(0);
+  });
+});
+
+describe("cv-snap-host as a user command (end to end)", () => {
+  it("prints the version, and nothing that looks like a frame", async () => {
+    const result = await exchange(process.execPath, [MAIN, "--version"], process.env, [], 0);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout.toString("utf8")).toBe(`${HOST_VERSION}\n`);
+  });
+
+  it.each([[[]], [["instal"]]])("prints usage to stderr with exit code 2 for %j", async (args) => {
+    const result = await exchange(process.execPath, [MAIN, ...args], process.env, [], 0);
+
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout.length).toBe(0);
+    expect(result.stderr).toContain("Usage: cv-snap-host <command>");
+  });
+});
+
+describe("installed runtime (end to end)", () => {
+  it("serves Chrome, PDF extraction included, after the package it came from is deleted", async () => {
+    const root = tempDir("cv snap Zażółć runtime ");
+    // A copy of the package, like the npx cache; removed before Chrome "starts" the host.
+    const source = join(root, "npx-cache", "cv-snap-host", "dist", "cv-snap-host.mjs");
+    mkdirSync(join(source, ".."), { recursive: true });
+    writeFileSync(source, readFileSync(MAIN));
+    const { entryPath } = stageRuntime({
+      hostDir: join(root, "host"),
+      bundlePath: source,
+      pdfjsRoot: resolvePdfjsRoot(import.meta.url),
+      version: HOST_VERSION,
+    });
+    rmSync(join(root, "npx-cache"), { recursive: true });
+    const pdf = buildPdf([{ texts: column(["Jan Testowy", "Frontend Developer"], 60) }]);
+
+    const result = await exchange(
+      process.execPath,
+      [entryPath, CHROME_ORIGIN_ARG],
+      isolatedEnv(tempDir("cvsnap-e2e-")),
+      [
+        frame({ type: "health", requestId: "h1" }),
+        frame({ type: "extractPdfText", requestId: "p1", pdfBase64: pdf.toString("base64") }),
+      ],
+      3, // health reply + PDF progress + PDF reply
+    );
+
+    const replies = new Map(
+      parseFrames(result.stdout)
+        .filter((f) => f.type === "response")
+        .map((f) => [f.requestId, f]),
+    );
+    expect(replies.get("h1")).toMatchObject({
+      response: { ok: true, data: { hostVersion: HOST_VERSION } },
+    });
+    expect(replies.get("p1")).toMatchObject({
+      response: { ok: true, data: { text: "Jan Testowy\nFrontend Developer", pageCount: 1 } },
+    });
+    expect(result.exitCode).toBe(0);
   });
 });
 
@@ -316,7 +377,7 @@ describe("AI requests through the built host with a stand-in Claude (end to end)
 
     const result = await exchange(
       process.execPath,
-      [MAIN],
+      [MAIN, CHROME_ORIGIN_ARG],
       isolatedEnv(home),
       [
         frame({

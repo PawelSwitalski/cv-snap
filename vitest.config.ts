@@ -33,7 +33,7 @@ export default defineConfig({
         "shared/src/index.ts",
         "shared/src/provider.ts",
         "native-host/src/main.ts",
-        "native-host/src/install/cli.ts",
+        "native-host/src/host-main.ts",
       ],
       thresholds: { lines: 80, functions: 80, branches: 80, statements: 80 },
     },

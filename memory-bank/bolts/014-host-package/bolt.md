@@ -3,22 +3,29 @@ id: 014-host-package
 unit: 002-host-package
 intent: 002-release-readiness
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 001-bundled-host-package
   - 002-cli-command-routing
   - 003-stable-install-location
-created: 2026-10-29T16:09:23Z
-started: null
-completed: null
+created: '2026-10-29T16:09:23Z'
+started: '2026-10-29T16:45:00Z'
+completed: '2026-10-29T18:06:35Z'
 current_stage: null
-stages_completed: []
-
-requires_bolts: [013-store-ready-extension]
-enables_bolts: [015-host-package]
-requires_units: [001-store-ready-extension]
+stages_completed:
+  - name: plan
+    completed: '2026-10-29T16:50:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-10-29T17:45:00Z'
+    artifact: implementation-walkthrough.md
+requires_bolts:
+  - 013-store-ready-extension
+enables_bolts:
+  - 015-host-package
+requires_units:
+  - 001-store-ready-extension
 blocks: true
-
 complexity:
   avg_complexity: 2
   avg_uncertainty: 2
@@ -49,9 +56,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md
+- [x] **3. test**: Complete → tests + test-walkthrough.md
 
 ## Dependencies
 
@@ -63,7 +70,7 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] Tests passing
-- [ ] Code reviewed
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] Tests passing
+- [x] Code reviewed

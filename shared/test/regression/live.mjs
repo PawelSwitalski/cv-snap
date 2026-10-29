@@ -80,8 +80,15 @@ if (review) {
 }
 
 // --- Native host client (length-prefixed JSON over stdio) ---
-const hostPath = fileURLToPath(new URL("../../../native-host/dist/main.js", import.meta.url));
-const host = spawn(process.execPath, [hostPath], { stdio: ["pipe", "pipe", "ignore"] });
+const hostPath = fileURLToPath(
+  new URL("../../../native-host/dist/cv-snap-host.mjs", import.meta.url),
+);
+// The origin argument is what Chrome passes; without it the program runs as the user CLI.
+const host = spawn(
+  process.execPath,
+  [hostPath, "chrome-extension://mmchmbhcfcoeopinlclfbgaekeocdmnf/"],
+  { stdio: ["pipe", "pipe", "ignore"] },
+);
 const pending = new Map();
 let buffer = Buffer.alloc(0);
 host.stdout.on("data", (chunk) => {

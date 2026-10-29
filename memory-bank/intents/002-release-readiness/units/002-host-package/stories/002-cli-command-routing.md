@@ -2,11 +2,11 @@
 id: 002-cli-command-routing
 unit: 002-host-package
 intent: 002-release-readiness
-status: draft
+status: complete
 priority: must
-created: 2026-10-29T16:09:23Z
+created: '2026-10-29T16:09:23Z'
 assigned_bolt: 014-host-package
-implemented: false
+implemented: true
 ---
 
 # Story: 002-cli-command-routing

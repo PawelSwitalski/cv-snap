@@ -9,8 +9,8 @@
   "scripts": {
     "build": "pnpm -r --workspace-concurrency=1 build",
     "dev": "pnpm --filter @cv-snap/shared build && pnpm --filter @cv-snap/extension dev",
-    "install-host": "pnpm --filter @cv-snap/shared build && pnpm --filter @cv-snap/native-host build && node native-host/dist/install/cli.js install",
-    "uninstall-host": "pnpm --filter @cv-snap/shared build && pnpm --filter @cv-snap/native-host build && node native-host/dist/install/cli.js uninstall",
+    "install-host": "pnpm --filter @cv-snap/shared build && pnpm --filter cv-snap-host build && node native-host/dist/cv-snap-host.mjs install",
+    "uninstall-host": "pnpm --filter @cv-snap/shared build && pnpm --filter cv-snap-host build && node native-host/dist/cv-snap-host.mjs uninstall",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
