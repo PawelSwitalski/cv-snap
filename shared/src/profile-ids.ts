@@ -13,6 +13,31 @@ export const PROFILE_ID_PREFIXES = {
   other: "oth",
 } as const;
 
+/** Placeholders a model may write for a fact the CV doesn't state (PL/EN/DE). */
+const PLACEHOLDERS = new Set([
+  "unknown",
+  "n/a",
+  "na",
+  "none",
+  "not specified",
+  "not stated",
+  "-",
+  "—",
+  "brak",
+  "nieznana",
+  "nieznany",
+  "nie podano",
+  "unbekannt",
+  "keine angabe",
+]);
+
+/** `null` for empty or placeholder values of optional facts, so they are never shown as text. */
+export function placeholderToNull(value: string | null): string | null {
+  if (value === null) return null;
+  const trimmed = value.trim();
+  return trimmed.length === 0 || PLACEHOLDERS.has(trimmed.toLowerCase()) ? null : trimmed;
+}
+
 /**
  * Turns Claude's ID-less extraction into profile content with unique IDs. Items get a random
  * prefixed ID; their bullets are `<itemId>_b<n>` (1-based). IDs are opaque: they never encode
@@ -41,9 +66,23 @@ export function assignProfileIds(extraction: CvProfileExtraction): CvProfileCont
     contact: extraction.contact,
     headline: extraction.headline,
     summary: extraction.summary.map((text) => ({ id: next(PROFILE_ID_PREFIXES.summary), text })),
-    experience: extraction.experience.map((item) => withId(PROFILE_ID_PREFIXES.experience, item)),
-    projects: extraction.projects.map((item) => withId(PROFILE_ID_PREFIXES.project, item)),
-    education: extraction.education.map((item) => withId(PROFILE_ID_PREFIXES.education, item)),
+    experience: extraction.experience.map((item) =>
+      withId(PROFILE_ID_PREFIXES.experience, {
+        ...item,
+        company: placeholderToNull(item.company),
+        location: placeholderToNull(item.location),
+      }),
+    ),
+    projects: extraction.projects.map((item) =>
+      withId(PROFILE_ID_PREFIXES.project, { ...item, role: placeholderToNull(item.role) }),
+    ),
+    education: extraction.education.map((item) =>
+      withId(PROFILE_ID_PREFIXES.education, {
+        ...item,
+        degree: placeholderToNull(item.degree),
+        field: placeholderToNull(item.field),
+      }),
+    ),
     skills: extraction.skills.map((skill) => ({ ...skill, id: next(PROFILE_ID_PREFIXES.skill) })),
     languages: extraction.languages.map((language) => ({
       ...language,
@@ -51,6 +90,7 @@ export function assignProfileIds(extraction: CvProfileExtraction): CvProfileCont
     })),
     certifications: extraction.certifications.map((certification) => ({
       ...certification,
+      issuer: placeholderToNull(certification.issuer),
       id: next(PROFILE_ID_PREFIXES.certification),
     })),
     otherSections: extraction.otherSections.map((section) => {

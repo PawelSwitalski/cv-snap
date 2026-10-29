@@ -63,3 +63,9 @@ last_updated: 2026-10-28T19:08:38Z
 ## Notes
 
 - Inputs from spike 001-native-host (`memory-bank/bolts/001-native-host/spike-report.md`): add `MODEL_UNAVAILABLE` / `CLAUDE_VERSION_UNSUPPORTED`; fact fields nullable; explicit output language.
+- 2026-10-29T07:18:51Z: Bolt 006 Stage 5, Haiku trial on the real set (6 CVs, 27 cases run; cv-06 cases pending review). Findings and fixes:
+  - Missing employer: required `company` made the model write "unknown" → `company` optional, prompt forbids placeholders, `placeholderToNull` safety net (PL/EN/DE), PDF/editor/validator handle null.
+  - Validator false positives: Polish locatives after "w" (Javie, Angularze, Scrumie, Pythonie) taken for companies (56/57 first-attempt company flags); spoken languages in the skills list flagged as skills → base-form candidates + language equivalents. Retries on the same plans: 18/27 → 7/27.
+  - Fabrication leak: inflected unknown skills (w Kubernetesie, z Dockerem) passed as verified → skill mentions resolved through base forms. Regression tests added.
+  - Tooling: `regression:review` ignored its target (silently reviewed nothing); live run crashed on a missing recordings/ folder → both fixed.
+  - Haiku timings (before fixes): requirements median 9.4 s; tailoring median 50 s / p95 72 s; case median 59 s / p95 83 s.

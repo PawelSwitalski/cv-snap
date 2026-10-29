@@ -3,7 +3,7 @@
 // with `reviewedAt: null`. Opt-in, costs Claude usage. Recorded mode ignores recordings and CV
 // profiles until they are reviewed (`--review`), so nothing is accepted automatically.
 //
-//   pnpm test:live [--set real] [--model claude-sonnet-5-5] [--case <id>]
+//   pnpm test:live [--set real] [--model claude-sonnet-5-5] [--case <id>] [--resume]
 //   pnpm regression:review --set real <caseId | cv:<cvId> | all>
 //
 // Untrusted ad HTML is reduced to text here without the extension's hidden-text filter, which
@@ -23,7 +23,20 @@ const flag = (name, fallback) => {
 const setName = flag("set", "real");
 const model = flag("model", "claude-sonnet-5-5");
 const onlyCase = flag("case", null);
-const review = flag("review", null);
+// `--review` is a switch; its target is the positional argument (`pnpm regression:review --set real
+// cv:<id>` expands to `live.mjs --review --set real cv:<id>`, so "the value after --review" is wrong).
+const VALUE_FLAGS = new Set(["--set", "--model", "--case"]);
+// `--resume`: skip cases already recorded with this model, so an interrupted run (e.g. a usage
+// limit) continues where it stopped instead of paying for finished cases again.
+const isResume = args.includes("--resume");
+const positional = args.filter(
+  (arg, index) => !arg.startsWith("--") && !VALUE_FLAGS.has(args[index - 1] ?? ""),
+);
+const review = args.includes("--review") ? (positional[0] ?? null) : null;
+if (args.includes("--review") && !review) {
+  process.stderr.write("Usage: pnpm regression:review --set <set> <caseId | cv:<cvId> | all>\n");
+  process.exit(1);
+}
 const setDir = new URL(`../fixtures/regression/${setName}/`, import.meta.url);
 const print = (line) => process.stdout.write(`${line}\n`);
 
@@ -34,6 +47,8 @@ if (!existsSync(new URL("manifest.json", setDir))) {
 const manifest = JSON.parse(readFileSync(new URL("manifest.json", setDir), "utf8"));
 const readJson = (path) => JSON.parse(readFileSync(new URL(path, setDir), "utf8"));
 const writeJson = (path, value) => {
+  // A fresh set has no recordings/ (or cvs/) folder yet.
+  mkdirSync(new URL(".", new URL(path, setDir)), { recursive: true });
   writeFileSync(new URL(path, setDir), `${JSON.stringify(value, null, 2)}\n`);
 };
 
@@ -50,10 +65,16 @@ if (review) {
             ? `cvs/${review.slice(3)}.profile.json`
             : `recordings/${review}.json`,
         ];
+  let reviewed = 0;
   for (const path of targets) {
     if (!existsSync(new URL(path, setDir))) continue;
     writeJson(path, { ...readJson(path), reviewedAt: now });
     print(`reviewed ${path}`);
+    reviewed++;
+  }
+  if (reviewed === 0) {
+    process.stderr.write(`Nothing to review for "${review}" in set "${setName}".\n`);
+    process.exit(1);
   }
   process.exit(0);
 }
@@ -135,6 +156,8 @@ try {
     const now = new Date().toISOString();
     writeJson(path, {
       reviewedAt: null,
+      model,
+      durationMs: ms,
       profile: {
         ...content,
         schemaVersion: 1,
@@ -153,6 +176,13 @@ try {
     if (onlyCase && testCase.id !== onlyCase) continue;
     const profile = profiles.get(testCase.cv);
     if (!profile) continue;
+    const recordingPath = `recordings/${testCase.id}.json`;
+    if (isResume && existsSync(new URL(recordingPath, setDir))) {
+      if (readJson(recordingPath).model === model) {
+        print(`  ${testCase.id}: already recorded with ${model}, skipped (--resume)`);
+        continue;
+      }
+    }
     const ad = manifest.ads.find((entry) => entry.id === testCase.ad);
     const injectionPath = `injection/${testCase.id}.html`;
     if (testCase.kind === "injection" && !existsSync(new URL(injectionPath, setDir))) {

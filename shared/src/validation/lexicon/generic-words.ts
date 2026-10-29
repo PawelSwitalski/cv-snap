@@ -123,3 +123,25 @@ export const LEGAL_SUFFIXES: readonly string[] = [
   "co",
   "se",
 ];
+
+/**
+ * Spoken-language names that mean the same language (folded; PL/EN/DE forms). A plan in English may
+ * list "English (B2)" for a profile language written as "angielski".
+ */
+const LANGUAGE_EQUIVALENTS: readonly (readonly string[])[] = [
+  ["english", "angielski", "angielskiego", "angielskim", "englisch"],
+  ["polish", "polski", "polskiego", "polnisch"],
+  ["german", "niemiecki", "niemieckiego", "deutsch"],
+  ["french", "francuski", "francuskiego", "franzosisch"],
+  ["spanish", "hiszpanski", "hiszpanskiego", "spanisch"],
+  ["italian", "wloski", "wloskiego", "italienisch"],
+  ["russian", "rosyjski", "rosyjskiego", "russisch"],
+  ["ukrainian", "ukrainski", "ukrainskiego", "ukrainisch"],
+];
+
+/** Index of the language a folded name refers to, or null when it isn't a known language name. */
+export function languageKey(foldedName: string): number | null {
+  const name = foldedName.trim();
+  const index = LANGUAGE_EQUIVALENTS.findIndex((names) => names.includes(name));
+  return index >= 0 ? index : null;
+}

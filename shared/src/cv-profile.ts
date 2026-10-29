@@ -36,7 +36,8 @@ const datedFields = {
 
 export const ExperienceItemSchema = z.object({
   id: IdSchema,
-  company: ShortTextSchema,
+  /** Null when the CV doesn't name the employer (freelance, confidential client, anonymised CV). */
+  company: OptionalShortTextSchema,
   title: ShortTextSchema,
   location: OptionalShortTextSchema,
   ...datedFields,

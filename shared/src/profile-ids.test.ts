@@ -2,11 +2,12 @@ import { describe, expect, it } from "vitest";
 import { extractionFixture } from "../test/extraction.js";
 import {
   collectProfileIds,
+  CvProfileContentSchema,
   CvProfileExtractionSchema,
   ParsedCvProfileContentSchema,
 } from "./cv-profile.js";
 import { findDuplicateIds } from "./ids.js";
-import { assignProfileIds, PROFILE_ID_PREFIXES } from "./profile-ids.js";
+import { assignProfileIds, placeholderToNull, PROFILE_ID_PREFIXES } from "./profile-ids.js";
 
 describe("assignProfileIds", () => {
   it("produces content that passes the profile schema, keeping the source language", () => {
@@ -73,5 +74,33 @@ describe("assignProfileIds", () => {
     const second = collectProfileIds(assignProfileIds(extractionFixture()));
 
     expect(first).not.toEqual(second);
+  });
+
+  it("turns placeholder values for unstated facts into null instead of keeping them as text", () => {
+    const extraction = extractionFixture();
+    const job = extraction.experience[0];
+    if (!job) throw new Error("fixture changed");
+    job.company = "unknown";
+    job.location = "Brak";
+
+    const content = assignProfileIds(extraction);
+
+    expect(content.experience[0]).toMatchObject({ company: null, location: null });
+    expect(CvProfileContentSchema.safeParse(content).success).toBe(true);
+  });
+});
+
+describe("placeholderToNull", () => {
+  it.each(["unknown", "  N/A ", "-", "—", "brak", "nie podano", "Unbekannt", ""])(
+    "maps %j to null",
+    (value) => {
+      expect(placeholderToNull(value)).toBeNull();
+    },
+  );
+
+  it("keeps real values (trimmed) and null", () => {
+    expect(placeholderToNull("  Acme Sp. z o.o. ")).toBe("Acme Sp. z o.o.");
+    expect(placeholderToNull("Unknown Worlds Entertainment")).toBe("Unknown Worlds Entertainment");
+    expect(placeholderToNull(null)).toBeNull();
   });
 });

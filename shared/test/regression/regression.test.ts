@@ -38,8 +38,13 @@ const MIN_ADS = 20;
 const sets = listFixtureSets();
 
 describe("regression fixtures: privacy", () => {
-  it("contains no e-mail, phone number or street address in any fixture file", () => {
-    const findings = scanFiles(listFiles(fileURLToPath(REGRESSION_ROOT)));
+  it("contains no e-mail, phone number or street address in any committed fixture file", () => {
+    // `real*/` sets are git-ignored (user decision: real data stays local), so they can never be
+    // committed; the guard protects what can reach the repository (also via the pre-commit hook).
+    const committed = listFiles(fileURLToPath(REGRESSION_ROOT)).filter(
+      (file) => !/[\\/]regression[\\/]real[^\\/]*[\\/]/.test(file),
+    );
+    const findings = scanFiles(committed);
 
     expect(findings).toEqual([]);
   });

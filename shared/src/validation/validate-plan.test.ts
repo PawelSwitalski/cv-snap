@@ -54,6 +54,45 @@ describe("validatePlan (Stage 4 smoke checks; full rule tests in Stage 5)", () =
     expect(rulesOf(validatePlan(cited, profile()))).toEqual([]);
   });
 
+  it("handles a job without an employer: no crash, and no company can be claimed for it", () => {
+    const withoutCompany = profile();
+    const job = withoutCompany.experience[0];
+    if (!job) throw new Error("fixture changed");
+    job.company = null;
+
+    expect(rulesOf(validatePlan(plan(), withoutCompany))).toEqual([]);
+    expect(
+      rulesOf(validatePlan(withBullet("Migracja do TypeScript w Acme."), withoutCompany)),
+    ).toEqual(["UNKNOWN_COMPANY"]);
+  });
+
+  it.each([
+    "Migracja do TypeScript w Javie.",
+    "Praca w Angularze i TypeScript.",
+    "Zespół pracujący w Scrumie.",
+  ])('doesn\'t take a Polish inflected skill or method after "w" for a company: %j', (text) => {
+    expect(rulesOf(validatePlan(withBullet(text), profile()))).not.toContain("UNKNOWN_COMPANY");
+  });
+
+  it.each([
+    ["Wdrożenia w Kubernetesie.", ["UNKNOWN_SKILL"]],
+    ["Doświadczenie z Kubernetesem i w Dockerze.", ["UNKNOWN_SKILL", "UNKNOWN_SKILL"]],
+  ])("catches an invented skill hidden by a Polish case ending: %j", (text, rules) => {
+    expect(rulesOf(validatePlan(withBullet(text), profile()))).toEqual(rules);
+  });
+
+  it("accepts an inflected skill the profile has (Angular → w Angularze)", () => {
+    expect(
+      rulesOf(validatePlan(withBullet("Migracja do TypeScript w Angularze."), profile())),
+    ).toEqual([]);
+  });
+
+  it('still flags an unknown organisation after "w"', () => {
+    expect(
+      rulesOf(validatePlan(withBullet("Migracja do TypeScript w Globex."), profile())),
+    ).toEqual(["UNKNOWN_COMPANY"]);
+  });
+
   it("flags a percentage from a bullet the line doesn't cite", () => {
     const run = validatePlan(withBullet("Czas ładowania krótszy o 40%."), profile());
 
@@ -82,6 +121,27 @@ describe("validatePlan (Stage 4 smoke checks; full rule tests in Stage 5)", () =
 
     expect(feedback).toEqual([
       'items[exp_acme].bullets[0]: number "12" is not in the cited sources',
+    ]);
+  });
+});
+
+describe("validatePlan: spoken languages in the skills list", () => {
+  const withSkill = (name: string) => {
+    const result = plan();
+    result.skills.push({ name, sourceIds: ["lng_en"] });
+    return result;
+  };
+
+  it.each(["English (B2)", "angielski: B2", "Englisch (B2)"])(
+    "accepts the profile's language in any language: %j",
+    (name) => {
+      expect(rulesOf(validatePlan(withSkill(name), profile()))).toEqual([]);
+    },
+  );
+
+  it("flags a language the profile doesn't list", () => {
+    expect(rulesOf(validatePlan(withSkill("Französisch (B1)"), profile()))).toEqual([
+      "UNKNOWN_SKILL",
     ]);
   });
 });

@@ -14,4 +14,4 @@ exampleCV/
 .claude/worktrees/
 
 # Real regression set (anonymised CVs + saved ads): local only, never committed
-shared/test/fixtures/regression/real/
+shared/test/fixtures/regression/real*/

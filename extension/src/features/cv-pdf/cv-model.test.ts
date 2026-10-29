@@ -56,6 +56,20 @@ describe("buildCvModel", () => {
     expect(experience?.entries[0]?.dates).toBe("03/2021 – obecnie");
   });
 
+  it("leaves the employer out when a job has none (never prints a placeholder)", () => {
+    const profile = smallProfile();
+    const job = profile.experience.find((item) => item.id === "exp_acme");
+    if (!job) throw new Error("fixture changed");
+    job.company = null;
+
+    const entry = buildCvModel(profile, smallPlan())
+      .sections.find((section) => section.key === "experience")
+      ?.entries.find((item) => item.id === "exp_acme");
+
+    expect(entry?.subtitle).toBe(job.location ?? "");
+    expect(JSON.stringify(entry)).not.toMatch(/unknown|null/i);
+  });
+
   it("keeps a repeated plan item once, at its best rank", () => {
     const plan = smallPlan();
     plan.items.push({ profileId: "exp_acme", rank: 5, bullets: [] });

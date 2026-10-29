@@ -1,5 +1,5 @@
 import { SKILL_ALIAS_GROUPS } from "../lexicon/skills.js";
-import { fold, words, type WordToken } from "./text.js";
+import { baseFormCandidates, fold, words, type WordToken } from "./text.js";
 
 /** Built-in alias → canonical skill ID, built once. */
 const BUILT_IN_ALIASES: ReadonlyMap<string, string> = new Map(
@@ -100,13 +100,18 @@ export class SkillAliasIndex {
       const slice = tokens.slice(start, start + length);
       if (slice.length < length) continue;
       const phrase = slice.map((token) => token.folded).join(" ");
-      const canonical = this.aliases.get(phrase);
-      if (canonical === undefined) continue;
       const first = slice[0];
-      if (length === 1 && first && AMBIGUOUS_ALIASES.has(phrase) && !looksLikeTech(first.raw)) {
-        continue;
+      // A single word may carry a Polish case ending ("w Kubernetesie", "z Dockerem"): resolve
+      // it through its base forms, so an inflected skill is neither missed nor taken for a name.
+      const bases = length === 1 ? baseFormCandidates(phrase) : [phrase];
+      for (const base of bases) {
+        const canonical = this.aliases.get(base);
+        if (canonical === undefined) continue;
+        if (length === 1 && first && AMBIGUOUS_ALIASES.has(base) && !looksLikeTech(first.raw)) {
+          continue;
+        }
+        return { canonical, token: phrase, length };
       }
-      return { canonical, token: phrase, length };
     }
     return null;
   }

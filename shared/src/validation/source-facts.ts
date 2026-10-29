@@ -42,6 +42,8 @@ export class ProfileIndex {
   readonly allLocations: string[][] = [];
   readonly allTexts: string[] = [];
   readonly skillNames: string[] = [];
+  /** Spoken languages of the profile ("angielski", "English"), for language lines in a skills list. */
+  readonly languageNames: string[] = [];
 
   constructor(profile: CvProfileContent) {
     const addItem = (
@@ -99,7 +101,7 @@ export class ProfileIndex {
         {
           fieldTexts: nonEmpty([item.company, item.title, item.location, ...item.skills]),
           ...dated(item),
-          companies: [item.company],
+          companies: nonEmpty([item.company]),
           titles: [item.title],
           locations: nonEmpty([item.location]),
         },
@@ -150,6 +152,7 @@ export class ProfileIndex {
       this.skillNames.push(skill.name);
     }
     for (const language of profile.languages) {
+      this.languageNames.push(language.name);
       addItem(
         language.id,
         {

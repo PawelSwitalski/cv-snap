@@ -77,3 +77,23 @@ export function isSentenceStart(text: string, index: number): boolean {
   const before = text.slice(0, index).trimEnd();
   return before.length === 0 || /[.!?:•\-–—]$/.test(before);
 }
+
+/** Polish case endings that follow prepositions like "w" ("w Javie", "w Angularze", "w Scrumie"). */
+const POLISH_CASE_ENDINGS = ["owi", "zie", "ie", "ze", "em", "u", "e", "y", "a"];
+
+/**
+ * Possible base forms of a folded word with a Polish case ending: the word itself, the word without
+ * the ending, and for `-ie` also with `-a` restored (`javie` → `java`, `firmie` → `firma`). Bases
+ * shorter than 3 letters are not produced.
+ */
+export function baseFormCandidates(word: string): string[] {
+  const candidates = new Set([word]);
+  for (const ending of POLISH_CASE_ENDINGS) {
+    if (!word.endsWith(ending)) continue;
+    const stem = word.slice(0, -ending.length);
+    if (stem.length < 3) continue;
+    candidates.add(stem);
+    if (ending === "ie" || ending === "zie") candidates.add(`${stem}a`);
+  }
+  return [...candidates];
+}

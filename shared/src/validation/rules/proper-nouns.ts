@@ -7,7 +7,14 @@ import {
   ORGANISATION_PREPOSITIONS,
   TITLE_PREPOSITIONS,
 } from "../lexicon/generic-words.js";
-import { containsPhrase, stemEquals, words, type WordToken } from "../normalize/text.js";
+import {
+  baseFormCandidates,
+  containsPhrase,
+  fold,
+  stemEquals,
+  words,
+  type WordToken,
+} from "../normalize/text.js";
 import type { Finding, RuleContext } from "./context.js";
 
 /** Words of legal forms (`Sp. z o.o.`, `GmbH`, `Ltd`), folded. */
@@ -98,8 +105,12 @@ export function unknownProperNouns({ line, facts, profile, skills }: RuleContext
         GENERIC_CAPITALISED.has(word) ||
         LANGUAGE_NAMES.has(word) ||
         monthOf(word) !== null ||
-        skills.isSkillName(word) ||
-        skills.isKnown(word),
+        baseFormCandidates(word).some(
+          (base) =>
+            skills.isSkillName(base) ||
+            skills.isKnown(base) ||
+            profile.skillNames.some((skill) => stemEquals(base, fold(skill))),
+        ),
     ) ||
     matchesAny(name, facts.companies) ||
     matchesAny(name, facts.locations) ||

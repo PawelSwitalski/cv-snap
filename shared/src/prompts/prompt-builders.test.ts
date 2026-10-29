@@ -57,6 +57,13 @@ describe("profile prompt", () => {
     expect(system).not.toMatch(/\bid\b/i);
   });
 
+  it("asks for null instead of placeholders for facts the CV doesn't state", () => {
+    const { system } = promptBuilders.profile({ cvText: "CV" });
+
+    expect(system).toContain("company null");
+    expect(system).toMatch(/Never write placeholders/);
+  });
+
   it("truncates very long CV text with a visible marker", () => {
     const { user } = promptBuilders.profile({ cvText: "a".repeat(MAX_CV_CHARS + 10) });
 

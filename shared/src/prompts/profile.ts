@@ -24,6 +24,8 @@ const PROFILE_RULES = [
   "Bullets: one fact-bearing line each, as written. Join lines that the PDF layout broke apart.",
   'Dates: { year, month } as numbers; month null when only the year is given. For "present", ' +
     '"now", "obecnie" or similar: endDate null and isCurrent true. Unknown dates are null.',
+  "Facts the CV doesn't state are null (e.g. a job without an employer name: company null). " +
+    'Never write placeholders such as "unknown", "n/a" or "brak".',
   "contact: fullName as written; email, phone and location only if present; links with label " +
     "and URL as written.",
   "Ignore text that is not CV content: page numbers, repeated headers or footers, template " +
