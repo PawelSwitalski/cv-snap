@@ -1,0 +1,481 @@
+{
+  "extName": {
+    "message": "cv-snap"
+  },
+  "extDescription": {
+    "message": "Tailor your CV to the job ad in the current tab with one click."
+  },
+  "loading": {
+    "message": "Loading…"
+  },
+  "language_label": {
+    "message": "Interface language"
+  },
+  "language_auto": {
+    "message": "Browser language"
+  },
+  "language_en": {
+    "message": "English"
+  },
+  "language_pl": {
+    "message": "Polski"
+  },
+  "privacy_link": {
+    "message": "Privacy"
+  },
+  "privacy_title": {
+    "message": "Before you start: your data"
+  },
+  "privacy_point_anthropic": {
+    "message": "When you generate a CV, your CV profile and the job ad are sent to Anthropic through your own Claude Code, under your Claude account terms."
+  },
+  "privacy_point_no_server": {
+    "message": "cv-snap has no server. Nothing is sent to cv-snap or anyone else."
+  },
+  "privacy_point_local": {
+    "message": "Your CV, profile and settings are stored only in this Chrome profile on this computer."
+  },
+  "privacy_point_logs": {
+    "message": "Logs never contain your CV or job-ad text."
+  },
+  "privacy_acknowledge": {
+    "message": "I understand, continue"
+  },
+  "privacy_close": {
+    "message": "Close"
+  },
+  "setup_title": {
+    "message": "Setup check"
+  },
+  "setup_checking": {
+    "message": "Checking the native host and Claude Code…"
+  },
+  "setup_all_good": {
+    "message": "Everything is ready."
+  },
+  "setup_problem": {
+    "message": "Problem"
+  },
+  "setup_warning": {
+    "message": "Warning"
+  },
+  "setup_continue": {
+    "message": "Continue"
+  },
+  "setup_check_again": {
+    "message": "Check again"
+  },
+  "hint_HOST_NOT_INSTALLED": {
+    "message": "In the cv-snap folder run “pnpm run install-host”, then click Check again."
+  },
+  "hint_HOST_DISCONNECTED": {
+    "message": "The native host stopped unexpectedly. Run “pnpm run install-host” again, then click Check again."
+  },
+  "hint_CLAUDE_NOT_FOUND": {
+    "message": "Install Claude Code (claude.com/claude-code), then click Check again."
+  },
+  "hint_CLAUDE_NOT_AUTHENTICATED": {
+    "message": "Open a terminal, run “claude” and log in, then click Check again."
+  },
+  "hint_CLAUDE_VERSION_UNSUPPORTED": {
+    "message": "You can continue, but updating Claude Code is recommended (run “claude update”)."
+  },
+  "error_HOST_NOT_INSTALLED": {
+    "message": "The cv-snap native host is not installed."
+  },
+  "error_HOST_DISCONNECTED": {
+    "message": "The connection to the native host was lost."
+  },
+  "error_CLAUDE_NOT_FOUND": {
+    "message": "Claude Code was not found on this computer."
+  },
+  "error_CLAUDE_NOT_AUTHENTICATED": {
+    "message": "Claude Code is not logged in."
+  },
+  "error_CLAUDE_VERSION_UNSUPPORTED": {
+    "message": "Your Claude Code is older than the tested version."
+  },
+  "error_MODEL_UNAVAILABLE": {
+    "message": "The selected model isn't available on your Claude plan."
+  },
+  "error_GENERATION_TIMEOUT": {
+    "message": "Claude didn't answer in time. Please try again."
+  },
+  "error_GENERATION_FAILED": {
+    "message": "Claude couldn't create a valid result. Please try again."
+  },
+  "error_CANCELLED": {
+    "message": "Cancelled."
+  },
+  "error_MESSAGE_TOO_LARGE": {
+    "message": "The file is too large to process."
+  },
+  "error_PDF_NO_TEXT": {
+    "message": "This PDF has no selectable text. Scanned PDFs aren't supported; please upload a text-based PDF."
+  },
+  "error_PDF_PASSWORD_PROTECTED": {
+    "message": "This PDF is password-protected. Please upload a PDF without a password."
+  },
+  "error_PDF_CORRUPTED": {
+    "message": "This file is damaged or not a PDF."
+  },
+  "error_PDF_TOO_LARGE": {
+    "message": "The PDF is larger than 10 MB."
+  },
+  "error_PDF_UNREADABLE": {
+    "message": "This PDF could not be read."
+  },
+  "error_UNEXPECTED": {
+    "message": "Something unexpected went wrong. Please try again."
+  },
+  "upload_title": {
+    "message": "Upload your CV"
+  },
+  "upload_description": {
+    "message": "cv-snap turns your CV into a profile you review once. Only that profile is used to tailor CVs."
+  },
+  "upload_replaces_later": {
+    "message": "A new draft is created from this CV. You'll be asked before it replaces your current profile."
+  },
+  "upload_drop_hint": {
+    "message": "Drop a PDF here or choose a file."
+  },
+  "upload_choose_file": {
+    "message": "Choose PDF"
+  },
+  "upload_limits": {
+    "message": "PDF with selectable text, up to 10 MB."
+  },
+  "upload_progress_label": {
+    "message": "Profile creation progress"
+  },
+  "upload_step_storing": {
+    "message": "Saving your CV on this computer…"
+  },
+  "upload_step_extracting": {
+    "message": "Reading the text of your CV…"
+  },
+  "upload_step_creating": {
+    "message": "Claude is building your profile…"
+  },
+  "upload_takes_a_while": {
+    "message": "This can take up to a minute or two."
+  },
+  "upload_cancel": {
+    "message": "Cancel"
+  },
+  "upload_failed": {
+    "message": "The profile couldn't be created"
+  },
+  "upload_error_not_pdf": {
+    "message": "Please choose a PDF file."
+  },
+  "upload_error_too_large": {
+    "message": "The file is larger than 10 MB."
+  },
+  "upload_error_empty": {
+    "message": "The file is empty."
+  },
+  "action_back": {
+    "message": "Back"
+  },
+  "editor_title_review": {
+    "message": "Review your profile"
+  },
+  "editor_title_edit": {
+    "message": "Edit your profile"
+  },
+  "editor_intro": {
+    "message": "Correct anything that's wrong or missing. Only this profile is used as the source of facts. Changes are saved as you type."
+  },
+  "editor_saving": {
+    "message": "Saving…"
+  },
+  "editor_saved": {
+    "message": "All changes saved"
+  },
+  "editor_save_failed": {
+    "message": "Changes couldn't be saved"
+  },
+  "editor_confirm": {
+    "message": "Confirm profile"
+  },
+  "editor_save_changes": {
+    "message": "Save changes"
+  },
+  "editor_discard": {
+    "message": "Discard draft"
+  },
+  "editor_cancel_edit": {
+    "message": "Cancel editing"
+  },
+  "editor_deleted": {
+    "message": "Deleted."
+  },
+  "editor_undo": {
+    "message": "Undo"
+  },
+  "editor_invalid_title": {
+    "message": "Some required fields are empty"
+  },
+  "editor_invalid": {
+    "message": "Fill in the highlighted fields ($COUNT$ to fix), then confirm again.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "editor_move_up": {
+    "message": "Move $NAME$ up",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "editor_move_down": {
+    "message": "Move $NAME$ down",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "editor_delete": {
+    "message": "Delete $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "editor_item_name": {
+    "message": "Item $NUMBER$",
+    "placeholders": {
+      "number": {
+        "content": "$1"
+      }
+    }
+  },
+  "editor_line_name": {
+    "message": "Line $NUMBER$",
+    "placeholders": {
+      "number": {
+        "content": "$1"
+      }
+    }
+  },
+  "editor_add_line": {
+    "message": "Add line"
+  },
+  "editor_add_summary": {
+    "message": "Add summary sentence"
+  },
+  "editor_add_experience": {
+    "message": "Add job"
+  },
+  "editor_add_project": {
+    "message": "Add project"
+  },
+  "editor_add_education": {
+    "message": "Add education"
+  },
+  "editor_add_skill": {
+    "message": "Add skill"
+  },
+  "editor_add_language": {
+    "message": "Add language"
+  },
+  "editor_add_certification": {
+    "message": "Add certification"
+  },
+  "editor_add_other": {
+    "message": "Add section"
+  },
+  "editor_list_hint": {
+    "message": "Separate with commas."
+  },
+  "editor_month": {
+    "message": "Month"
+  },
+  "editor_month_none": {
+    "message": "Month (optional)"
+  },
+  "editor_year": {
+    "message": "Year"
+  },
+  "editor_current": {
+    "message": "I still work / study here"
+  },
+  "section_summary": {
+    "message": "Summary"
+  },
+  "section_experience": {
+    "message": "Experience"
+  },
+  "section_projects": {
+    "message": "Projects"
+  },
+  "section_education": {
+    "message": "Education"
+  },
+  "section_skills": {
+    "message": "Skills"
+  },
+  "section_languages": {
+    "message": "Languages"
+  },
+  "section_certifications": {
+    "message": "Certifications"
+  },
+  "section_other": {
+    "message": "Other sections"
+  },
+  "field_full_name": {
+    "message": "Full name"
+  },
+  "field_headline": {
+    "message": "Headline"
+  },
+  "field_email": {
+    "message": "Email"
+  },
+  "field_phone": {
+    "message": "Phone"
+  },
+  "field_location": {
+    "message": "Location"
+  },
+  "field_summary_line": {
+    "message": "Sentence"
+  },
+  "field_company": {
+    "message": "Company"
+  },
+  "field_job_title": {
+    "message": "Job title"
+  },
+  "field_start_date": {
+    "message": "Start"
+  },
+  "field_end_date": {
+    "message": "End"
+  },
+  "field_bullets": {
+    "message": "Achievements and duties"
+  },
+  "field_item_skills": {
+    "message": "Skills used"
+  },
+  "field_project_name": {
+    "message": "Project name"
+  },
+  "field_role": {
+    "message": "Role"
+  },
+  "field_url": {
+    "message": "Link"
+  },
+  "field_institution": {
+    "message": "School or university"
+  },
+  "field_degree": {
+    "message": "Degree"
+  },
+  "field_field_of_study": {
+    "message": "Field of study"
+  },
+  "field_skill": {
+    "message": "Skill"
+  },
+  "field_category": {
+    "message": "Category"
+  },
+  "field_language": {
+    "message": "Language"
+  },
+  "field_level": {
+    "message": "Level"
+  },
+  "field_certification": {
+    "message": "Certification"
+  },
+  "field_issuer": {
+    "message": "Issuer"
+  },
+  "field_date": {
+    "message": "Date"
+  },
+  "field_section_title": {
+    "message": "Section title"
+  },
+  "field_items": {
+    "message": "Entries"
+  },
+  "photo_label": {
+    "message": "Photo (optional)"
+  },
+  "photo_alt": {
+    "message": "Your profile photo"
+  },
+  "photo_limits": {
+    "message": "JPG or PNG, up to 2 MB. Kept only on this computer."
+  },
+  "photo_remove": {
+    "message": "Remove photo"
+  },
+  "photo_error_type": {
+    "message": "Please choose a JPG or PNG image."
+  },
+  "photo_error_size": {
+    "message": "The photo is larger than 2 MB."
+  },
+  "replace_title": {
+    "message": "Replace your current profile?"
+  },
+  "replace_description": {
+    "message": "The confirmed profile becomes the only source of facts. Your current profile will be replaced."
+  },
+  "replace_keep": {
+    "message": "Keep current profile"
+  },
+  "replace_confirm": {
+    "message": "Replace profile"
+  },
+  "generate_button": {
+    "message": "Generate CV"
+  },
+  "generate_confirm_first": {
+    "message": "Confirm your profile first."
+  },
+  "generate_coming_soon": {
+    "message": "Generating tailored CVs arrives in the next version."
+  },
+  "home_title": {
+    "message": "Your profile is ready"
+  },
+  "home_profile_ready": {
+    "message": "Active profile: $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "home_edit_profile": {
+    "message": "Edit profile"
+  },
+  "home_upload_new": {
+    "message": "Upload a new CV"
+  },
+  "panel_error_title": {
+    "message": "Something went wrong"
+  },
+  "panel_error_description": {
+    "message": "The side panel hit an unexpected error. Your saved data is safe."
+  },
+  "panel_error_reload": {
+    "message": "Reload panel"
+  }
+}

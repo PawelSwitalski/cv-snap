@@ -3,23 +3,35 @@ id: 010-tailored-cv-ui
 unit: 005-tailored-cv-ui
 intent: 001-one-click-tailored-cv
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 001-side-panel-shell-and-localization
   - 002-onboarding-and-privacy-notice
   - 003-cv-upload-and-profile-creation
   - 004-profile-review-editor
-created: 2026-10-25T12:00:00Z
-started: null
-completed: null
+created: '2026-10-25T12:00:00Z'
+started: '2026-10-28T19:49:41Z'
+completed: '2026-10-29T06:35:10Z'
 current_stage: null
-stages_completed: []
-
-requires_bolts: [004-native-host, 005-cv-tailoring-core]
-enables_bolts: [011-tailored-cv-ui]
-requires_units: [001-cv-tailoring-core, 002-native-host]
+stages_completed:
+  - name: plan
+    completed: '2026-10-28T19:52:48Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-10-28T20:16:50Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-10-29T06:35:10Z'
+    artifact: test-walkthrough.md
+requires_bolts:
+  - 004-native-host
+  - 005-cv-tailoring-core
+enables_bolts:
+  - 011-tailored-cv-ui
+requires_units:
+  - 001-cv-tailoring-core
+  - 002-native-host
 blocks: true
-
 complexity:
   avg_complexity: 2
   avg_uncertainty: 1
@@ -51,9 +63,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md
+- [x] **3. test**: Complete → tests + test-walkthrough.md
 
 ## Dependencies
 

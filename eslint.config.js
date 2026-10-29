@@ -30,6 +30,57 @@ const todoNeedsReference = {
   },
 };
 
+/** JSX attributes whose text is read or shown to the user. */
+const USER_FACING_ATTRIBUTES = new Set(["aria-label", "title", "placeholder", "alt"]);
+/** Anything with a letter is words; punctuation, numbers and symbols ("•", " *", ": ") are not. */
+const HAS_LETTER = /\p{L}/u;
+
+/**
+ * "No hard-coded user-facing strings" (FR-19): UI text must come from `_locales` through `t()`.
+ * Flags JSX text with letters and string literals in user-facing attributes.
+ * @type {import("eslint").Rule.RuleModule}
+ */
+const noHardcodedUiStrings = {
+  meta: {
+    type: "problem",
+    messages: {
+      text: "Hard-coded UI text: put it in _locales/{en,pl}/messages.json and use t().",
+    },
+    schema: [],
+  },
+  create(context) {
+    /** @param {import("estree").Node} node */
+    const report = (node) => {
+      context.report({ node, messageId: "text" });
+    };
+    return {
+      /** @param {any} node */
+      JSXText(node) {
+        if (HAS_LETTER.test(node.value)) report(node);
+      },
+      /** @param {any} node */
+      JSXAttribute(node) {
+        const name = node.name?.name;
+        if (typeof name !== "string" || !USER_FACING_ATTRIBUTES.has(name)) return;
+        const value = node.value;
+        const literal =
+          value?.type === "Literal"
+            ? value.value
+            : value?.type === "JSXExpressionContainer" && value.expression.type === "Literal"
+              ? value.expression.value
+              : null;
+        if (typeof literal === "string" && HAS_LETTER.test(literal)) report(value);
+      },
+      /** @param {any} node */
+      "JSXExpressionContainer > Literal"(node) {
+        if (node.parent.parent?.type !== "JSXAttribute" && typeof node.value === "string") {
+          if (HAS_LETTER.test(node.value)) report(node);
+        }
+      },
+    };
+  },
+};
+
 export default tseslint.config(
   {
     ignores: [
@@ -56,7 +107,14 @@ export default tseslint.config(
       },
       globals: { ...globals.node },
     },
-    plugins: { local: { rules: { "todo-needs-reference": todoNeedsReference } } },
+    plugins: {
+      local: {
+        rules: {
+          "todo-needs-reference": todoNeedsReference,
+          "no-hardcoded-ui-strings": noHardcodedUiStrings,
+        },
+      },
+    },
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-floating-promises": "error",
@@ -72,6 +130,17 @@ export default tseslint.config(
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "error",
     },
+  },
+  {
+    // UI code: every user-facing string comes from _locales (FR-19). The CV PDF template renders
+    // CV content and its own heading tables (bolt 009), not panel UI, so it is excluded.
+    files: [
+      "extension/src/entrypoints/sidepanel/**/*.tsx",
+      "extension/src/features/**/*.tsx",
+      "extension/src/components/**/*.tsx",
+    ],
+    ignores: ["**/*.test.tsx", "extension/src/features/cv-pdf/**"],
+    rules: { "local/no-hardcoded-ui-strings": "error" },
   },
   {
     // Config files are plain JS outside any tsconfig: lint them without type information.

@@ -8,5 +8,6 @@ export default defineProject({
     name: "extension",
     include: ["src/**/*.test.{ts,tsx}"],
     environment: "happy-dom",
+    setupFiles: ["./test/setup.ts"],
   },
 });

@@ -2,9 +2,9 @@
 
 ## Overview
 - **Total stories**: 32
-- **Generated**: 12
-- **Completed**: 20
-- **Last updated**: 2026-10-28T19:08:24Z
+- **Generated**: 8
+- **Completed**: 24
+- **Last updated**: 2026-10-29T06:35:10Z
 
 ---
 
@@ -73,13 +73,13 @@
 
 #### 005-tailored-cv-ui
 
-- [x] **001-side-panel-shell-and-localization** — Side panel shell and localization - Must - bolt `010-tailored-cv-ui` - ✅ GENERATED
+- [x] **001-side-panel-shell-and-localization** — Side panel shell and localization - Must - bolt `010-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/001-side-panel-shell-and-localization.md`
-- [x] **002-onboarding-and-privacy-notice** — Onboarding and privacy notice - Must - bolt `010-tailored-cv-ui` - ✅ GENERATED
+- [x] **002-onboarding-and-privacy-notice** — Onboarding and privacy notice - Must - bolt `010-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/002-onboarding-and-privacy-notice.md`
-- [x] **003-cv-upload-and-profile-creation** — CV upload and profile creation - Must - bolt `010-tailored-cv-ui` - ✅ GENERATED
+- [x] **003-cv-upload-and-profile-creation** — CV upload and profile creation - Must - bolt `010-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/003-cv-upload-and-profile-creation.md`
-- [x] **004-profile-review-editor** — Profile review editor - Must - bolt `010-tailored-cv-ui` - ✅ GENERATED
+- [x] **004-profile-review-editor** — Profile review editor - Must - bolt `010-tailored-cv-ui` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/004-profile-review-editor.md`
 - [x] **005-generate-flow-with-progress-and-cancel** — Generate flow with progress and cancel - Must - bolt `011-tailored-cv-ui` - ✅ GENERATED
   `memory-bank/intents/001-one-click-tailored-cv/units/005-tailored-cv-ui/stories/005-generate-flow-with-progress-and-cancel.md`
@@ -97,6 +97,6 @@
 ## Stories by Status
 
 - **Planned**: 0
-- **Generated**: 12
+- **Generated**: 8
 - **In Progress**: 0
-- **Completed**: 20
+- **Completed**: 24
