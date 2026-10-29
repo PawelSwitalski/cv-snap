@@ -46,3 +46,7 @@ created: 2026-10-29T07:49:03Z
 - Manifest language labels for ad-24 and ad-31 should be `pl` (their JSON-LD descriptions are Polish); the product decided correctly.
 - Remaining tuning candidates (false positives, not leaks): titles mentioned in summary lines that cite the summary instead of the job (UNKNOWN_TITLE), capitalised generic terms after "w"/"at" ("Code Review", "GitHub Actions"), rare consonant alternations ("w Reakcie").
 - Remaining real catches the strict skill rule is meant to show as unverified: generalisations such as "API design", "design patterns", "deployment automation".
+
+### User Decision (2026-10-29T08:08:54Z)
+
+- Test report approved; bolt complete.

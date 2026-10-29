@@ -2,11 +2,11 @@
 unit: 001-cv-tailoring-core
 intent: 001-one-click-tailored-cv
 phase: inception
-status: ready
+status: complete
 unit_type: domain
 default_bolt_type: ddd-construction-bolt
-created: 2026-10-25T12:00:00Z
-updated: 2026-10-25T12:00:00Z
+created: '2026-10-25T12:00:00Z'
+updated: '2026-10-25T12:00:00Z'
 ---
 
 # Unit Brief: 001-cv-tailoring-core

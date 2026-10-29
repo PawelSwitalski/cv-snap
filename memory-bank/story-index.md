@@ -2,9 +2,9 @@
 
 ## Overview
 - **Total stories**: 32
-- **Generated**: 8
-- **Completed**: 24
-- **Last updated**: 2026-10-29T06:35:10Z
+- **Generated**: 5
+- **Completed**: 27
+- **Last updated**: 2026-10-29T08:08:55Z
 
 ---
 
@@ -25,11 +25,11 @@
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/004-job-requirements-parsing-and-cache.md`
 - [x] **005-tailoring-plan-generation** — Tailoring plan generation - Must - bolt `005-cv-tailoring-core` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/005-tailoring-plan-generation.md`
-- [x] **006-deterministic-validator** — Deterministic validator - Must - bolt `006-cv-tailoring-core` - ✅ GENERATED
+- [x] **006-deterministic-validator** — Deterministic validator - Must - bolt `006-cv-tailoring-core` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/006-deterministic-validator.md`
-- [x] **007-generation-pipeline-with-retry** — Generation pipeline with retry - Must - bolt `006-cv-tailoring-core` - ✅ GENERATED
+- [x] **007-generation-pipeline-with-retry** — Generation pipeline with retry - Must - bolt `006-cv-tailoring-core` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/007-generation-pipeline-with-retry.md`
-- [x] **008-regression-fixture-suite** — Regression fixture suite - Must - bolt `006-cv-tailoring-core` - ✅ GENERATED
+- [x] **008-regression-fixture-suite** — Regression fixture suite - Must - bolt `006-cv-tailoring-core` - ✅ COMPLETED
   `memory-bank/intents/001-one-click-tailored-cv/units/001-cv-tailoring-core/stories/008-regression-fixture-suite.md`
 
 #### 002-native-host
@@ -97,6 +97,6 @@
 ## Stories by Status
 
 - **Planned**: 0
-- **Generated**: 8
+- **Generated**: 5
 - **In Progress**: 0
-- **Completed**: 24
+- **Completed**: 27

@@ -2,7 +2,7 @@
 unit: 001-cv-tailoring-core
 intent: 001-one-click-tailored-cv
 created: 2026-10-25T17:51:57Z
-last_updated: 2026-10-28T19:08:38Z
+last_updated: 2026-10-29T08:08:55Z
 ---
 
 # Construction Log: cv-tailoring-core
@@ -29,7 +29,7 @@ last_updated: 2026-10-28T19:08:38Z
 |---------|---------|--------|---------|
 | 002-cv-tailoring-core | 001-monorepo-scaffold, 002-domain-schemas-and-contracts | ✅ completed | - |
 | 005-cv-tailoring-core | 003-cv-profile-extraction, 004-job-requirements-parsing-and-cache, 005-tailoring-plan-generation | ✅ completed | - |
-| 006-cv-tailoring-core | 006-deterministic-validator, 007-generation-pipeline-with-retry, 008-regression-fixture-suite | ⏳ in-progress | - |
+| 006-cv-tailoring-core | 006-deterministic-validator, 007-generation-pipeline-with-retry, 008-regression-fixture-suite | ✅ completed | - |
 
 ## Execution History
 
@@ -48,6 +48,7 @@ last_updated: 2026-10-28T19:08:38Z
 | 2026-10-28T07:05:27Z | 006-cv-tailoring-core | stage-complete | model → design |
 | 2026-10-28T11:52:24Z | 006-cv-tailoring-core | stage-complete | design → adr (skipped) → implement |
 | 2026-10-28T19:08:38Z | 006-cv-tailoring-core | stage-complete | implement → test |
+| 2026-10-29T08:08:55Z | 006-cv-tailoring-core | completed | All stages done; ADR skipped (795/795 tests, 0 fabrications verified, Sonnet p95 40.7 s) |
 
 ## Execution Summary
 
@@ -55,9 +56,9 @@ last_updated: 2026-10-28T19:08:38Z
 |--------|-------|
 | Original bolts planned | 3 |
 | Current bolt count | 3 |
-| Bolts completed | 2 |
-| Bolts in progress | 1 |
-| Bolts remaining | 1 |
+| Bolts completed | 3 |
+| Bolts in progress | 0 |
+| Bolts remaining | 0 |
 | Replanning events | 0 |
 
 ## Notes
