@@ -5,7 +5,13 @@ import {
   adPageFacts,
   fakePageStateApis,
 } from "../../../test/generate-fixtures";
-import { derivePageState, watchPageState, type PageState, type PageStateApis } from "./page-state";
+import {
+  derivePageState,
+  isPageAccessChanged,
+  watchPageState,
+  type PageState,
+  type PageStateApis,
+} from "./page-state";
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -117,5 +123,22 @@ describe("watchPageState", () => {
     await settle();
 
     expect(states).toEqual([{ kind: "no-tab" }]);
+  });
+});
+
+describe("isPageAccessChanged", () => {
+  const OWN_ID = "mmchmbhcfcoeopinlclfbgaekeocdmnf";
+
+  it("accepts the background's page-access-changed from cv-snap itself", () => {
+    expect(isPageAccessChanged({ type: "page-access-changed" }, { id: OWN_ID }, OWN_ID)).toBe(true);
+  });
+
+  it.each([
+    ["another type", { type: "job-ad-status" }, OWN_ID],
+    ["no message", undefined, OWN_ID],
+    ["another sender", { type: "page-access-changed" }, "abcdefghijklmnopabcdefghijklmnop"],
+    ["no sender ID", { type: "page-access-changed" }, undefined],
+  ])("ignores %s", (_case, message, senderId) => {
+    expect(isPageAccessChanged(message, { id: senderId }, OWN_ID)).toBe(false);
   });
 });

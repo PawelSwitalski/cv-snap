@@ -2,7 +2,7 @@
 unit: 001-store-ready-extension
 intent: 002-release-readiness
 created: 2026-10-29T16:12:48Z
-last_updated: 2026-10-29T16:40:00Z
+last_updated: 2026-10-30T20:50:00Z
 ---
 
 # Construction Log: store-ready-extension
@@ -20,12 +20,14 @@ last_updated: 2026-10-29T16:40:00Z
 
 | Date | Action | Change | Reason | Approved |
 |------|--------|--------|--------|----------|
+| 2026-10-30T19:40:00Z | add | bolt 018-store-ready-extension, story 004-toolbar-icon-opens-panel | Operations dev check: the icon only closed and reopened the panel; "Add this site" never appeared | user |
 
 ## Current Bolt Structure
 
 | Bolt ID | Stories | Status | Changed |
 |---------|---------|--------|---------|
 | 013-store-ready-extension | 001-release-build-without-key, 002-store-extension-id, 003-extension-icons | ✅ complete | - |
+| 018-store-ready-extension | 004-toolbar-icon-opens-panel | ✅ complete | added |
 
 ## Execution History
 
@@ -35,16 +37,20 @@ last_updated: 2026-10-29T16:40:00Z
 | 2026-10-29T16:14:30Z | 013-store-ready-extension | stage-complete | plan → implement (decision: store-ID guard moves to release:pack, bolt 015) |
 | 2026-10-29T16:18:25Z | 013-store-ready-extension | stage-complete | implement → test |
 | 2026-10-29T16:40:00Z | 013-store-ready-extension | completed | 936/936 tests; release zip 1.80 MB, no key; manual Chrome check passed |
+| 2026-10-30T19:40:00Z | 018-store-ready-extension | started | Stage 1: plan (fix bolt from Operations) |
+| 2026-10-30T20:05:00Z | 018-store-ready-extension | stage-complete | plan → implement |
+| 2026-10-30T20:35:00Z | 018-store-ready-extension | stage-complete | implement → test |
+| 2026-10-30T20:50:00Z | 018-store-ready-extension | completed | 1,081 tests (10 new); manual Chrome check passed |
 
 ## Execution Summary
 
 | Metric | Value |
 |--------|-------|
 | Original bolts planned | 1 |
-| Current bolt count | 1 |
-| Bolts completed | 1 |
+| Current bolt count | 2 |
+| Bolts completed | 2 |
 | Bolts in progress | 0 |
 | Bolts remaining | 0 |
-| Replanning events | 0 |
+| Replanning events | 1 |
 
 ## Notes

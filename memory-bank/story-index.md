@@ -1,11 +1,11 @@
 # Global Story Index
 
 ## Overview
-- **Total stories**: 47
+- **Total stories**: 48
 - **Planned**: 0
 - **Generated**: 0
-- **Completed**: 47
-- **Last updated**: 2026-10-30T17:40:00Z
+- **Completed**: 48
+- **Last updated**: 2026-10-30T20:50:00Z
 
 ---
 
@@ -104,6 +104,8 @@
   `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/002-store-extension-id.md`
 - [x] **003-extension-icons** — Extension icons - Must - bolt `013-store-ready-extension` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/003-extension-icons.md`
+- [x] **004-toolbar-icon-opens-panel** — Toolbar icon opens the panel and shows "Add this site" - Must - bolt `018-store-ready-extension` - ✅ COMPLETED
+  `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/004-toolbar-icon-opens-panel.md`
 
 #### 002-host-package
 
@@ -142,4 +144,4 @@
 - **Planned**: 0
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 47
+- **Completed**: 48

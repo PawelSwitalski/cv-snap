@@ -233,6 +233,22 @@ describe("GenerateView", () => {
     ).toBe(true);
   });
 
+  it("turns the icon hint into Add this site once the icon is clicked, without remounting", async () => {
+    const ctx = setup({
+      facts: { ...adPageFacts(), tab: { id: 7, url: undefined }, grantedPatterns: [] },
+    });
+    expect(await screen.findByText(en("generate_click_icon"))).toBeTruthy();
+
+    // The click granted activeTab; the background then tells the open panel (page-access-changed).
+    ctx.page.facts.tab = { id: 7, url: AD_URL };
+    act(() => {
+      ctx.page.fire();
+    });
+
+    expect(await screen.findByRole("button", { name: en("generate_add_site") })).toBeTruthy();
+    expect(screen.queryByText(en("generate_click_icon"))).toBeNull();
+  });
+
   it("offers Reconnect for a lost connection and starts a new run with it", async () => {
     const ctx = setup();
     await ctx.user.click(await screen.findByRole("button", { name: en("generate_button") }));

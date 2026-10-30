@@ -1,5 +1,6 @@
 import { forgetPatterns } from "@/features/allowed-sites/allowed-sites";
 import { browserApis } from "@/features/allowed-sites/chrome-apis";
+import { browserActionClickApis, handleActionClick } from "@/features/generate/action-click";
 import { clearJobAdStatus, showJobAdStatus } from "@/features/job-ad/badge";
 import { createCaptureAd } from "@/features/generation/capture-ad";
 import { GenerationPipeline } from "@/features/generation/generation-pipeline";
@@ -68,9 +69,15 @@ export default defineBackground(() => {
     });
   });
 
-  // Open the side panel when the toolbar icon is clicked.
-  browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error: unknown) => {
+  // The toolbar icon opens the side panel through our own handler (story
+  // 004-toolbar-icon-opens-panel): Chrome's built-in behaviour closes an open panel and doesn't
+  // tell it about the activeTab grant. Set to false explicitly: Chrome keeps it across updates.
+  browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch((error: unknown) => {
     logger.error("sidePanel.setPanelBehavior failed", error);
+  });
+  const actionClick = browserActionClickApis();
+  browser.action.onClicked.addListener((tab) => {
+    void handleActionClick(actionClick, tab.windowId);
   });
 
   const reconcile = () =>
