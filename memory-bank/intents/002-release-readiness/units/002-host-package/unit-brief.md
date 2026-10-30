@@ -2,7 +2,7 @@
 unit: 002-host-package
 intent: 002-release-readiness
 phase: inception
-status: complete
+status: in-progress
 unit_type: cli
 default_bolt_type: simple-construction-bolt
 created: '2026-10-29T16:09:23Z'

@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { HealthReport } from "@cv-snap/shared";
 import { afterEach, describe, expect, it } from "vitest";
-import type { HostPlatform } from "../install/platform.js";
+import { toHostPlatform, type HostPlatform } from "../install/platform.js";
 import type { RunProcessOptions, RunProcessResult } from "../lib/run-process.js";
 import { HOST_VERSION } from "../version.js";
 import { runCommand, type CommandDeps } from "./commands.js";
@@ -16,13 +16,17 @@ const HEALTHY: HealthReport = {
   isAuthenticated: true,
   isVersionSupported: true,
 };
+/** Real files: tests use the layout of the OS they run on (bolt 017). */
+const NATIVE: HostPlatform = toHostPlatform(process.platform) ?? "linux";
+/** Registry, `.cmd` launcher and file locks exist on Windows only. */
+const IS_WINDOWS = process.platform === "win32";
 const dirs: string[] = [];
 afterEach(() => {
   for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
 });
 
 /** An isolated home, a package `dist/` to install from, a fake reg.exe and captured output. */
-function harness(platform: HostPlatform = "win32", overrides: Partial<CommandDeps> = {}) {
+function harness(platform: HostPlatform = NATIVE, overrides: Partial<CommandDeps> = {}) {
   const home = mkdtempSync(join(tmpdir(), "cv snap cli "));
   dirs.push(home);
   const sourceDir = join(home, "npx-cache", "dist");
@@ -93,7 +97,7 @@ describe("runCommand: information", () => {
   });
 
   it("refuses an unsupported OS", async () => {
-    const { deps, err } = harness("win32", { context: null });
+    const { deps, err } = harness(NATIVE, { context: null });
 
     expect(await runCommand({ kind: "install" }, deps)).toBe(1);
     expect(err).toEqual(["cv-snap supports Windows, macOS and Linux only."]);
@@ -101,37 +105,43 @@ describe("runCommand: information", () => {
 });
 
 describe("runCommand: install", () => {
-  it("copies the runtime to the host directory and points the launcher there (Windows)", async () => {
-    const { deps, out, hostDir, regCalls } = harness();
+  it.runIf(IS_WINDOWS)(
+    "copies the runtime to the host directory and points the launcher there (Windows)",
+    async () => {
+      const { deps, out, hostDir, regCalls } = harness("win32");
 
-    expect(await runCommand({ kind: "install" }, deps)).toBe(0);
+      expect(await runCommand({ kind: "install" }, deps)).toBe(0);
 
-    const entry = join(hostDir, "runtime", "cv-snap-host.mjs");
-    expect(readFileSync(entry, "utf8")).toBe("// bundle\n");
-    expect(existsSync(join(hostDir, "runtime", "vendor", "pdf.mjs"))).toBe(true);
-    expect(readFileSync(join(hostDir, "cv-snap-host.cmd"), "utf8")).toContain(`"${entry}" %*`);
-    expect(regCalls[0]?.[0]).toBe("add");
-    expect(out[0]).toBe(`cv-snap native host ${HOST_VERSION} installed`);
-    expect(out.at(-1)).toBe("Reload the extension in chrome://extensions to connect.");
-  });
+      const entry = join(hostDir, "runtime", "cv-snap-host.mjs");
+      expect(readFileSync(entry, "utf8")).toBe("// bundle\n");
+      expect(existsSync(join(hostDir, "runtime", "vendor", "pdf.mjs"))).toBe(true);
+      expect(readFileSync(join(hostDir, "cv-snap-host.cmd"), "utf8")).toContain(`"${entry}" %*`);
+      expect(regCalls[0]?.[0]).toBe("add");
+      expect(out[0]).toBe(`cv-snap native host ${HOST_VERSION} installed`);
+      expect(out.at(-1)).toBe("Reload the extension in chrome://extensions to connect.");
+    },
+  );
 
-  it("asks to close the side panel when the running host locks its files", async () => {
-    const { deps, err, hostDir } = harness("win32", {
-      run: () => {
-        throw Object.assign(new Error("EBUSY: resource busy"), { code: "EBUSY" });
-      },
-    });
+  it.runIf(IS_WINDOWS)(
+    "asks to close the side panel when the running host locks its files",
+    async () => {
+      const { deps, err, hostDir } = harness("win32", {
+        run: () => {
+          throw Object.assign(new Error("EBUSY: resource busy"), { code: "EBUSY" });
+        },
+      });
 
-    expect(await runCommand({ kind: "install" }, deps)).toBe(1);
-    expect(err).toEqual([
-      expect.stringContaining(
-        "Close the cv-snap side panel (or Chrome), then run the command again",
-      ),
-    ]);
-    expect(existsSync(join(hostDir, "runtime", "cv-snap-host.mjs"))).toBe(true);
-  });
+      expect(await runCommand({ kind: "install" }, deps)).toBe(1);
+      expect(err).toEqual([
+        expect.stringContaining(
+          "Close the cv-snap side panel (or Chrome), then run the command again",
+        ),
+      ]);
+      expect(existsSync(join(hostDir, "runtime", "cv-snap-host.mjs"))).toBe(true);
+    },
+  );
 
-  it("rethrows other failures", async () => {
+  it.runIf(IS_WINDOWS)("rethrows other failures (reg.exe missing)", async () => {
     const { deps } = harness("win32", {
       run: () => Promise.reject(new Error("reg.exe is missing")),
     });
@@ -141,7 +151,7 @@ describe("runCommand: install", () => {
 });
 
 describe("runCommand: uninstall", () => {
-  async function installedWithLogs(platform: HostPlatform = "win32") {
+  async function installedWithLogs(platform: HostPlatform = NATIVE) {
     const h = harness(platform);
     await runCommand({ kind: "install" }, h.deps);
     mkdirSync(join(h.dataDir, "logs"), { recursive: true });
@@ -150,16 +160,19 @@ describe("runCommand: uninstall", () => {
     return h;
   }
 
-  it("removes runtime, launcher, manifest and registration but keeps the logs", async () => {
-    const { deps, out, hostDir, dataDir, regCalls } = await installedWithLogs();
+  it.runIf(IS_WINDOWS)(
+    "removes runtime, launcher, manifest and registration but keeps the logs",
+    async () => {
+      const { deps, out, hostDir, dataDir, regCalls } = await installedWithLogs("win32");
 
-    expect(await runCommand({ kind: "uninstall", purge: false }, deps)).toBe(0);
+      expect(await runCommand({ kind: "uninstall", purge: false }, deps)).toBe(0);
 
-    expect(existsSync(hostDir)).toBe(false);
-    expect(existsSync(join(dataDir, "logs", "host.log"))).toBe(true);
-    expect(regCalls.map((args) => args[0])).toEqual(["add", "query", "delete"]);
-    expect(out.at(-1)).toContain("kept");
-  });
+      expect(existsSync(hostDir)).toBe(false);
+      expect(existsSync(join(dataDir, "logs", "host.log"))).toBe(true);
+      expect(regCalls.map((args) => args[0])).toEqual(["add", "query", "delete"]);
+      expect(out.at(-1)).toContain("kept");
+    },
+  );
 
   it("deletes the logs too with --purge", async () => {
     const { deps, out, dataDir } = await installedWithLogs();

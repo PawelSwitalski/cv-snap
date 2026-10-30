@@ -14,6 +14,7 @@ import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import { installHost } from "../src/install/install.js";
+import { dataDir, toHostPlatform } from "../src/install/platform.js";
 import { stageRuntime } from "../src/install/runtime.js";
 import { HOST_VERSION } from "../src/version.js";
 import { frame, parseFrames } from "./frames.js";
@@ -140,7 +141,16 @@ describe("built native host (end to end)", () => {
       1,
     );
 
-    const logFile = join(home, "cv-snap", "logs", "host.log");
+    // The per-OS data directory for this isolated home (bolt 015 layout).
+    const logFile = join(
+      dataDir({
+        platform: toHostPlatform(process.platform) ?? "linux",
+        env: isolatedEnv(home),
+        home,
+      }),
+      "logs",
+      "host.log",
+    );
     expect(existsSync(logFile)).toBe(true);
     const fileLog = readFileSync(logFile, "utf8");
     expect(fileLog).toContain('"message":"host started"');
@@ -308,6 +318,27 @@ describe.runIf(process.platform === "win32")(
  * isolated home. It logs what the host sent and answers like `claude -p --output-format
  * stream-json` with a fixed structured output per step (shapes from the real spike transcripts).
  */
+/**
+ * Puts the stand-in where the host searches on this OS: the npm layout on Windows
+ * (`%APPDATA%\npm\…\cli.js`), `~/.local/bin/claude` on macOS and Linux (a shell script that
+ * starts Node by absolute path, as the isolated PATH is empty).
+ */
+function installFakeClaude(home: string): string {
+  const cliDir = join(home, "npm", "node_modules", "@anthropic-ai", "claude-code");
+  mkdirSync(cliDir, { recursive: true });
+  writeFileSync(join(cliDir, "cli.js"), FAKE_CLAUDE);
+  if (process.platform === "win32") return cliDir;
+  const binDir = join(home, ".local", "bin");
+  mkdirSync(binDir, { recursive: true });
+  const quote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
+  writeFileSync(
+    join(binDir, "claude"),
+    `#!/bin/sh\nexec ${quote(process.execPath)} ${quote(join(cliDir, "cli.js"))} "$@"\n`,
+    { mode: 0o755 },
+  );
+  return cliDir;
+}
+
 const FAKE_CLAUDE = String.raw`
 const fs = require("node:fs");
 const path = require("node:path");
@@ -359,9 +390,7 @@ process.stdin.on("end", () => {
 describe("AI requests through the built host with a stand-in Claude (end to end)", () => {
   it("creates a profile, parses requirements and tailors, with lockdown, IDs by code and clean-up", async () => {
     const home = tempDir("cvsnap-e2e-ai-");
-    const cliDir = join(home, "npm", "node_modules", "@anthropic-ai", "claude-code");
-    mkdirSync(cliDir, { recursive: true });
-    writeFileSync(join(cliDir, "cli.js"), FAKE_CLAUDE);
+    const cliDir = installFakeClaude(home);
     const profile = JSON.parse(
       readFileSync(
         new URL("../../shared/test/fixtures/profile.valid.json", import.meta.url),
