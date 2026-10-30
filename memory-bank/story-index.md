@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 47
-- **Planned**: 1
+- **Planned**: 0
 - **Generated**: 0
-- **Completed**: 46
-- **Last updated**: 2026-10-30T16:05:00Z
+- **Completed**: 47
+- **Last updated**: 2026-10-30T17:40:00Z
 
 ---
 
@@ -119,7 +119,7 @@
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/005-doctor-command.md`
 - [x] **006-release-pack-and-version-check** — Release packing and version check - Should - bolt `015-host-package` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/006-release-pack-and-version-check.md`
-- [ ] **007-cross-platform-ci-green** — Claude Code found on macOS/Linux; CI green on three OSes - Must - bolt `017-host-package` - ⏳ PLANNED
+- [x] **007-cross-platform-ci-green** — Claude Code found on macOS/Linux; CI green on three OSes - Must - bolt `017-host-package` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/002-host-package/stories/007-cross-platform-ci-green.md`
 
 #### 003-ci-and-release-docs
@@ -139,7 +139,7 @@
 
 ## Stories by Status
 
-- **Planned**: 1
+- **Planned**: 0
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 46
+- **Completed**: 47

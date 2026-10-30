@@ -3,26 +3,25 @@ id: 017-host-package
 unit: 002-host-package
 intent: 002-release-readiness
 type: simple-construction-bolt
-status: in-progress
+status: complete
 stories:
   - 007-cross-platform-ci-green
-created: 2026-10-30T16:05:00Z
-started: 2026-10-30T16:05:00Z
-completed: null
-current_stage: test
+created: '2026-10-30T16:05:00Z'
+started: '2026-10-30T16:05:00Z'
+completed: '2026-10-30T18:44:10Z'
+current_stage: null
 stages_completed:
   - name: plan
-    completed: 2026-10-30T16:15:00Z
+    completed: '2026-10-30T16:15:00Z'
     artifact: implementation-plan.md
   - name: implement
-    completed: 2026-10-30T16:45:00Z
+    completed: '2026-10-30T16:45:00Z'
     artifact: implementation-walkthrough.md
-
-requires_bolts: [016-ci-and-release-docs]
+requires_bolts:
+  - 016-ci-and-release-docs
 enables_bolts: []
 requires_units: []
 blocks: true
-
 complexity:
   avg_complexity: 1
   avg_uncertainty: 1
@@ -55,7 +54,7 @@ three OSes.
 
 - [x] **1. plan**: Complete → implementation-plan.md
 - [x] **2. implement**: Complete → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **3. test**: Complete → tests + test-walkthrough.md
 
 ## Dependencies
 
@@ -67,7 +66,7 @@ three OSes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] Tests passing (and CI green on Windows, macOS, Ubuntu)
-- [ ] Code reviewed
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] Tests passing (and CI green on Windows, macOS, Ubuntu)
+- [x] Code reviewed

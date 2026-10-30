@@ -2,7 +2,7 @@
 unit: 002-host-package
 intent: 002-release-readiness
 created: 2026-10-29T16:45:00Z
-last_updated: 2026-10-30T16:45:00Z
+last_updated: 2026-10-30T17:40:00Z
 ---
 
 # Construction Log: host-package
@@ -29,7 +29,7 @@ last_updated: 2026-10-30T16:45:00Z
 |---------|---------|--------|---------|
 | 014-host-package | 001-bundled-host-package, 002-cli-command-routing, 003-stable-install-location | ✅ complete | - |
 | 015-host-package | 004-macos-linux-registration, 005-doctor-command, 006-release-pack-and-version-check | ✅ complete | - |
-| 017-host-package | 007-cross-platform-ci-green | ⏳ in-progress | added |
+| 017-host-package | 007-cross-platform-ci-green | ✅ complete | added |
 
 ## Execution History
 
@@ -46,6 +46,7 @@ last_updated: 2026-10-30T16:45:00Z
 | 2026-10-30T16:05:00Z | 017-host-package | started | Stage 1: plan (fix bolt from Operations) |
 | 2026-10-30T16:15:00Z | 017-host-package | stage-complete | plan → implement |
 | 2026-10-30T16:45:00Z | 017-host-package | stage-complete | implement → test |
+| 2026-10-30T17:40:00Z | 017-host-package | completed | CI green on Windows, macOS, Ubuntu (runs 41087387628, after action bump); 9 new lookup tests |
 
 ## Execution Summary
 
@@ -53,8 +54,8 @@ last_updated: 2026-10-30T16:45:00Z
 |--------|-------|
 | Original bolts planned | 2 |
 | Current bolt count | 3 |
-| Bolts completed | 2 |
-| Bolts in progress | 1 |
+| Bolts completed | 3 |
+| Bolts in progress | 0 |
 | Bolts remaining | 0 |
 | Replanning events | 1 |
 

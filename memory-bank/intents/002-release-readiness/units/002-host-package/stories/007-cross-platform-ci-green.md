@@ -2,11 +2,11 @@
 id: 007-cross-platform-ci-green
 unit: 002-host-package
 intent: 002-release-readiness
-status: draft
+status: complete
 priority: must
-created: 2026-10-30T16:05:00Z
+created: '2026-10-30T16:05:00Z'
 assigned_bolt: 017-host-package
-implemented: false
+implemented: true
 ---
 
 # Story: 007-cross-platform-ci-green
