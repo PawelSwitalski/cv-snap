@@ -46,6 +46,15 @@ function isolatedEnv(home: string): NodeJS.ProcessEnv {
   return { ...env, PATH: "", LOCALAPPDATA: home, APPDATA: home, USERPROFILE: home, HOME: home };
 }
 
+/** cv-snap's per-OS data directory for an isolated home (bolt 015 layout). */
+function appDataFor(home: string): string {
+  return dataDir({
+    platform: toHostPlatform(process.platform) ?? "linux",
+    env: isolatedEnv(home),
+    home,
+  });
+}
+
 interface Exchange {
   exitCode: number | null;
   stdout: Buffer;
@@ -141,16 +150,7 @@ describe("built native host (end to end)", () => {
       1,
     );
 
-    // The per-OS data directory for this isolated home (bolt 015 layout).
-    const logFile = join(
-      dataDir({
-        platform: toHostPlatform(process.platform) ?? "linux",
-        env: isolatedEnv(home),
-        home,
-      }),
-      "logs",
-      "host.log",
-    );
+    const logFile = join(appDataFor(home), "logs", "host.log");
     expect(existsSync(logFile)).toBe(true);
     const fileLog = readFileSync(logFile, "utf8");
     expect(fileLog).toContain('"message":"host started"');
@@ -480,7 +480,7 @@ describe("AI requests through the built host with a stand-in Claude (end to end)
     expect(profileCall?.stdin.match(/<\/cv_text>/g)).toHaveLength(1);
     expect(tailorCall?.stdin).not.toContain("jan.testowy@example.com");
     expect(tailorCall?.stdin).not.toContain("<job_ad>");
-    expect(readdirSync(join(home, "cv-snap", "run"))).toEqual([]);
+    expect(readdirSync(join(appDataFor(home), "run"))).toEqual([]);
     expect(result.exitCode).toBe(0);
   });
 });
