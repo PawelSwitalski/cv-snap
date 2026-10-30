@@ -11,10 +11,10 @@ export const EXTENSION_PUBLIC_KEY =
 export const DEV_EXTENSION_ID = "mmchmbhcfcoeopinlclfbgaekeocdmnf";
 
 /**
- * ID the Chrome Web Store assigned to cv-snap. Empty until the store item is created (Operations);
- * then set here once. `release:pack` refuses to pack the host while it is empty.
+ * ID the Chrome Web Store assigned to cv-snap (draft item created 2026-10-30, release 0.1.0).
+ * The host trusts it next to the dev ID; `release:pack` refuses to pack while it is empty.
  */
-export const STORE_EXTENSION_ID: string = "";
+export const STORE_EXTENSION_ID: string = "oginbbblfjbbccigemfeiimdlfeibjja";
 
 /** Chrome extension IDs are 32 letters a–p. */
 export const EXTENSION_ID_PATTERN = /^[a-p]{32}$/;
