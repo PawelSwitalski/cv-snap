@@ -32,7 +32,9 @@ describe("third-party notices", () => {
 
   it("are up to date (run `pnpm notices` after changing dependencies)", () => {
     for (const file of files) {
-      expect(readFileSync(file.path, "utf8"), file.path).toBe(file.content);
+      // Line endings aside: git may check text files out with CRLF on Windows (core.autocrlf).
+      const committed = readFileSync(file.path, "utf8").replaceAll("\r\n", "\n");
+      expect(committed, file.path).toBe(file.content);
     }
   });
 

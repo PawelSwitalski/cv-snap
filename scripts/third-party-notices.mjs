@@ -24,7 +24,8 @@ function findPackageDir(fromDir, name) {
 
 function licenseText(packageDir) {
   const file = readdirSync(packageDir).find((name) => /^(licen[cs]e|copying)(\.|-|$)/i.test(name));
-  return file ? readFileSync(join(packageDir, file), "utf8").trim() : null;
+  // LF only: some packages ship CRLF license files, and git stores the notices with LF.
+  return file ? readFileSync(join(packageDir, file), "utf8").replaceAll("\r\n", "\n").trim() : null;
 }
 
 /**
