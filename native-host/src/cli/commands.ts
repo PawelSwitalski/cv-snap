@@ -72,7 +72,7 @@ export async function runCommand(
       case "uninstall":
         return await uninstall(context, route.purge, deps);
       case "doctor":
-        return await doctor(context, deps);
+        return await doctor(context, route.skipClaude, deps);
     }
   } catch (error) {
     if (error instanceof HostInUseError || isFileLockError(error)) {
@@ -140,24 +140,32 @@ async function uninstall(
   return 0;
 }
 
-async function doctor(context: PlatformContext, deps: CommandDeps): Promise<number> {
-  const checks = await runDoctor({
-    context,
-    nodeVersion: deps.nodeVersion,
-    hostVersion: HOST_VERSION,
-    expectedOrigins: allowedExtensionOrigins(),
-    readFile: (path) => {
-      try {
-        return readFileSync(path, "utf8");
-      } catch {
-        return null;
-      }
+async function doctor(
+  context: PlatformContext,
+  skipClaude: boolean,
+  deps: CommandDeps,
+): Promise<number> {
+  const checks = await runDoctor(
+    {
+      context,
+      nodeVersion: deps.nodeVersion,
+      hostVersion: HOST_VERSION,
+      expectedOrigins: allowedExtensionOrigins(),
+      readFile: (path) => {
+        try {
+          return readFileSync(path, "utf8");
+        } catch {
+          return null;
+        }
+      },
+      exists: existsSync,
+      queryRegistry: () => queryRegisteredManifest(undefined, deps.run),
+      health: deps.health ?? (() => checkHealth(deps.run ? { run: deps.run } : {})),
     },
-    exists: existsSync,
-    queryRegistry: () => queryRegisteredManifest(undefined, deps.run),
-    health: deps.health ?? (() => checkHealth(deps.run ? { run: deps.run } : {})),
-  });
+    { skipClaude },
+  );
   deps.print(`cv-snap-host ${HOST_VERSION} doctor`);
   for (const line of formatDoctor(checks)) deps.print(line);
+  if (skipClaude) deps.print("(Claude Code checks skipped: --skip-claude)");
   return doctorExitCode(checks);
 }

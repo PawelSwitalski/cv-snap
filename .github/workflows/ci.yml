@@ -1,0 +1,83 @@
+# CI (bolt 016, story 001-ci-three-os). Runs as soon as the repository is on GitHub.
+# - check: everything on Ubuntu (types, lint, format, all tests, both builds, store zip)
+# - install: the packed host as a user gets it, on Windows, macOS and Linux:
+#   npx <tarball> install -> doctor (registration checks) -> uninstall -> gone
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4 # version from package.json "packageManager"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm format:check
+      # Includes the tarball allowlist (NFR-1), the notices and listing checks, and the real shell
+      # launcher test that is skipped on Windows.
+      - run: pnpm test
+      - run: pnpm --filter @cv-snap/extension zip:release
+
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Host tests on every OS: registry round trip and .cmd launcher on Windows, file
+      # permissions and the shell launcher on macOS and Linux.
+      - run: pnpm --filter @cv-snap/shared build && pnpm vitest run --project native-host
+      - name: Pack the host
+        run: |
+          pnpm --filter cv-snap-host build
+          mkdir -p "$RUNNER_TEMP/pack" "$RUNNER_TEMP/user"
+          pnpm --filter cv-snap-host pack --pack-destination "$RUNNER_TEMP/pack"
+          cp "$RUNNER_TEMP"/pack/cv-snap-host-*.tgz "$RUNNER_TEMP/user/"
+      - name: Install from the tarball (as a user)
+        working-directory: ${{ runner.temp }}/user
+        run: |
+          tarball="./$(ls cv-snap-host-*.tgz)"
+          npx --yes "$tarball" --version
+          npx --yes "$tarball" install
+          npx --yes "$tarball" doctor --skip-claude
+      - name: Uninstall and check nothing is left
+        working-directory: ${{ runner.temp }}/user
+        run: |
+          tarball="./$(ls cv-snap-host-*.tgz)"
+          npx --yes "$tarball" uninstall --purge
+          case "$RUNNER_OS" in
+            Windows)
+              if reg query 'HKCU\Software\Google\Chrome\NativeMessagingHosts\com.cvsnap.host' >/dev/null 2>&1; then
+                echo "registry key still present"; exit 1
+              fi ;;
+            macOS) test ! -e "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.cvsnap.host.json" ;;
+            Linux) test ! -e "$HOME/.config/google-chrome/NativeMessagingHosts/com.cvsnap.host.json" ;;
+          esac
+          # doctor must now report the missing registration (exit 1).
+          if npx --yes "$tarball" doctor --skip-claude; then
+            echo "doctor passed after uninstall"; exit 1
+          fi

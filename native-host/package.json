@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OWNER/cv-snap.git",
+    "url": "git+https://github.com/PawelSwitalski/cv-snap.git",
     "directory": "native-host"
   },
   "type": "module",
@@ -13,7 +13,8 @@
     "cv-snap-host": "dist/cv-snap-host.mjs"
   },
   "files": [
-    "dist"
+    "dist",
+    "THIRD-PARTY-NOTICES.md"
   ],
   "engines": {
     "node": ">=24"

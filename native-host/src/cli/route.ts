@@ -7,7 +7,7 @@ export type CliRoute =
   | { kind: "host" }
   | { kind: "install" }
   | { kind: "uninstall"; purge: boolean }
-  | { kind: "doctor" }
+  | { kind: "doctor"; skipClaude: boolean }
   | { kind: "version" }
   | { kind: "help" }
   | { kind: "usage"; problem: string | null };
@@ -33,8 +33,10 @@ export function routeArgs(args: readonly string[]): CliRoute {
         : unknownArgument(unknown);
     }
     case "doctor": {
-      const unknown = extra([]);
-      return unknown === undefined ? { kind: "doctor" } : unknownArgument(unknown);
+      const unknown = extra(["--skip-claude"]);
+      return unknown === undefined
+        ? { kind: "doctor", skipClaude: rest.includes("--skip-claude") }
+        : unknownArgument(unknown);
     }
     case "--version":
     case "-v":
@@ -60,6 +62,7 @@ export const USAGE = [
   "  install              Connect the cv-snap Chrome extension to your Claude Code (this user only)",
   "  uninstall [--purge]  Remove the connection again; --purge also deletes cv-snap's logs",
   "  doctor               Check the setup and show how to fix each problem",
+  "         [--skip-claude] (leave out the Claude Code checks, e.g. on CI)",
   "  --version            Print the version",
   "  --help               Show this help",
   "",

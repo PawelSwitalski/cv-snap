@@ -266,6 +266,34 @@ describe("runDoctor", () => {
   });
 });
 
+describe("runDoctor with skipClaude (CI runners have no Claude Code)", () => {
+  it("leaves out the Claude checks without running the health check", async () => {
+    const { probes } = installed("linux");
+    let healthCalls = 0;
+
+    const checks = await runDoctor(
+      {
+        ...probes,
+        health: () => {
+          healthCalls += 1;
+          return Promise.reject(new Error("no Claude Code here"));
+        },
+      },
+      { skipClaude: true },
+    );
+
+    expect(healthCalls).toBe(0);
+    expect(checks.map((check) => check.name)).toEqual([
+      "Node",
+      "Registration",
+      "Allowed extensions",
+      "Launcher",
+      "Installed version",
+    ]);
+    expect(doctorExitCode(checks)).toBe(0);
+  });
+});
+
 describe("formatDoctor", () => {
   it("prints one line per check, the fix under each problem and a summary", () => {
     const lines = formatDoctor([

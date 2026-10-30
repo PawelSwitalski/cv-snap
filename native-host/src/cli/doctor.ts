@@ -40,7 +40,11 @@ export interface DoctorProbes {
 export const MIN_NODE_MAJOR = 24;
 const INSTALL_FIX = "Run `npx cv-snap-host install`, then reload the extension.";
 
-export async function runDoctor(probes: DoctorProbes): Promise<DoctorCheck[]> {
+/** `skipClaude`: leave out the Claude Code checks (CI runners have no Claude Code). */
+export async function runDoctor(
+  probes: DoctorProbes,
+  options: { skipClaude?: boolean } = {},
+): Promise<DoctorCheck[]> {
   const { context } = probes;
   const { join } = pathFor(context.platform);
   const show = (path: string) => displayPath(context, path);
@@ -155,7 +159,7 @@ export async function runDoctor(probes: DoctorProbes): Promise<DoctorCheck[]> {
           },
   );
 
-  checks.push(...claudeChecks(await probes.health()));
+  if (!options.skipClaude) checks.push(...claudeChecks(await probes.health()));
   return checks;
 }
 

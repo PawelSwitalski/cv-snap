@@ -3,24 +3,30 @@ id: 016-ci-and-release-docs
 unit: 003-ci-and-release-docs
 intent: 002-release-readiness
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 001-ci-three-os
   - 002-mit-license
   - 003-end-user-readme
   - 004-privacy-policy-page
   - 005-store-listing-texts
-created: 2026-10-29T16:09:23Z
-started: null
-completed: null
+created: '2026-10-29T16:09:23Z'
+started: '2026-10-29T20:05:00Z'
+completed: '2026-10-29T19:23:46Z'
 current_stage: null
-stages_completed: []
-
-requires_bolts: [015-host-package]
+stages_completed:
+  - name: plan
+    completed: '2026-10-29T20:10:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-10-29T21:10:00Z'
+    artifact: implementation-walkthrough.md
+requires_bolts:
+  - 015-host-package
 enables_bolts: []
-requires_units: [002-host-package]
+requires_units:
+  - 002-host-package
 blocks: false
-
 complexity:
   avg_complexity: 1
   avg_uncertainty: 1
@@ -53,9 +59,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md
+- [x] **3. test**: Complete → tests + test-walkthrough.md
 
 ## Dependencies
 
@@ -67,7 +73,7 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] Tests passing
-- [ ] Code reviewed
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] Tests passing
+- [x] Code reviewed

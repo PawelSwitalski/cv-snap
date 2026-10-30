@@ -15,7 +15,8 @@ describe("routeArgs", () => {
 
   it.each([
     [["install"], { kind: "install" }],
-    [["doctor"], { kind: "doctor" }],
+    [["doctor"], { kind: "doctor", skipClaude: false }],
+    [["doctor", "--skip-claude"], { kind: "doctor", skipClaude: true }],
     [["uninstall"], { kind: "uninstall", purge: false }],
     [["uninstall", "--purge"], { kind: "uninstall", purge: true }],
     [["--version"], { kind: "version" }],

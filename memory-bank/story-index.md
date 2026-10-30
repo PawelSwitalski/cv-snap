@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 46
-- **Planned**: 5
+- **Planned**: 0
 - **Generated**: 0
-- **Completed**: 41
-- **Last updated**: 2026-10-29T19:55:00Z
+- **Completed**: 46
+- **Last updated**: 2026-10-29T22:00:00Z
 
 ---
 
@@ -122,22 +122,22 @@
 
 #### 003-ci-and-release-docs
 
-- [ ] **001-ci-three-os** — CI on three operating systems - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+- [x] **001-ci-three-os** — CI on three operating systems - Must - bolt `016-ci-and-release-docs` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/001-ci-three-os.md`
-- [ ] **002-mit-license** — MIT license - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+- [x] **002-mit-license** — MIT license - Must - bolt `016-ci-and-release-docs` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/002-mit-license.md`
-- [ ] **003-end-user-readme** — End-user README - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+- [x] **003-end-user-readme** — End-user README - Must - bolt `016-ci-and-release-docs` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/003-end-user-readme.md`
-- [ ] **004-privacy-policy-page** — Privacy policy page - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+- [x] **004-privacy-policy-page** — Privacy policy page - Must - bolt `016-ci-and-release-docs` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/004-privacy-policy-page.md`
-- [ ] **005-store-listing-texts** — Chrome Web Store listing texts - Must - bolt `016-ci-and-release-docs` - ⏳ PLANNED
+- [x] **005-store-listing-texts** — Chrome Web Store listing texts - Must - bolt `016-ci-and-release-docs` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/005-store-listing-texts.md`
 
 ---
 
 ## Stories by Status
 
-- **Planned**: 5
+- **Planned**: 0
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 41
+- **Completed**: 46

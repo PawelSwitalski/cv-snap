@@ -201,16 +201,28 @@ describe("runCommand: doctor", () => {
     await runCommand({ kind: "install" }, deps);
     out.length = 0;
 
-    expect(await runCommand({ kind: "doctor" }, deps)).toBe(0);
+    expect(await runCommand({ kind: "doctor", skipClaude: false }, deps)).toBe(0);
     expect(out[0]).toBe(`cv-snap-host ${HOST_VERSION} doctor`);
     expect(out.filter((line) => line.startsWith("✓"))).toHaveLength(7);
     expect(out.at(-1)).toBe("cv-snap is ready.");
   });
 
+  it("with --skip-claude, checks only the installation and says the Claude checks were skipped", async () => {
+    const { deps, out } = harness("darwin", {
+      health: () => Promise.reject(new Error("must not be called")),
+    });
+    await runCommand({ kind: "install" }, deps);
+    out.length = 0;
+
+    expect(await runCommand({ kind: "doctor", skipClaude: true }, deps)).toBe(0);
+    expect(out.filter((line) => line.startsWith("✓"))).toHaveLength(5);
+    expect(out.at(-1)).toBe("(Claude Code checks skipped: --skip-claude)");
+  });
+
   it("lists the problems and exits 1 when nothing is installed", async () => {
     const { deps, out } = harness("linux");
 
-    expect(await runCommand({ kind: "doctor" }, deps)).toBe(1);
+    expect(await runCommand({ kind: "doctor", skipClaude: false }, deps)).toBe(1);
     expect(out.some((line) => line.startsWith("✗ Registration"))).toBe(true);
     expect(out.at(-1)).toMatch(/problem\(s\) to fix\.$/);
   });

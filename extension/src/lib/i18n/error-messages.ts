@@ -70,7 +70,7 @@ export function errorMessageKey(code: ErrorCode, reason?: string): MessageKey {
   return byReason?.[0] ?? ERROR_MESSAGES[code];
 }
 
-/** The fix hint shown under the message (e.g. "Run `pnpm run install-host`"). */
+/** The fix hint shown under the message (e.g. "Run `npx cv-snap-host install`"). */
 export function errorFixKey(code: ErrorCode, reason?: string): MessageKey {
   const byReason = reason !== undefined ? REASON_MESSAGES[code]?.[reason] : undefined;
   return byReason?.[1] ?? ERROR_FIXES[code];

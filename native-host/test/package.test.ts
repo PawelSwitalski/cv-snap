@@ -70,7 +70,13 @@ describe("cv-snap-host npm package", () => {
   });
 
   it("holds only the bundle, the allowlisted pdf.js files, package.json and the docs", () => {
-    const allowed = new Set(["package.json", "README.md", "LICENSE", "dist/cv-snap-host.mjs"]);
+    const allowed = new Set([
+      "package.json",
+      "README.md",
+      "LICENSE",
+      "THIRD-PARTY-NOTICES.md",
+      "dist/cv-snap-host.mjs",
+    ]);
     const vendor = "dist/vendor/pdfjs-dist/";
     const isAllowedPdfjs = (file: string) =>
       file.startsWith(vendor) &&

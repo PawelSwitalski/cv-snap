@@ -45,11 +45,15 @@ describe("error messages", () => {
     }
   });
 
-  it("names the install command for a missing or lost host", () => {
-    for (const code of ["HOST_NOT_INSTALLED", "HOST_DISCONNECTED"] as const) {
-      for (const language of ["en", "pl"] as const) {
-        expect(formatMessage(language, errorFixKey(code))).toContain("pnpm run install-host");
-      }
+  it("names the user command for a missing or lost host (install, or doctor to diagnose)", () => {
+    for (const language of ["en", "pl"] as const) {
+      expect(formatMessage(language, errorFixKey("HOST_NOT_INSTALLED"))).toContain(
+        "npx cv-snap-host install",
+      );
+      expect(formatMessage(language, errorFixKey("HOST_DISCONNECTED"))).toContain(
+        "npx cv-snap-host doctor",
+      );
+      expect(formatMessage(language, errorFixKey("HOST_DISCONNECTED"))).not.toContain("pnpm");
     }
   });
 

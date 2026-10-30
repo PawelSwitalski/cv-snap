@@ -63,10 +63,10 @@
     "message": "Check again"
   },
   "hint_HOST_NOT_INSTALLED": {
-    "message": "In the cv-snap folder run “pnpm run install-host”, then click Check again."
+    "message": "Open a terminal, run “npx cv-snap-host install”, then click Check again."
   },
   "hint_HOST_DISCONNECTED": {
-    "message": "The native host stopped unexpectedly. Run “pnpm run install-host” again, then click Check again."
+    "message": "The native host stopped unexpectedly. Run “npx cv-snap-host doctor” to find the cause, then click Check again."
   },
   "hint_CLAUDE_NOT_FOUND": {
     "message": "Install Claude Code (claude.com/claude-code), then click Check again."
@@ -575,10 +575,10 @@
     "message": "Close"
   },
   "fix_HOST_NOT_INSTALLED": {
-    "message": "In the cv-snap folder run “pnpm run install-host”, then click Try again."
+    "message": "Open a terminal, run “npx cv-snap-host install”, then click Try again."
   },
   "fix_HOST_DISCONNECTED": {
-    "message": "Click Reconnect. If it keeps happening, run “pnpm run install-host” again."
+    "message": "Click Reconnect. If it keeps happening, run “npx cv-snap-host doctor”."
   },
   "fix_CLAUDE_NOT_FOUND": {
     "message": "Install Claude Code (claude.com/claude-code), then click Try again."

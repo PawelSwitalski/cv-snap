@@ -2,11 +2,11 @@
 id: 005-store-listing-texts
 unit: 003-ci-and-release-docs
 intent: 002-release-readiness
-status: draft
+status: complete
 priority: must
-created: 2026-10-29T16:09:23Z
+created: '2026-10-29T16:09:23Z'
 assigned_bolt: 016-ci-and-release-docs
-implemented: false
+implemented: true
 ---
 
 # Story: 005-store-listing-texts
