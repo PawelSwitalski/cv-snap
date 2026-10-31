@@ -21,7 +21,7 @@ przez Ciebie, więc nic nie jest zmyślone.
 
 ## Instalacja
 
-1. **Dodaj rozszerzenie** z Chrome Web Store: _link pojawi się z pierwszym wydaniem_.
+1. **Dodaj rozszerzenie** z [Chrome Web Store](https://chromewebstore.google.com/detail/oginbbblfjbbccigemfeiimdlfeibjja).
 2. **Zainstaluj program pomocniczy** („native host”) w terminalu:
 
    ```sh

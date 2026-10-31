@@ -21,7 +21,7 @@ invented.
 
 ## Install
 
-1. **Add the extension** from the Chrome Web Store: _link follows with the first release_.
+1. **Add the extension** from the [Chrome Web Store](https://chromewebstore.google.com/detail/oginbbblfjbbccigemfeiimdlfeibjja).
 2. **Install the helper** (the "native host") in a terminal:
 
    ```sh

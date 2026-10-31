@@ -1,7 +1,7 @@
 # cv-snap-host
 
 The helper program ("native host") of the [cv-snap](https://github.com/PawelSwitalski/cv-snap) Chrome
-extension. It lets the extension tailor your CV to a job ad using Claude Code on your own computer.
+extension ([Chrome Web Store](https://chromewebstore.google.com/detail/oginbbblfjbbccigemfeiimdlfeibjja)). It lets the extension tailor your CV to a job ad using Claude Code on your own computer.
 There is no cv-snap server.
 
 ```sh
