@@ -2,7 +2,7 @@
 release: 0.1.0
 intents: [001-one-click-tailored-cv, 002-release-readiness]
 created: 2026-10-30T17:45:00Z
-updated: 2026-10-31T18:30:00Z
+updated: 2026-10-31T19:05:00Z
 status: staging
 ---
 
@@ -26,7 +26,7 @@ Environments, rollback and monitoring: see `release-readiness.md`.
   - [x] Store listing, privacy practices (PII + website content; 3 certifications; remote code: No), 5 screenshots (1280×800, address bar and company blurred), visibility Private → trusted testers (user)
   - [x] Submitted for review 2026-10-31 (user); publisher contact email set and verified
   - [ ] Review passed
-  - [ ] `npm publish ./release/cv-snap-host-0.1.0.tgz --tag next` (user; dry run passed)
+  - [x] `npm publish ./release/cv-snap-host-0.1.0.tgz --tag next` (user, 2026-10-31): shasum `606e0fc1…` matches the tarball, 207 files; `npx cv-snap-host@next --version` → 0.1.0
   - [ ] Verify: store install in a clean profile + host, `doctor`, Add this site, Generate CV, Download PDF
 - [ ] **Checkpoint 3: Production**: public listing; npm `latest`; verify
 - [ ] **Checkpoint 4: Monitoring**: checklist
@@ -47,6 +47,8 @@ Environments, rollback and monitoring: see `release-readiness.md`.
 | 2026-10-31 | Fix `e9ca4ab` pushed, CI green (41186085304); re-packed: new store zip (CSP verified in its manifest, no `key`), host tarball unchanged; tag `v0.1.0` to move from `cae1b58` to `e9ca4ab` (user runs the force-push) |
 | 2026-10-31 | Tag `v0.1.0` moved to `e9ca4ab` (user); new store zip uploaded to the draft (user); dev check complete; `npm publish --dry-run --tag next` passed (207 files, 2.8 MB) |
 | 2026-10-31 | Store item submitted for review (trusted testers); publisher contact email set and verified; screenshots kept outside the repo |
+| 2026-10-31 | First `npm publish` failed: login session expired (401, shown as 404), then 2FA could not complete through the `!` prompt; published from the user's PowerShell |
+| 2026-10-31 | npm staged publishing: placeholder `0.0.0-stage` for ~2 min, then `cv-snap-host@0.1.0` released; dist-tags `latest` and `next` = 0.1.0 (npm sets `latest` on a first version) |
 
 ## Artifacts (tag v0.1.0, commit e9ca4ab)
 
