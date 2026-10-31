@@ -1,0 +1,48 @@
+name: Bug report
+description: Something in cv-snap doesn't work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! **Please don't paste your CV, a job ad's text or personal data here.**
+        Issues are public. Describe the problem in your own words instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what you saw (the exact message helps).
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `npx cv-snap-host doctor`
+      description: |
+        Run it in a terminal and paste the result. It shows versions and setup checks only, with
+        your home folder shortened to `~`.
+      render: text
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: The cv-snap version (chrome://extensions) and your Chrome version.
+      placeholder: cv-snap 0.1.0, Chrome 142
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Errors from the side panel console (optional)
+      description: |
+        Right-click inside the cv-snap side panel → Inspect → Console, then copy the red
+        `[cv-snap]` lines. They never contain CV or job-ad text.
+      render: text

@@ -2,7 +2,7 @@
 release: 0.1.0
 intents: [001-one-click-tailored-cv, 002-release-readiness]
 created: 2026-10-30T17:45:00Z
-updated: 2026-10-31T19:05:00Z
+updated: 2026-10-31T19:40:00Z
 status: staging
 ---
 
@@ -29,7 +29,15 @@ Environments, rollback and monitoring: see `release-readiness.md`.
   - [x] `npm publish ./release/cv-snap-host-0.1.0.tgz --tag next` (user, 2026-10-31): shasum `606e0fc1…` matches the tarball, 207 files; `npx cv-snap-host@next --version` → 0.1.0
   - [ ] Verify: store install in a clean profile + host, `doctor`, Add this site, Generate CV, Download PDF
 - [ ] **Checkpoint 3: Production**: public listing; npm `latest`; verify
+  - [x] npm `latest` = 0.1.0 already (set by npm on the first version)
+  - [x] Store link in the READMEs prepared on branch `release/store-link` (merge when public)
+  - [x] Draft GitHub Release `v0.1.0` with both artifacts (publish when public)
+  - [x] macOS/Linux: CI only for 0.1.0 (user decision 2026-10-31: no machine); README says so
+  - [ ] Listing public; merge `release/store-link`; publish the GitHub Release; verify
 - [ ] **Checkpoint 4: Monitoring**: checklist
+  - [x] `memory-bank/operations/monitoring.md` (sources, weekly check, signals, rollback)
+  - [x] GitHub issue templates (bug report asks for `doctor`, warns against CV text)
+  - [ ] Confirmed after production (first weekly check)
 
 ## Log
 

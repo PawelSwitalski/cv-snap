@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Privacy policy
+    url: https://pawelswitalski.github.io/cv-snap/privacy/
+    about: How cv-snap handles your data. Privacy questions can be asked as a regular issue.

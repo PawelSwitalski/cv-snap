@@ -9,7 +9,10 @@ przez Ciebie, więc nic nie jest zmyślone.
 
 ## Czego potrzebujesz
 
-- **Google Chrome** (stabilny), na Windows 10/11, macOS 13+ lub Linuksie (np. Ubuntu 22.04+)
+- **Google Chrome** (stabilny), na Windows 10/11, macOS 13+ lub Linuksie (np. Ubuntu 22.04+).
+  Windows jest sprawdzony ręcznie; na macOS i Linuksie instalacja programu pomocniczego i test
+  konfiguracji są sprawdzane automatycznie, ale jeszcze nie cały proces w Chrome. Problemy tam
+  zgłaszaj jako [issues](https://github.com/PawelSwitalski/cv-snap/issues).
 - **Node.js 24 lub nowszy** ([nodejs.org](https://nodejs.org)); uruchamia mały program pomocniczy,
   który łączy Chrome z Claude Code
 - **Claude Code**, zainstalowany i zalogowany ([claude.com/claude-code](https://claude.com/claude-code)).

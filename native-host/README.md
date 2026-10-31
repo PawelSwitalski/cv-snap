@@ -10,7 +10,7 @@ npx cv-snap-host doctor      # check the setup; prints a fix for each problem
 npx cv-snap-host uninstall   # remove it again (--purge also deletes its logs)
 ```
 
-Needs Node.js 24+ and Claude Code, logged in. Works on Windows, macOS and Linux.
+Needs Node.js 24+ and Claude Code, logged in. Works on Windows, macOS and Linux (macOS and Linux tested by CI).
 
 See the [cv-snap README](https://github.com/PawelSwitalski/cv-snap#readme) for the full setup and the
 [privacy policy](https://pawelswitalski.github.io/cv-snap/privacy/).
