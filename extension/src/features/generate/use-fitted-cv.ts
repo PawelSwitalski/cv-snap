@@ -46,7 +46,7 @@ export function useFittedCv(
             if (isCurrent) setState({ status: "ready", fitted, source: model });
           },
           (error: unknown) => {
-            logger.error("CV render failed", error instanceof Error ? error.name : "unknown");
+            logger.error("CV render failed", describeRenderError(error));
             if (isCurrent) setState({ status: "failed", fitted: null });
           },
         );
@@ -61,4 +61,16 @@ export function useFittedCv(
   }, [model, render, delayMs]);
 
   return state;
+}
+
+/**
+ * What the log may say about a failed render: the error's name, plus the message of a WebAssembly
+ * error (it names the engine's failure, such as a blocked module, never CV text; fix bolt 019).
+ * Other errors may quote the CV, so only their name is kept.
+ */
+export function describeRenderError(error: unknown): string {
+  if (!(error instanceof Error)) return "unknown";
+  return error instanceof WebAssembly.RuntimeError || error instanceof WebAssembly.CompileError
+    ? `${error.name}: ${error.message}`
+    : error.name;
 }

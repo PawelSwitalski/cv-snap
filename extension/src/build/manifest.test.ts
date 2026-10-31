@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { inflateSync } from "node:zlib";
 import { DEV_EXTENSION_ID, EXTENSION_PUBLIC_KEY } from "@cv-snap/shared";
 import { describe, expect, it } from "vitest";
-import { buildManifest, ICON_SIZES, RELEASE_MODE } from "./manifest";
+import { buildManifest, EXTENSION_PAGES_CSP, ICON_SIZES, RELEASE_MODE } from "./manifest";
 
 const PUBLIC_DIR = fileURLToPath(new URL("../../public/", import.meta.url));
 const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
@@ -84,6 +84,17 @@ describe("buildManifest", () => {
     expect(manifest.optional_host_permissions).toEqual(["https://*/*"]);
     expect(manifest.permissions).not.toContain("tabs");
     expect(manifest.permissions).not.toContain("<all_urls>");
+  });
+
+  it("lets extension pages run WebAssembly (the PDF layout) in every build, and nothing more", () => {
+    for (const mode of ["development", "production", RELEASE_MODE]) {
+      expect(buildManifest(mode).content_security_policy).toEqual({
+        extension_pages: EXTENSION_PAGES_CSP,
+      });
+    }
+    const scriptSrc = /script-src ([^;]*)/.exec(EXTENSION_PAGES_CSP)?.[1]?.trim().split(/\s+/);
+    expect(scriptSrc).toEqual(["'self'", "'wasm-unsafe-eval'"]);
+    expect(EXTENSION_PAGES_CSP).toContain("object-src 'self'");
   });
 });
 

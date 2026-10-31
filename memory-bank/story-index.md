@@ -1,11 +1,11 @@
 # Global Story Index
 
 ## Overview
-- **Total stories**: 48
+- **Total stories**: 49
 - **Planned**: 0
 - **Generated**: 0
-- **Completed**: 48
-- **Last updated**: 2026-10-30T20:50:00Z
+- **Completed**: 49
+- **Last updated**: 2026-10-31T09:50:00Z
 
 ---
 
@@ -106,6 +106,8 @@
   `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/003-extension-icons.md`
 - [x] **004-toolbar-icon-opens-panel** — Toolbar icon opens the panel and shows "Add this site" - Must - bolt `018-store-ready-extension` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/004-toolbar-icon-opens-panel.md`
+- [x] **005-pdf-in-store-build** — Download PDF works outside `pnpm dev` (WebAssembly allowed) - Must - bolt `019-store-ready-extension` - ✅ COMPLETED
+  `memory-bank/intents/002-release-readiness/units/001-store-ready-extension/stories/005-pdf-in-store-build.md`
 
 #### 002-host-package
 
@@ -144,4 +146,4 @@
 - **Planned**: 0
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 48
+- **Completed**: 49

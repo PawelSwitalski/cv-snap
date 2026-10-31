@@ -2,7 +2,7 @@
 release: 0.1.0
 intents: [001-one-click-tailored-cv, 002-release-readiness]
 created: 2026-10-30T17:45:00Z
-updated: 2026-10-30T20:50:00Z
+updated: 2026-10-31T09:50:00Z
 status: build
 ---
 
@@ -38,6 +38,7 @@ Environments, rollback and monitoring: see `release-readiness.md`.
 | 2026-10-30 | Packed: `cv-snap-0.1.0-chrome-release.zip` 1.73 MB; `cv-snap-host-0.1.0.tgz` 2.69 MB; tag `v0.1.0` pushed |
 | 2026-10-30 | Dev check (user): the toolbar icon only closed and reopened the panel; "Add this site" never appeared → fix bolt 018 (manual check passed) |
 | 2026-10-30 | Fix `f731d17` pushed, CI green (41131863932); re-packed: new store zip, host tarball unchanged (byte-identical) |
+| 2026-10-31 | Dev check (user): Download PDF failed ("The PDF couldn't be prepared"); Chrome's default extension CSP blocked react-pdf's WebAssembly, hidden by `pnpm dev` → fix bolt 019 (manual check passed: PDF downloaded) |
 
 ## Artifacts (commit f731d17)
 
