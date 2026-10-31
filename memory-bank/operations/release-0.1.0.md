@@ -19,7 +19,7 @@ Environments, rollback and monitoring: see `release-readiness.md`.
   - [x] Chrome Web Store developer account (user)
   - [x] Store zip uploaded as a **draft** (not submitted) → store item ID `oginbbblfjbbccigemfeiimdlfeibjja` (user)
   - [x] `STORE_EXTENSION_ID` set in `shared/src/extension-identity.ts` (`cae1b58`), CI green (41111403017)
-  - [x] `pnpm release:pack` → `release/` (store zip + host tarball); tag `v0.1.0` on `cae1b58`
+  - [x] `pnpm release:pack` → `release/` (store zip + host tarball); tag `v0.1.0` on `e9ca4ab` (moved from `cae1b58` after fix bolts 018 and 019)
   - [x] npm login (user: `pawel-switalski`)
 - [ ] **Dev + verify**: dev build in a clean Chrome profile + host from the release tarball
 - [ ] **Checkpoint 2: Staging**: CWS trusted testers; `npm publish --tag next`; verify
@@ -39,13 +39,14 @@ Environments, rollback and monitoring: see `release-readiness.md`.
 | 2026-10-30 | Dev check (user): the toolbar icon only closed and reopened the panel; "Add this site" never appeared → fix bolt 018 (manual check passed) |
 | 2026-10-30 | Fix `f731d17` pushed, CI green (41131863932); re-packed: new store zip, host tarball unchanged (byte-identical) |
 | 2026-10-31 | Dev check (user): Download PDF failed ("The PDF couldn't be prepared"); Chrome's default extension CSP blocked react-pdf's WebAssembly, hidden by `pnpm dev` → fix bolt 019 (manual check passed: PDF downloaded) |
+| 2026-10-31 | Fix `e9ca4ab` pushed, CI green (41186085304); re-packed: new store zip (CSP verified in its manifest, no `key`), host tarball unchanged; tag `v0.1.0` to move from `cae1b58` to `e9ca4ab` (user runs the force-push) |
 
-## Artifacts (commit f731d17)
+## Artifacts (tag v0.1.0, commit e9ca4ab)
 
 | File | Size | SHA-256 |
 |---|---|---|
-| `release/cv-snap-0.1.0-chrome-release.zip` | 1,814,377 B | `1d2e7c6794d9d0dd1af0ba8fb02ad9548e7867b6bfff6ae492e738be21dfc2be` |
+| `release/cv-snap-0.1.0-chrome-release.zip` | 1,814,506 B | `ebc7461faf5216888b116b3e7c805afeadc6439032d8c1350b41d80bb6efd8ca` |
 | `release/cv-snap-host-0.1.0.tgz` | 2,821,477 B | `8b3581a3e2d0884bcf13b2a827995537fcdc159016a9fe0348dade5700074e39` |
 
-The store zip replaces the draft's first upload (`b6189d7b…`, built before fix bolt 018). The
-host tarball is byte-identical to the `cae1b58` pack: bolt 018 changed the extension only.
+The store zip replaces the draft's first upload (`b6189d7b…`, built before fix bolts 018 and 019). The
+host tarball is byte-identical to the `cae1b58` pack: bolts 018 and 019 changed the extension only.
