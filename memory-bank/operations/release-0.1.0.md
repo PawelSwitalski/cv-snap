@@ -2,8 +2,8 @@
 release: 0.1.0
 intents: [001-one-click-tailored-cv, 002-release-readiness]
 created: 2026-10-30T17:45:00Z
-updated: 2026-10-31T09:50:00Z
-status: build
+updated: 2026-10-31T09:00:00Z
+status: staging
 ---
 
 # Release 0.1.0
@@ -21,7 +21,7 @@ Environments, rollback and monitoring: see `release-readiness.md`.
   - [x] `STORE_EXTENSION_ID` set in `shared/src/extension-identity.ts` (`cae1b58`), CI green (41111403017)
   - [x] `pnpm release:pack` → `release/` (store zip + host tarball); tag `v0.1.0` on `e9ca4ab` (moved from `cae1b58` after fix bolts 018 and 019)
   - [x] npm login (user: `pawel-switalski`)
-- [ ] **Dev + verify**: dev build in a clean Chrome profile + host from the release tarball
+- [x] **Dev + verify**: dev build in a clean Chrome profile + host from the release tarball (user, 2026-10-31; found and fixed bolts 018, 019)
 - [ ] **Checkpoint 2: Staging**: CWS trusted testers; `npm publish --tag next`; verify
 - [ ] **Checkpoint 3: Production**: public listing; npm `latest`; verify
 - [ ] **Checkpoint 4: Monitoring**: checklist
@@ -40,6 +40,7 @@ Environments, rollback and monitoring: see `release-readiness.md`.
 | 2026-10-30 | Fix `f731d17` pushed, CI green (41131863932); re-packed: new store zip, host tarball unchanged (byte-identical) |
 | 2026-10-31 | Dev check (user): Download PDF failed ("The PDF couldn't be prepared"); Chrome's default extension CSP blocked react-pdf's WebAssembly, hidden by `pnpm dev` → fix bolt 019 (manual check passed: PDF downloaded) |
 | 2026-10-31 | Fix `e9ca4ab` pushed, CI green (41186085304); re-packed: new store zip (CSP verified in its manifest, no `key`), host tarball unchanged; tag `v0.1.0` to move from `cae1b58` to `e9ca4ab` (user runs the force-push) |
+| 2026-10-31 | Tag `v0.1.0` moved to `e9ca4ab` (user); new store zip uploaded to the draft (user); dev check complete; `npm publish --dry-run --tag next` passed (207 files, 2.8 MB) |
 
 ## Artifacts (tag v0.1.0, commit e9ca4ab)
 
