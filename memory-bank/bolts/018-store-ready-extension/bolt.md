@@ -54,7 +54,7 @@ release 0.1.0.
 
 - [x] **1. plan**: Complete → implementation-plan.md
 - [x] **2. implement**: Complete → source + implementation-walkthrough.md
-- [ ] **3. test**: In progress → tests + test-walkthrough.md
+- [x] **3. test**: Complete → tests + test-walkthrough.md
 
 ## Dependencies
 
@@ -66,7 +66,7 @@ release 0.1.0.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] Tests passing (and CI green on Windows, macOS, Ubuntu)
-- [ ] Code reviewed
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] Tests passing (and CI green on Windows, macOS, Ubuntu)
+- [x] Code reviewed

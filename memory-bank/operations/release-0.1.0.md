@@ -37,13 +37,14 @@ Environments, rollback and monitoring: see `release-readiness.md`.
 | 2026-10-30 | Store ID set (`cae1b58`), CI green (41111403017); `release:pack` passed all checks |
 | 2026-10-30 | Packed: `cv-snap-0.1.0-chrome-release.zip` 1.73 MB; `cv-snap-host-0.1.0.tgz` 2.69 MB; tag `v0.1.0` pushed |
 | 2026-10-30 | Dev check (user): the toolbar icon only closed and reopened the panel; "Add this site" never appeared → fix bolt 018 (manual check passed) |
+| 2026-10-30 | Fix `f731d17` pushed, CI green (41131863932); re-packed: new store zip, host tarball unchanged (byte-identical) |
 
-## Artifacts (tag v0.1.0, commit cae1b58)
+## Artifacts (commit f731d17)
 
 | File | Size | SHA-256 |
 |---|---|---|
-| `release/cv-snap-0.1.0-chrome-release.zip` | 1,814,236 B | `b6189d7b9141bae4932a489354ca54cf11e09c4cd9055926cb7213fdb88c1075` |
+| `release/cv-snap-0.1.0-chrome-release.zip` | 1,814,377 B | `1d2e7c6794d9d0dd1af0ba8fb02ad9548e7867b6bfff6ae492e738be21dfc2be` |
 | `release/cv-snap-host-0.1.0.tgz` | 2,821,477 B | `8b3581a3e2d0884bcf13b2a827995537fcdc159016a9fe0348dade5700074e39` |
 
-The store zip is byte-identical to the one uploaded as the draft (the store ID only affects the
-host).
+The store zip replaces the draft's first upload (`b6189d7b…`, built before fix bolt 018). The
+host tarball is byte-identical to the `cae1b58` pack: bolt 018 changed the extension only.
