@@ -1,6 +1,6 @@
 {
   "name": "cv-snap-host",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Native messaging host for the cv-snap Chrome extension: tailors your CV to a job ad with your local Claude Code",
   "license": "MIT",
   "repository": {

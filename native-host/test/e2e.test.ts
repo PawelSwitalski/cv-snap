@@ -121,7 +121,7 @@ describe("built native host (end to end)", () => {
     const byId = new Map(responses.map((f) => [f.requestId, f]));
     expect(result.exitCode).toBe(0);
     expect(byId.get("h1")).toMatchObject({
-      response: { ok: true, data: { claudeFound: false, hostVersion: "0.1.0" } },
+      response: { ok: true, data: { claudeFound: false, hostVersion: HOST_VERSION } },
     });
     expect(byId.get("t1")).toMatchObject({
       response: { ok: false, error: { code: "INVALID_MESSAGE" } },

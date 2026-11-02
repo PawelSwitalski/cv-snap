@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { RunProcessOptions, RunProcessResult } from "../lib/run-process.js";
 import { checkHealth, parseLoggedIn } from "./check-health.js";
 import type { ClaudeCommand } from "./find-claude.js";
+import { HOST_VERSION } from "../version.js";
 
 const CLAUDE: ClaudeCommand = { command: "C:\\claude.exe", prefixArgs: [], source: "winget" };
 
@@ -41,7 +42,7 @@ describe("checkHealth", () => {
     const report = await checkHealth({ findClaude: () => CLAUDE, run: cli.run });
 
     expect(report).toEqual({
-      hostVersion: "0.1.0",
+      hostVersion: HOST_VERSION,
       claudeFound: true,
       claudeVersion: "2.1.302",
       isAuthenticated: true,
