@@ -2,8 +2,8 @@
 release: 0.1.0
 intents: [001-one-click-tailored-cv, 002-release-readiness]
 created: 2026-10-30T17:45:00Z
-updated: 2026-11-02T12:00:00Z
-status: staging
+updated: 2026-11-02T18:00:00Z
+status: production
 ---
 
 # Release 0.1.0
@@ -28,12 +28,12 @@ Environments, rollback and monitoring: see `release-readiness.md`.
   - [x] Review passed (2026-11-02: store install works for a trusted tester)
   - [x] `npm publish ./release/cv-snap-host-0.1.0.tgz --tag next` (user, 2026-10-31): shasum `606e0fc1…` matches the tarball, 207 files; `npx cv-snap-host@next --version` → 0.1.0
   - [x] Verify: store install in a clean profile + host from npm (`npx cv-snap-host@next install`), `doctor`, Add this site, Generate CV, Download PDF (user, 2026-11-02: all passed)
-- [ ] **Checkpoint 3: Production**: public listing; npm `latest`; verify
+- [x] **Checkpoint 3: Production**: public listing; npm `latest`; verify
   - [x] npm `latest` = 0.1.0 already (set by npm on the first version)
   - [x] Store link in the READMEs prepared on branch `release/store-link` (merge when public)
   - [x] Draft GitHub Release `v0.1.0` with both artifacts (publish when public)
   - [x] macOS/Linux: CI only for 0.1.0 (user decision 2026-10-31: no machine); README says so
-  - [ ] Listing public; merge `release/store-link`; publish the GitHub Release; verify
+  - [x] Listing public (re-review passed); `release/store-link` on `main`; GitHub Release published; verify (user, 2026-11-02: public listing, install, `npx cv-snap-host install`, Generate CV, Download PDF)
 - [ ] **Checkpoint 4: Monitoring**: checklist
   - [x] `memory-bank/operations/monitoring.md` (sources, weekly check, signals, rollback)
   - [x] GitHub issue templates (bug report asks for `doctor`, warns against CV text)
@@ -59,6 +59,7 @@ Environments, rollback and monitoring: see `release-readiness.md`.
 | 2026-10-31 | npm staged publishing: placeholder `0.0.0-stage` for ~2 min, then `cv-snap-host@0.1.0` released; dist-tags `latest` and `next` = 0.1.0 (npm sets `latest` on a first version) |
 | 2026-11-02 | Store review passed: the item installs from the store for a trusted tester and works (user) |
 | 2026-11-02 | Staging verified (user): clean Chrome profile, store install, host from npm, `doctor`, Add this site, Generate CV, Download PDF all pass → Checkpoint 2 done |
+| 2026-11-02 | Visibility Private → Public, re-review passed; production check as a non-tester passed (user); store link on `main`; GitHub Release `v0.1.0` published → Checkpoint 3 done |
 
 ## Artifacts (tag v0.1.0, commit e9ca4ab)
 
