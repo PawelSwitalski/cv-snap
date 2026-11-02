@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 54
-- **Planned**: 2
+- **Planned**: 0
 - **Generated**: 0
-- **Completed**: 52
-- **Last updated**: 2026-11-02T20:45:00Z
+- **Completed**: 54
+- **Last updated**: 2026-11-02T22:05:00Z
 
 ---
 
@@ -154,16 +154,16 @@
 
 #### 002-other-sections
 
-- [ ] **001-plan-selects-other-sections** — Plan selects other sections, validator checks them - Must - bolt `021-other-sections` - ⏳ PLANNED
+- [x] **001-plan-selects-other-sections** — Plan selects other sections, validator checks them - Must - bolt `021-other-sections` - ✅ COMPLETED
   `memory-bank/intents/003-complete-cv-content/units/002-other-sections/stories/001-plan-selects-other-sections.md`
-- [ ] **002-other-sections-in-cv** — Selected other sections printed, dropped first - Should - bolt `021-other-sections` - ⏳ PLANNED
+- [x] **002-other-sections-in-cv** — Selected other sections printed, dropped first - Should - bolt `021-other-sections` - ✅ COMPLETED
   `memory-bank/intents/003-complete-cv-content/units/002-other-sections/stories/002-other-sections-in-cv.md`
 
 ---
 
 ## Stories by Status
 
-- **Planned**: 2
+- **Planned**: 0
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 52
+- **Completed**: 54

@@ -2,11 +2,11 @@
 id: 002-other-sections-in-cv
 unit: 002-other-sections
 intent: 003-complete-cv-content
-status: planned
+status: complete
 priority: should
 created: '2026-11-02T18:45:00Z'
 assigned_bolt: 021-other-sections
-implemented: false
+implemented: true
 ---
 
 # Story: 002-other-sections-in-cv
@@ -19,10 +19,10 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a plan selecting other sections, **When** the model is built, **Then** each appears as its own section (after the ranked sections, before languages and certifications) with the plan's title or else the profile title, and the profile's lines
-- [ ] **Given** a plan selecting none (or a plan from an older host), **When** the model is built, **Then** no other section is printed
-- [ ] **Given** a CV over two pages, **When** `planDropSteps` runs, **Then** other sections are dropped first (last selected first, whole section per step), before any ranked bullet, and reported
-- [ ] **Given** the PDF, **When** rendered, **Then** other sections use the existing list layout and fonts
+- [x] **Given** a plan selecting other sections, **When** the model is built, **Then** each appears as its own section (after the ranked sections, before languages and certifications) with the plan's title or else the profile title, and the profile's lines
+- [x] **Given** a plan selecting none (or a plan from an older host), **When** the model is built, **Then** no other section is printed
+- [x] **Given** a CV over two pages, **When** `planDropSteps` runs, **Then** other sections are dropped first (last selected first, whole section per step), before any ranked bullet, and reported
+- [x] **Given** the PDF, **When** rendered, **Then** other sections use the existing list layout and fonts
 
 ## Technical Notes
 
