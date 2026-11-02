@@ -1,11 +1,11 @@
 # Global Story Index
 
 ## Overview
-- **Total stories**: 49
-- **Planned**: 0
+- **Total stories**: 54
+- **Planned**: 5
 - **Generated**: 0
 - **Completed**: 49
-- **Last updated**: 2026-10-31T09:50:00Z
+- **Last updated**: 2026-11-02T18:45:00Z
 
 ---
 
@@ -139,11 +139,31 @@
 - [x] **005-store-listing-texts** — Chrome Web Store listing texts - Must - bolt `016-ci-and-release-docs` - ✅ COMPLETED
   `memory-bank/intents/002-release-readiness/units/003-ci-and-release-docs/stories/005-store-listing-texts.md`
 
+
+### 003-complete-cv-content
+
+
+#### 001-complete-cv-model
+
+- [ ] **001-education-always-printed** — Every education entry is printed - Must - bolt `020-complete-cv-model` - ⏳ PLANNED
+  `memory-bank/intents/003-complete-cv-content/units/001-complete-cv-model/stories/001-education-always-printed.md`
+- [ ] **002-all-skills-printed** — All skills printed, plan-selected first - Must - bolt `020-complete-cv-model` - ⏳ PLANNED
+  `memory-bank/intents/003-complete-cv-content/units/001-complete-cv-model/stories/002-all-skills-printed.md`
+- [ ] **003-live-regression-education** — Live regression checks education and skills - Must - bolt `020-complete-cv-model` - ⏳ PLANNED
+  `memory-bank/intents/003-complete-cv-content/units/001-complete-cv-model/stories/003-live-regression-education.md`
+
+#### 002-other-sections
+
+- [ ] **001-plan-selects-other-sections** — Plan selects other sections, validator checks them - Must - bolt `021-other-sections` - ⏳ PLANNED
+  `memory-bank/intents/003-complete-cv-content/units/002-other-sections/stories/001-plan-selects-other-sections.md`
+- [ ] **002-other-sections-in-cv** — Selected other sections printed, dropped first - Should - bolt `021-other-sections` - ⏳ PLANNED
+  `memory-bank/intents/003-complete-cv-content/units/002-other-sections/stories/002-other-sections-in-cv.md`
+
 ---
 
 ## Stories by Status
 
-- **Planned**: 0
+- **Planned**: 5
 - **Generated**: 0
 - **In Progress**: 0
 - **Completed**: 49
