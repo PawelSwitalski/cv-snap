@@ -2,7 +2,7 @@
 release: 0.1.0
 intents: [001-one-click-tailored-cv, 002-release-readiness]
 created: 2026-10-30T17:45:00Z
-updated: 2026-10-31T19:40:00Z
+updated: 2026-11-02T12:00:00Z
 status: staging
 ---
 
@@ -22,12 +22,12 @@ Environments, rollback and monitoring: see `release-readiness.md`.
   - [x] `pnpm release:pack` → `release/` (store zip + host tarball); tag `v0.1.0` on `e9ca4ab` (moved from `cae1b58` after fix bolts 018 and 019)
   - [x] npm login (user: `pawel-switalski`)
 - [x] **Dev + verify**: dev build in a clean Chrome profile + host from the release tarball (user, 2026-10-31; found and fixed bolts 018, 019)
-- [ ] **Checkpoint 2: Staging**: CWS trusted testers; `npm publish --tag next`; verify
+- [x] **Checkpoint 2: Staging**: CWS trusted testers; `npm publish --tag next`; verify
   - [x] Store listing, privacy practices (PII + website content; 3 certifications; remote code: No), 5 screenshots (1280×800, address bar and company blurred), visibility Private → trusted testers (user)
   - [x] Submitted for review 2026-10-31 (user); publisher contact email set and verified
-  - [ ] Review passed
+  - [x] Review passed (2026-11-02: store install works for a trusted tester)
   - [x] `npm publish ./release/cv-snap-host-0.1.0.tgz --tag next` (user, 2026-10-31): shasum `606e0fc1…` matches the tarball, 207 files; `npx cv-snap-host@next --version` → 0.1.0
-  - [ ] Verify: store install in a clean profile + host, `doctor`, Add this site, Generate CV, Download PDF
+  - [x] Verify: store install in a clean profile + host from npm (`npx cv-snap-host@next install`), `doctor`, Add this site, Generate CV, Download PDF (user, 2026-11-02: all passed)
 - [ ] **Checkpoint 3: Production**: public listing; npm `latest`; verify
   - [x] npm `latest` = 0.1.0 already (set by npm on the first version)
   - [x] Store link in the READMEs prepared on branch `release/store-link` (merge when public)
@@ -57,6 +57,8 @@ Environments, rollback and monitoring: see `release-readiness.md`.
 | 2026-10-31 | Store item submitted for review (trusted testers); publisher contact email set and verified; screenshots kept outside the repo |
 | 2026-10-31 | First `npm publish` failed: login session expired (401, shown as 404), then 2FA could not complete through the `!` prompt; published from the user's PowerShell |
 | 2026-10-31 | npm staged publishing: placeholder `0.0.0-stage` for ~2 min, then `cv-snap-host@0.1.0` released; dist-tags `latest` and `next` = 0.1.0 (npm sets `latest` on a first version) |
+| 2026-11-02 | Store review passed: the item installs from the store for a trusted tester and works (user) |
+| 2026-11-02 | Staging verified (user): clean Chrome profile, store install, host from npm, `doctor`, Add this site, Generate CV, Download PDF all pass → Checkpoint 2 done |
 
 ## Artifacts (tag v0.1.0, commit e9ca4ab)
 
