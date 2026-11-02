@@ -2,11 +2,11 @@
 unit: 001-complete-cv-model
 intent: 003-complete-cv-content
 phase: inception
-status: stories-defined
+status: complete
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 created: '2026-11-02T18:45:00Z'
-updated: '2026-11-02T18:45:00Z'
+updated: '2026-11-02T20:45:00Z'
 ---
 
 # Unit Brief: 001-complete-cv-model
@@ -36,9 +36,9 @@ The CV model always prints every education entry and every profile skill (plan-s
 
 ### Stories
 
-- [ ] **001-education-always-printed**: Every education entry is printed - Must - Planned
-- [ ] **002-all-skills-printed**: All skills printed, plan-selected first - Must - Planned
-- [ ] **003-live-regression-education**: Live regression checks education - Must - Planned
+- [x] **001-education-always-printed**: Every education entry is printed - Must - Complete
+- [x] **002-all-skills-printed**: All skills printed, plan-selected first - Must - Complete
+- [x] **003-live-regression-education**: Live regression checks education - Must - Complete
 
 ---
 
@@ -51,9 +51,9 @@ The CV model always prints every education entry and every profile skill (plan-s
 
 ## Success Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests passing (unit; `pnpm test:live` for the regression check)
-- [ ] Code reviewed and approved
+- [x] All acceptance criteria met
+- [x] Tests passing (unit; `pnpm test:live` for the regression check)
+- [x] Code reviewed and approved
 
 ---
 

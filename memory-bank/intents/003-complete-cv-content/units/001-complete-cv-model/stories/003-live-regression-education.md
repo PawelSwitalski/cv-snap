@@ -2,11 +2,11 @@
 id: 003-live-regression-education
 unit: 001-complete-cv-model
 intent: 003-complete-cv-content
-status: planned
+status: complete
 priority: must
 created: '2026-11-02T18:45:00Z'
 assigned_bolt: 020-complete-cv-model
-implemented: false
+implemented: true
 ---
 
 # Story: 003-live-regression-education
@@ -19,9 +19,9 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** `pnpm test:live`, **When** a fixture is tailored, **Then** the run fails if the CV model is missing any education entry of the fixture profile
-- [ ] **Given** the same run, **When** checked, **Then** every profile skill is in the CV model
-- [ ] **Given** the fixture set, **When** reviewed, **Then** at least one fixture has two or more education entries and an ad that doesn't mention education
+- [x] **Given** `pnpm test:live`, **When** a fixture is tailored, **Then** the run fails if the CV model is missing any education entry of the fixture profile
+- [x] **Given** the same run, **When** checked, **Then** every profile skill is in the CV model
+- [x] **Given** the fixture set, **When** reviewed, **Then** at least one fixture has two or more education entries and an ad that doesn't mention education
 
 ## Technical Notes
 

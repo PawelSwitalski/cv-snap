@@ -2,11 +2,11 @@
 id: 002-all-skills-printed
 unit: 001-complete-cv-model
 intent: 003-complete-cv-content
-status: planned
+status: complete
 priority: must
 created: '2026-11-02T18:45:00Z'
 assigned_bolt: 020-complete-cv-model
-implemented: false
+implemented: true
 ---
 
 # Story: 002-all-skills-printed
@@ -19,10 +19,10 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a plan selecting some skills, **When** the model is built, **Then** the skills section lists the plan's skills in plan order, followed by every other profile skill in profile order
-- [ ] **Given** a plan skill that cites a profile skill, **When** the model is built, **Then** that profile skill appears once (the plan's name kept)
-- [ ] **Given** a CV still over two pages after all ranked bullets and items are dropped, **When** fitting continues, **Then** non-selected skills are dropped from the end, one per step, and reported
-- [ ] **Given** any fit, **When** it finishes, **Then** plan-selected skills are never dropped
+- [x] **Given** a plan selecting some skills, **When** the model is built, **Then** the skills section lists the plan's skills in plan order, followed by every other profile skill in profile order
+- [x] **Given** a plan skill that cites a profile skill, **When** the model is built, **Then** that profile skill appears once (the plan's name kept)
+- [x] **Given** a CV still over two pages after all ranked bullets and items are dropped, **When** fitting continues, **Then** non-selected skills are dropped from the end, one per step, and reported
+- [x] **Given** any fit, **When** it finishes, **Then** plan-selected skills are never dropped
 
 ## Technical Notes
 

@@ -2,11 +2,11 @@
 id: 001-education-always-printed
 unit: 001-complete-cv-model
 intent: 003-complete-cv-content
-status: planned
+status: complete
 priority: must
 created: '2026-11-02T18:45:00Z'
 assigned_bolt: 020-complete-cv-model
-implemented: false
+implemented: true
 ---
 
 # Story: 001-education-always-printed
@@ -19,11 +19,11 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a profile with N education entries and a plan with no education items, **When** `buildCvModel` runs, **Then** the model has an education section with N entries, printed with their profile bullets
-- [ ] **Given** a plan that ranks some education entries, **When** the model is built, **Then** those entries keep the plan's order and bullets, and the remaining entries follow in profile order with profile bullets
-- [ ] **Given** a plan with no education items, **When** the model is built, **Then** the education section comes after experience and projects
-- [ ] **Given** a CV over two pages, **When** `planDropSteps` runs, **Then** it may drop education bullets but never an education entry
-- [ ] **Given** education bullets were dropped, **When** the result is shown, **Then** they are listed with the other dropped content
+- [x] **Given** a profile with N education entries and a plan with no education items, **When** `buildCvModel` runs, **Then** the model has an education section with N entries, printed with their profile bullets
+- [x] **Given** a plan that ranks some education entries, **When** the model is built, **Then** those entries keep the plan's order and bullets, and the remaining entries follow in profile order with profile bullets
+- [x] **Given** a plan with no education items, **When** the model is built, **Then** the education section comes after experience and projects
+- [x] **Given** a CV over two pages, **When** `planDropSteps` runs, **Then** it may drop education bullets but never an education entry
+- [x] **Given** education bullets were dropped, **When** the result is shown, **Then** they are listed with the other dropped content
 
 ## Technical Notes
 

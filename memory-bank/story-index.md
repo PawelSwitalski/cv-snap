@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 54
-- **Planned**: 5
+- **Planned**: 2
 - **Generated**: 0
-- **Completed**: 49
-- **Last updated**: 2026-11-02T18:45:00Z
+- **Completed**: 52
+- **Last updated**: 2026-11-02T20:45:00Z
 
 ---
 
@@ -145,11 +145,11 @@
 
 #### 001-complete-cv-model
 
-- [ ] **001-education-always-printed** — Every education entry is printed - Must - bolt `020-complete-cv-model` - ⏳ PLANNED
+- [x] **001-education-always-printed** — Every education entry is printed - Must - bolt `020-complete-cv-model` - ✅ COMPLETED
   `memory-bank/intents/003-complete-cv-content/units/001-complete-cv-model/stories/001-education-always-printed.md`
-- [ ] **002-all-skills-printed** — All skills printed, plan-selected first - Must - bolt `020-complete-cv-model` - ⏳ PLANNED
+- [x] **002-all-skills-printed** — All skills printed, plan-selected first - Must - bolt `020-complete-cv-model` - ✅ COMPLETED
   `memory-bank/intents/003-complete-cv-content/units/001-complete-cv-model/stories/002-all-skills-printed.md`
-- [ ] **003-live-regression-education** — Live regression checks education and skills - Must - bolt `020-complete-cv-model` - ⏳ PLANNED
+- [x] **003-live-regression-education** — Live regression checks education and skills - Must - bolt `020-complete-cv-model` - ✅ COMPLETED
   `memory-bank/intents/003-complete-cv-content/units/001-complete-cv-model/stories/003-live-regression-education.md`
 
 #### 002-other-sections
@@ -163,7 +163,7 @@
 
 ## Stories by Status
 
-- **Planned**: 5
+- **Planned**: 2
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 49
+- **Completed**: 52
