@@ -32,12 +32,15 @@ export interface CvEntry {
    * profile skills after them are dropped last, from the end. Unset: not part of the fit.
    */
   fixedBullets?: number;
+  /** Dropped as a whole before anything else to fit two pages (other sections). */
+  dropFirst?: boolean;
 }
 
 export type CvSectionLayout = "paragraph" | "entries" | "inline" | "list";
 
 export interface CvSection {
-  key: SectionKey;
+  /** `other`: one selected profile "other section"; several may appear, each with its title. */
+  key: SectionKey | "other";
   heading: string;
   layout: CvSectionLayout;
   entries: CvEntry[];
@@ -75,7 +78,8 @@ type RankedItemKind = "experience" | "projects" | "education";
  *
  * Education and skills are complete whatever the plan selects: every education entry is printed
  * (the plan's first, then the rest with their profile bullets), and every profile skill follows
- * the plan's skills.
+ * the plan's skills. Other sections appear only when the plan selects them, with their profile
+ * lines, after the skills.
  */
 export function buildCvModel(
   profile: CvProfile,
@@ -177,6 +181,29 @@ export function buildCvModel(
     });
   }
 
+  const printedSections = new Set<string>();
+  for (const selected of plan.otherSections) {
+    const section = profile.otherSections.find((item) => item.id === selected.profileId);
+    if (!section || printedSections.has(section.id) || section.items.length === 0) continue;
+    printedSections.add(section.id);
+    sections.push({
+      key: "other",
+      heading: selected.title?.trim() || section.title,
+      layout: "list",
+      entries: [
+        {
+          id: section.id,
+          rank: null,
+          title: null,
+          subtitle: null,
+          dates: null,
+          bullets: section.items.map((line) => line.text),
+          dropFirst: true,
+        },
+      ],
+    });
+  }
+
   const languages = profile.languages.map((item) =>
     item.level ? `${item.name} — ${item.level}` : item.name,
   );
@@ -239,6 +266,10 @@ export function buildCvModel(
     clause: options.clause ?? null,
   };
 }
+
+/** A unique React key for a section: other sections share `key`, so their entry ID is added. */
+export const sectionKey = (section: CvSection): string =>
+  section.key === "other" ? `other:${section.entries[0]?.id ?? ""}` : section.key;
 
 const skillKey = (name: string) => name.trim().toLocaleLowerCase();
 

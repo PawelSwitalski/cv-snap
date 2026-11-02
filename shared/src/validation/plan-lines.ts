@@ -13,7 +13,7 @@ export interface PlanLineRef {
 
 /**
  * Lines in plan order with positional IDs: `summary[i]`, `items[<profileId>].bullets[j]`,
- * `skills[k]`. A profile ID repeated in the plan gets `~2`, `~3`… so IDs stay unique.
+ * `skills[k]`, `otherSections[n]`. A profile ID repeated in the plan gets `~2`, `~3`… so IDs stay unique.
  */
 export function planLines(plan: TailoringPlan): PlanLineRef[] {
   const lines: PlanLineRef[] = [];
@@ -47,6 +47,15 @@ export function planLines(plan: TailoringPlan): PlanLineRef[] {
       kind: "skill",
       text: skill.name,
       sourceIds: skill.sourceIds,
+      parentProfileId: null,
+    });
+  });
+  plan.otherSections.forEach((section, index) => {
+    lines.push({
+      lineId: `otherSections[${String(index)}]`,
+      kind: "section",
+      text: section.title ?? "",
+      sourceIds: [section.profileId],
       parentProfileId: null,
     });
   });

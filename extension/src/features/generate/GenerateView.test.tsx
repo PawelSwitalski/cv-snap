@@ -287,6 +287,7 @@ describe("GenerateView", () => {
       drop: () => [
         { kind: "item", entryId: "exp_beta", title: "Beta role", text: null },
         { kind: "skill", entryId: "skills", title: null, text: "Docker" },
+        { kind: "section", entryId: "oth_hobby", title: "Zainteresowania", text: null },
       ],
     });
     const store = createGenerateStore({ connect: connector.connect });
@@ -310,9 +311,10 @@ describe("GenerateView", () => {
       connector.last().emit({ type: "result", result: generationResult() });
     });
 
-    expect(await screen.findByRole("heading", { name: en("result_dropped", "2") })).toBeTruthy();
+    expect(await screen.findByRole("heading", { name: en("result_dropped", "3") })).toBeTruthy();
     expect(screen.getByText(en("result_dropped_item", "Beta role"))).toBeTruthy();
     expect(screen.getByText(en("result_dropped_skill", "Docker"))).toBeTruthy();
+    expect(screen.getByText(en("result_dropped_section", "Zainteresowania"))).toBeTruthy();
     await waitFor(() => {
       expect(renderer.rendered.length).toBeGreaterThan(0);
     });

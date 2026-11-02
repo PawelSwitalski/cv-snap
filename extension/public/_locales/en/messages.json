@@ -805,6 +805,14 @@
       }
     }
   },
+  "result_dropped_section": {
+    "message": "$TITLE$ (whole section)",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
   "panel_error_retry": {
     "message": "Try again"
   },

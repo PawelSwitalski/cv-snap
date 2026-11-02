@@ -411,7 +411,9 @@ function DroppedList({ dropped }: { dropped: DroppedContent[] }) {
               ? t("result_dropped_item", item.title ?? item.entryId)
               : item.kind === "skill"
                 ? t("result_dropped_skill", item.text ?? "")
-                : t("result_dropped_bullet", item.title ?? item.entryId, item.text ?? "")}
+                : item.kind === "section"
+                  ? t("result_dropped_section", item.title ?? item.entryId)
+                  : t("result_dropped_bullet", item.title ?? item.entryId, item.text ?? "")}
           </li>
         ))}
       </ul>

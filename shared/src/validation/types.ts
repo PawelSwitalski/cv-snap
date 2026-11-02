@@ -17,17 +17,20 @@ export const ValidationRuleSchema = z.enum(VALIDATION_RULES);
 export type ValidationRule = z.infer<typeof ValidationRuleSchema>;
 
 /**
- * Positional line ID (ddd-02 decision 2): `summary[i]`, `items[<profileId>].bullets[j]` or
- * `skills[k]`. Items are keyed by profile ID, so re-ranking items keeps bullet IDs; a profile ID
+ * Positional line ID (ddd-02 decision 2): `summary[i]`, `items[<profileId>].bullets[j]`,
+ * `skills[k]` or `otherSections[n]`. Items are keyed by profile ID, so re-ranking items keeps bullet IDs; a profile ID
  * that appears twice in a plan gets `~2`, `~3`… on its later occurrences.
  */
 export const LineIdSchema = z
   .string()
-  .regex(/^(summary\[\d+\]|skills\[\d+\]|items\[[A-Za-z0-9_-]+(~\d+)?\]\.bullets\[\d+\])$/);
+  .regex(
+    /^(summary\[\d+\]|skills\[\d+\]|otherSections\[\d+\]|items\[[A-Za-z0-9_-]+(~\d+)?\]\.bullets\[\d+\])$/,
+  );
 
 export type LineId = z.infer<typeof LineIdSchema>;
 
-export type PlanLineKind = "summary" | "bullet" | "skill";
+/** `section`: a selected other section; only its citation is checked (the title is a label). */
+export type PlanLineKind = "summary" | "bullet" | "skill" | "section";
 
 /** The offending token is normalised and short; never surrounding text (it goes into a prompt). */
 export const MAX_TOKEN_CHARS = 80;

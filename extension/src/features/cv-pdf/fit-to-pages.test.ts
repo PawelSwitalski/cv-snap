@@ -225,3 +225,41 @@ describe("two-page fit: education and skills (intent 003)", () => {
     expect(result.model.sections.find((s) => s.key === "education")?.entries).toHaveLength(1);
   });
 });
+
+describe("two-page fit: other sections (intent 003, unit 002)", () => {
+  function longModelWithSections() {
+    const { profile, plan } = buildLongCv(1, 1);
+    profile.otherSections = [
+      { id: "oth_a", title: "Kursy", items: [{ id: "oth_a_1", text: "Kurs A" }] },
+      { id: "oth_b", title: "Wolontariat", items: [{ id: "oth_b_1", text: "Fundacja B" }] },
+    ];
+    plan.otherSections = [
+      { profileId: "oth_a", title: null },
+      { profileId: "oth_b", title: null },
+    ];
+    return buildCvModel(profile, plan);
+  }
+
+  it("drops other sections first, the last selected first", () => {
+    const steps = planDropSteps(longModelWithSections());
+
+    expect(steps.slice(0, 3)).toEqual([
+      { kind: "section", entryId: "oth_b" },
+      { kind: "section", entryId: "oth_a" },
+      { kind: "bullet", entryId: "exp_1", bulletIndex: 0 },
+    ]);
+  });
+
+  it("removes a whole section and reports it by its heading", () => {
+    const model = longModelWithSections();
+
+    const { model: smaller, dropped } = applyDropSteps(model, planDropSteps(model), 1);
+
+    expect(dropped).toEqual([
+      { kind: "section", entryId: "oth_b", title: "Wolontariat", text: null },
+    ]);
+    expect(smaller.sections.filter((s) => s.key === "other").map((s) => s.heading)).toEqual([
+      "Kursy",
+    ]);
+  });
+});

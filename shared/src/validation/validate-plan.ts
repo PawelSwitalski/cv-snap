@@ -27,7 +27,8 @@ export interface ValidateOptions extends ValidatePlanOptions {
 /**
  * The deterministic validator (story 006, FR-11): checks every summary line, bullet and skill of a
  * plan against the facts of the lines it cites in the confirmed profile. Pure, no I/O, no LLM; the
- * same plan and profile always give the same run. Headings and gaps are never validated.
+ * same plan and profile always give the same run. Headings and gaps are never validated; for a
+ * selected other section only the citation is (its lines are printed from the profile verbatim).
  */
 export function validatePlan(
   plan: TailoringPlan,
@@ -47,7 +48,7 @@ export function validatePlan(
       continue;
     }
     let findings = unknownSources(line, index);
-    if (findings.length === 0) {
+    if (findings.length === 0 && line.kind !== "section") {
       const context: RuleContext = {
         line,
         facts: index.factsFor(line.sourceIds, line.parentProfileId),

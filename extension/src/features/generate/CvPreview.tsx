@@ -3,7 +3,7 @@ import { AlertTriangle, Check, PencilLine, Trash2, UserPen, X } from "lucide-rea
 import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label, Textarea } from "@/components/ui/field";
-import type { CvEntry, CvModel, CvSection } from "@/features/cv-pdf/cv-model";
+import { sectionKey, type CvEntry, type CvModel, type CvSection } from "@/features/cv-pdf/cv-model";
 import { useT } from "@/lib/i18n/i18n";
 import { cn } from "@/lib/utils";
 import type { LineAnnotation, PrintedLineIds } from "./preview-model";
@@ -57,7 +57,7 @@ export function CvPreview({
       </header>
       {model.sections.map((section) => (
         <PreviewSection
-          key={section.key}
+          key={sectionKey(section)}
           section={section}
           lineIds={lineIds}
           annotations={annotations}

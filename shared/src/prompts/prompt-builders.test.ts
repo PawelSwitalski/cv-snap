@@ -119,6 +119,22 @@ describe("requirements prompt", () => {
   });
 });
 
+describe("tailor prompt: other sections (intent 003)", () => {
+  it("asks to select relevant other sections when the profile has some", () => {
+    const prompt = promptBuilders.tailor(tailorInput("en"));
+
+    expect(prompt.system).toContain("otherSections");
+    expect(prompt.system).toContain("English (en) only if");
+  });
+
+  it("doesn't mention other sections for a profile without them", () => {
+    const input = tailorInput("pl");
+    input.profile.otherSections = [];
+
+    expect(promptBuilders.tailor(input).system).not.toContain("otherSections");
+  });
+});
+
 describe("tailor prompt", () => {
   it("never receives the raw ad text, only parsed requirements", () => {
     const prompt = promptBuilders.tailor(tailorInput("pl"));

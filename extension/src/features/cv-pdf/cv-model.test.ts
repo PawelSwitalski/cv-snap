@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildLongCv, smallPlan, smallProfile } from "../../../test/cv-fixtures";
-import { buildCvModel, formatDate, formatRange } from "./cv-model";
+import { buildCvModel, formatDate, formatRange, sectionKey } from "./cv-model";
 
 describe("buildCvModel", () => {
   it("builds the header from the profile and leaves the photo out when there is none", () => {
@@ -278,5 +278,79 @@ describe("buildCvModel: all skills are printed (intent 003, story 002)", () => {
     expect(
       sectionOf(buildCvModel(profile, { ...smallPlan(), skills: [] }), "skills"),
     ).toBeUndefined();
+  });
+});
+
+describe("buildCvModel: selected other sections (intent 003, unit 002)", () => {
+  const profileWithCourses = () => {
+    const profile = smallProfile();
+    profile.otherSections.push(
+      {
+        id: "oth_course",
+        title: "Kursy",
+        items: [{ id: "oth_course_1", text: "Kurs Kubernetes" }],
+      },
+      { id: "oth_empty", title: "Puste", items: [] },
+    );
+    return profile;
+  };
+  const otherOf = (model: ReturnType<typeof buildCvModel>) =>
+    model.sections
+      .filter((section) => section.key === "other")
+      .map((section) => [section.heading, section.layout, section.entries[0]?.bullets]);
+
+  it("prints no other section when the plan selects none", () => {
+    expect(otherOf(buildCvModel(profileWithCourses(), smallPlan()))).toEqual([]);
+  });
+
+  it("prints each selected section with its title and profile lines, in plan order", () => {
+    const plan = smallPlan();
+    plan.otherSections = [
+      { profileId: "oth_course", title: "Courses" },
+      { profileId: "oth_hobby", title: null },
+    ];
+
+    const model = buildCvModel(profileWithCourses(), plan);
+
+    expect(otherOf(model)).toEqual([
+      ["Courses", "list", ["Kurs Kubernetes"]],
+      ["Zainteresowania", "list", ["Wspinaczka"]],
+    ]);
+    expect(model.sections.map((section) => section.key)).toEqual([
+      "summary",
+      "experience",
+      "education",
+      "skills",
+      "other",
+      "other",
+      "languages",
+      "certifications",
+    ]);
+  });
+
+  it("skips unknown, empty and repeated sections, and a blank title falls back", () => {
+    const plan = smallPlan();
+    plan.otherSections = [
+      { profileId: "oth_ghost", title: null },
+      { profileId: "oth_empty", title: null },
+      { profileId: "oth_hobby", title: "  " },
+      { profileId: "oth_hobby", title: "Again" },
+    ];
+
+    expect(otherOf(buildCvModel(profileWithCourses(), plan))).toEqual([
+      ["Zainteresowania", "list", ["Wspinaczka"]],
+    ]);
+  });
+
+  it("gives every section a unique key", () => {
+    const plan = smallPlan();
+    plan.otherSections = [
+      { profileId: "oth_course", title: null },
+      { profileId: "oth_hobby", title: null },
+    ];
+
+    const keys = buildCvModel(profileWithCourses(), plan).sections.map(sectionKey);
+
+    expect(new Set(keys).size).toBe(keys.length);
   });
 });

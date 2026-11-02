@@ -63,3 +63,30 @@ describe("TailoringPlanSchema", () => {
     expect(TailoringPlanSchema.safeParse(plan).success).toBe(true);
   });
 });
+
+describe("TailoringPlanSchema: other sections (intent 003)", () => {
+  it("parses a plan without otherSections (hosts before 0.1.1) as none selected", () => {
+    const older: Record<string, unknown> = { ...validPlan() };
+    delete older.otherSections;
+
+    expect(TailoringPlanSchema.parse(older).otherSections).toEqual([]);
+  });
+
+  it("accepts selected sections with or without a translated title", () => {
+    const plan = {
+      ...validPlan(),
+      otherSections: [
+        { profileId: "oth_hobby", title: null },
+        { profileId: "oth_course", title: "Courses" },
+      ],
+    };
+
+    expect(TailoringPlanSchema.parse(plan).otherSections).toHaveLength(2);
+  });
+
+  it("rejects a selected section without a profileId", () => {
+    const plan = { ...validPlan(), otherSections: [{ title: null }] };
+
+    expect(TailoringPlanSchema.safeParse(plan).success).toBe(false);
+  });
+});

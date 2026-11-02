@@ -27,6 +27,15 @@ export const PlanSkillSchema = z.object({
   sourceIds: SourceIdsSchema,
 });
 
+/**
+ * A profile "other section" (courses, volunteering, …) selected for the CV. Its lines are printed
+ * from the profile as they are; `title` is set only to translate the profile's title.
+ */
+export const PlanOtherSectionSchema = z.object({
+  profileId: IdSchema,
+  title: z.string().max(LIMITS.shortChars).nullable(),
+});
+
 /** Requirement the user doesn't meet: shown to the user, never written into the CV. */
 export const GapSchema = z.object({
   requirement: LineTextSchema,
@@ -52,6 +61,8 @@ export const TailoringPlanSchema = z.object({
   summary: z.array(PlanLineSchema).max(LIMITS.bullets),
   items: z.array(PlanItemSchema).max(LIMITS.sectionItems),
   skills: z.array(PlanSkillSchema).max(LIMITS.listItems),
+  /** Missing in plans from hosts before 0.1.1: parsed as none selected. */
+  otherSections: z.array(PlanOtherSectionSchema).max(LIMITS.sectionItems).default([]),
   headings: PlanHeadingsSchema,
   gaps: z.array(GapSchema).max(LIMITS.sectionItems),
 });
@@ -59,6 +70,7 @@ export const TailoringPlanSchema = z.object({
 export type PlanLine = z.infer<typeof PlanLineSchema>;
 export type PlanItem = z.infer<typeof PlanItemSchema>;
 export type PlanSkill = z.infer<typeof PlanSkillSchema>;
+export type PlanOtherSection = z.infer<typeof PlanOtherSectionSchema>;
 export type Gap = z.infer<typeof GapSchema>;
 export type PlanHeadings = z.infer<typeof PlanHeadingsSchema>;
 export type TailoringPlan = z.infer<typeof TailoringPlanSchema>;

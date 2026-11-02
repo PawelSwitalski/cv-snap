@@ -145,3 +145,55 @@ describe("validatePlan: spoken languages in the skills list", () => {
     ]);
   });
 });
+
+describe("validatePlan: selected other sections (intent 003)", () => {
+  const withSections = (...otherSections: TailoringPlan["otherSections"]) => ({
+    ...plan(),
+    otherSections,
+  });
+
+  it("verifies a section that exists in the profile, without fact rules on its title", () => {
+    const run = validatePlan(
+      withSections({ profileId: "oth_hobby", title: "Hobbies 2024" }),
+      profile(),
+    );
+
+    expect(run.results.at(-1)).toEqual({
+      lineId: "otherSections[0]",
+      kind: "section",
+      status: "verified",
+      violations: [],
+    });
+    expect(run.violationCount).toBe(0);
+  });
+
+  it("rejects an unknown section ID with retry feedback", () => {
+    const run = validatePlan(withSections({ profileId: "oth_ghost", title: null }), profile());
+
+    expect(run.results.at(-1)?.status).toBe("unverified");
+    expect(rulesOf(run)).toEqual(["UNKNOWN_SOURCE"]);
+    expect(toFeedback(run)).toEqual([
+      'otherSections[0]: cites an id that is not in the profile ("oth_ghost")',
+    ]);
+  });
+
+  it("accepts the same section selected twice", () => {
+    const run = validatePlan(
+      withSections(
+        { profileId: "oth_hobby", title: null },
+        { profileId: "oth_hobby", title: null },
+      ),
+      profile(),
+    );
+
+    expect(run.violationCount).toBe(0);
+  });
+
+  it("leaves out a removed section line", () => {
+    const run = validatePlan(withSections({ profileId: "oth_ghost", title: null }), profile(), {
+      removedLineIds: ["otherSections[0]"],
+    });
+
+    expect(run.violationCount).toBe(0);
+  });
+});

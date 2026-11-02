@@ -1,5 +1,5 @@
 import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
-import type { CvEntry, CvModel, CvSection } from "./cv-model";
+import { sectionKey, type CvEntry, type CvModel, type CvSection } from "./cv-model";
 import { CV_FONT_FAMILY } from "./fonts";
 
 /** Right-to-left output languages (best effort: text alignment only). */
@@ -70,7 +70,7 @@ export function CvDocument({ model }: { model: CvModel }) {
         </View>
 
         {model.sections.map((section) => (
-          <SectionView key={section.key} section={section} />
+          <SectionView key={sectionKey(section)} section={section} />
         ))}
 
         {model.clause ? (

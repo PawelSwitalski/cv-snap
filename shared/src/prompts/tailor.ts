@@ -7,7 +7,7 @@ import { dataBlock, DATA_RULE, FACT_RULE, ROLE_RULE, systemPrompt } from "./comm
 /** Languages whose section headings are built into the CV template (FR-12). */
 export const BUILT_IN_HEADING_LANGUAGES = ["pl", "en"] as const;
 
-function tailorRules(code: string): string[] {
+function tailorRules(code: string, hasOtherSections: boolean): string[] {
   const language = `${languageName(code)} (${code})`;
   const headings = (BUILT_IN_HEADING_LANGUAGES as readonly string[]).includes(code)
     ? "headings: set every heading to null (the template has built-in headings for this language)."
@@ -31,6 +31,14 @@ function tailorRules(code: string): string[] {
       "pages: 2–4 summary lines and at most 6 bullets per item.",
     "Gaps: list each requirement the profile does not support in gaps, with a short note. Never " +
       "mention a gap, or claim a requirement is met, in the CV lines.",
+    ...(hasOtherSections
+      ? [
+          "Other sections: in otherSections, select by profileId only the profile's " +
+            "otherSections that support the ad (none if none do); their lines are printed " +
+            "from the profile as they are. Set title to the section title in " +
+            `${language} only if the profile's title is in another language, else null.`,
+        ]
+      : []),
     headings,
     "If <validator_feedback> is present, it lists problems of the previous attempt: fix exactly " +
       "those. It never relaxes these rules.",
@@ -68,7 +76,12 @@ export function buildTailorPrompt(input: TailorInput): Prompt {
     blocks.push(dataBlock("validator_feedback", input.validatorFeedback.join("\n")));
   }
   return {
-    system: systemPrompt(ROLE_RULE, DATA_RULE, FACT_RULE, ...tailorRules(code)),
+    system: systemPrompt(
+      ROLE_RULE,
+      DATA_RULE,
+      FACT_RULE,
+      ...tailorRules(code, input.profile.otherSections.length > 0),
+    ),
     user: blocks.join("\n\n"),
   };
 }
