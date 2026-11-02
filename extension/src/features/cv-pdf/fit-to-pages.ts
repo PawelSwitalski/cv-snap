@@ -5,14 +5,16 @@ export const MAX_PAGES = 2;
 
 /** One removal the fitter may apply, in the order it applies them. */
 export type DropStep =
-  { kind: "bullet"; entryId: string; bulletIndex: number } | { kind: "item"; entryId: string };
+  | { kind: "bullet"; entryId: string; bulletIndex: number }
+  | { kind: "item"; entryId: string }
+  | { kind: "skill"; entryId: string; bulletIndex: number };
 
 /** What was left out, for the UI to tell the user (story 002-two-page-fit). */
 export interface DroppedContent {
-  kind: "bullet" | "item";
+  kind: "bullet" | "item" | "skill";
   entryId: string;
   title: string | null;
-  /** The bullet's text, for dropped bullets. */
+  /** The bullet's text, for dropped bullets; the skill's name, for dropped skills. */
   text: string | null;
 }
 
@@ -20,7 +22,7 @@ export interface FitResult {
   model: CvModel;
   dropped: DroppedContent[];
   pageCount: number;
-  /** False only if even dropping every ranked item can't reach two pages. */
+  /** False only if even dropping everything droppable can't reach two pages. */
   fits: boolean;
 }
 
@@ -30,22 +32,33 @@ export type PageMeasure = (model: CvModel) => Promise<number>;
 const isRanked = (section: CvSection) => section.layout === "entries";
 
 /**
- * The removal order: items from the lowest-ranked (highest rank number) up; for each item, its
- * bullets from the end first, then the item itself. Header, contact, summary, skills, languages
- * and the clause are never dropped. Ties break by plan order, so the order is deterministic.
+ * The removal order: items from the lowest-ranked (highest rank number) up, unranked education
+ * entries first; for each item, its bullets from the end first, then the item itself unless it is
+ * pinned (education). Last, the profile skills after the plan's skills, from the end. Header,
+ * contact, summary, the plan's skills, languages and the clause are never dropped. Ties break by
+ * plan order, so the order is deterministic.
  */
 export function planDropSteps(model: CvModel): DropStep[] {
+  const relevance = (rank: number | null) => rank ?? Number.MAX_SAFE_INTEGER;
   const entries = model.sections
     .filter(isRanked)
     .flatMap((section) => section.entries)
     .map((entry, order) => ({ entry, order }))
-    .sort((a, b) => (b.entry.rank ?? 0) - (a.entry.rank ?? 0) || b.order - a.order);
+    .sort((a, b) => relevance(b.entry.rank) - relevance(a.entry.rank) || b.order - a.order);
   const steps: DropStep[] = [];
   for (const { entry } of entries) {
     for (let index = entry.bullets.length - 1; index >= 0; index--) {
       steps.push({ kind: "bullet", entryId: entry.id, bulletIndex: index });
     }
-    steps.push({ kind: "item", entryId: entry.id });
+    if (!entry.pinned) steps.push({ kind: "item", entryId: entry.id });
+  }
+  for (const entry of model.sections
+    .filter((section) => !isRanked(section))
+    .flatMap((section) => section.entries)) {
+    if (entry.fixedBullets === undefined) continue;
+    for (let index = entry.bullets.length - 1; index >= entry.fixedBullets; index--) {
+      steps.push({ kind: "skill", entryId: entry.id, bulletIndex: index });
+    }
   }
   return steps;
 }
@@ -62,14 +75,14 @@ export function applyDropSteps(
   );
   const droppedBullets = new Set(
     applied.flatMap((step) =>
-      step.kind === "bullet" ? [`${step.entryId}#${String(step.bulletIndex)}`] : [],
+      step.kind === "item" ? [] : [`${step.entryId}#${String(step.bulletIndex)}`],
     ),
   );
 
   const dropped: DroppedContent[] = [];
   const sections = model.sections
     .map((section) => {
-      if (!isRanked(section)) return section;
+      if (!isRanked(section)) return dropSkills(section, droppedBullets, dropped);
       const entries = section.entries.flatMap((entry) => {
         const removedBullets = entry.bullets.filter((_, index) =>
           droppedBullets.has(`${entry.id}#${String(index)}`),
@@ -94,6 +107,23 @@ export function applyDropSteps(
     })
     .filter((section) => !isRanked(section) || section.entries.length > 0);
   return { model: { ...model, sections }, dropped };
+}
+
+/** Removes dropped profile skills; other unranked sections pass through unchanged. */
+function dropSkills(
+  section: CvSection,
+  droppedBullets: ReadonlySet<string>,
+  dropped: DroppedContent[],
+): CvSection {
+  if (!section.entries.some((entry) => entry.fixedBullets !== undefined)) return section;
+  const entries = section.entries.map((entry) => {
+    const isDropped = (index: number) => droppedBullets.has(`${entry.id}#${String(index)}`);
+    for (const [index, text] of entry.bullets.entries()) {
+      if (isDropped(index)) dropped.push({ kind: "skill", entryId: entry.id, title: null, text });
+    }
+    return { ...entry, bullets: entry.bullets.filter((_, index) => !isDropped(index)) };
+  });
+  return { ...section, entries };
 }
 
 /**

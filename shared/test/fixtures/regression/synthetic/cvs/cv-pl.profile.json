@@ -110,6 +110,27 @@
         },
         "isCurrent": false,
         "bullets": []
+      },
+      {
+        "id": "edu_pl",
+        "institution": "Politechnika Krakowska",
+        "degree": "technik",
+        "field": "Informatyka",
+        "startDate": {
+          "year": 2011,
+          "month": 9
+        },
+        "endDate": {
+          "year": 2015,
+          "month": 6
+        },
+        "isCurrent": false,
+        "bullets": [
+          {
+            "id": "edu_pl_b1",
+            "text": "Projekt dyplomowy: aplikacja webowa do rezerwacji sal."
+          }
+        ]
       }
     ],
     "skills": [

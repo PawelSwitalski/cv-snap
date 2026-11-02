@@ -16,12 +16,22 @@ import { presentLabel, resolveHeadings, type SectionKey } from "./headings";
 export interface CvEntry {
   /** Profile item id (stable; used by two-page fitting and to report dropped items). */
   id: string;
-  /** Plan rank (1 = most relevant); null for entries that are never dropped. */
+  /**
+   * Plan rank (1 = most relevant). Null for entries outside the plan: never dropped, except
+   * education entries the plan didn't mention, whose bullets are dropped first.
+   */
   rank: number | null;
   title: string | null;
   subtitle: string | null;
   dates: string | null;
   bullets: string[];
+  /** The entry itself is never dropped to fit two pages; its bullets can be (education). */
+  pinned?: boolean;
+  /**
+   * For the skills entry: how many leading bullets (the plan's skills) are never dropped; the
+   * profile skills after them are dropped last, from the end. Unset: not part of the fit.
+   */
+  fixedBullets?: number;
 }
 
 export type CvSectionLayout = "paragraph" | "entries" | "inline" | "list";
@@ -52,6 +62,8 @@ export interface CvModel {
 export interface BuildCvModelOptions {
   photoDataUrl?: string | null;
   clause?: string | null;
+  /** Profile skill IDs cited by plan skills the user removed: not printed from the profile either. */
+  removedSkillIds?: readonly string[];
 }
 
 type RankedItemKind = "experience" | "projects" | "education";
@@ -60,6 +72,10 @@ type RankedItemKind = "experience" | "projects" | "education";
  * Joins the plan to the profile. Plan bullets are printed as written (unverified lines the user
  * kept print as normal text; markers are preview-only). Item sections appear in the order of
  * their most relevant item; plan items that don't match a profile item are skipped.
+ *
+ * Education and skills are complete whatever the plan selects: every education entry is printed
+ * (the plan's first, then the rest with their profile bullets), and every profile skill follows
+ * the plan's skills.
  */
 export function buildCvModel(
   profile: CvProfile,
@@ -96,12 +112,29 @@ export function buildCvModel(
       rank: planItem.rank,
       ...describeItem(found, language),
       bullets: planItem.bullets.map((bullet) => bullet.text),
+      ...(found.kind === "education" ? { pinned: true } : {}),
     };
     if (!byKind.has(found.kind)) {
       byKind.set(found.kind, []);
       kindOrder.push(found.kind);
     }
     byKind.get(found.kind)?.push(entry);
+  }
+  const unplannedEducation = profile.education
+    .filter((item) => !seen.has(item.id))
+    .map((item): CvEntry => ({
+      id: item.id,
+      rank: null,
+      ...describeItem({ kind: "education", item }, language),
+      bullets: item.bullets.map((bullet) => bullet.text),
+      pinned: true,
+    }));
+  if (unplannedEducation.length > 0) {
+    if (!byKind.has("education")) {
+      byKind.set("education", []);
+      kindOrder.push("education");
+    }
+    byKind.get("education")?.push(...unplannedEducation);
   }
   for (const kind of kindOrder) {
     sections.push({
@@ -112,14 +145,34 @@ export function buildCvModel(
     });
   }
 
-  const skills = plan.skills.map((skill) => skill.name);
+  const cited = new Set([
+    ...plan.skills.flatMap((skill) => skill.sourceIds),
+    ...(options.removedSkillIds ?? []),
+  ]);
+  const planSkills = plan.skills.map((skill) => skill.name);
+  // A plan skill may cite an experience item instead of the skill: also match by name.
+  const printedNames = new Set(planSkills.map(skillKey));
+  const skills = [
+    ...planSkills,
+    ...profile.skills
+      .filter((skill) => !cited.has(skill.id) && !printedNames.has(skillKey(skill.name)))
+      .map((skill) => skill.name),
+  ];
   if (skills.length > 0) {
     sections.push({
       key: "skills",
       heading: headings.skills,
       layout: "inline",
       entries: [
-        { id: "skills", rank: null, title: null, subtitle: null, dates: null, bullets: skills },
+        {
+          id: "skills",
+          rank: null,
+          title: null,
+          subtitle: null,
+          dates: null,
+          bullets: skills,
+          fixedBullets: planSkills.length,
+        },
       ],
     });
   }
@@ -186,6 +239,8 @@ export function buildCvModel(
     clause: options.clause ?? null,
   };
 }
+
+const skillKey = (name: string) => name.trim().toLocaleLowerCase();
 
 type FoundItem =
   | { kind: "experience"; item: ExperienceItem }

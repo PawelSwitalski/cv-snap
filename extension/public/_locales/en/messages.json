@@ -797,6 +797,14 @@
       }
     }
   },
+  "result_dropped_skill": {
+    "message": "Skill: $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
   "panel_error_retry": {
     "message": "Try again"
   },

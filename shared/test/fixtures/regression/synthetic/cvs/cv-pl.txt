@@ -12,5 +12,10 @@ Acme Sp. z o.o. — Frontend Developer, Kraków, 03/2021 – obecnie
 Beta Soft — Junior Developer, 2019 – 02/2021
 - Utrzymanie paneli administracyjnych w Angular.
 
+Wykształcenie
+AGH — inż., Informatyka, 10/2015 – 02/2019
+Politechnika Krakowska — technik, Informatyka, 09/2011 – 06/2015
+- Projekt dyplomowy: aplikacja webowa do rezerwacji sal.
+
 Umiejętności: React, TypeScript
 Języki: angielski B2

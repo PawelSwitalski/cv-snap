@@ -284,7 +284,10 @@ describe("GenerateView", () => {
     const connector = fakeConnector();
     const page = fakePageStateApis(adPageFacts());
     const renderer = fakeRender({
-      drop: () => [{ kind: "item", entryId: "exp_beta", title: "Beta role", text: null }],
+      drop: () => [
+        { kind: "item", entryId: "exp_beta", title: "Beta role", text: null },
+        { kind: "skill", entryId: "skills", title: null, text: "Docker" },
+      ],
     });
     const store = createGenerateStore({ connect: connector.connect });
     render(
@@ -307,8 +310,9 @@ describe("GenerateView", () => {
       connector.last().emit({ type: "result", result: generationResult() });
     });
 
-    expect(await screen.findByRole("heading", { name: en("result_dropped", "1") })).toBeTruthy();
+    expect(await screen.findByRole("heading", { name: en("result_dropped", "2") })).toBeTruthy();
     expect(screen.getByText(en("result_dropped_item", "Beta role"))).toBeTruthy();
+    expect(screen.getByText(en("result_dropped_skill", "Docker"))).toBeTruthy();
     await waitFor(() => {
       expect(renderer.rendered.length).toBeGreaterThan(0);
     });

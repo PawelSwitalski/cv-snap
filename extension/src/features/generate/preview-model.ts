@@ -107,8 +107,12 @@ export function buildPreviewModel(
       },
     ]),
   );
+  // A skill the user removed must not come back as one of the profile's remaining skills.
+  const removedSkillIds = plan.skills.flatMap((skill, index) =>
+    changes.removed.includes(`skills[${String(index)}]`) ? skill.sourceIds : [],
+  );
   return {
-    model: buildCvModel(profile, edited, options),
+    model: buildCvModel(profile, edited, { ...options, removedSkillIds }),
     validation,
     lineIds: printedLineIds(plan, changes.removed),
     annotations,

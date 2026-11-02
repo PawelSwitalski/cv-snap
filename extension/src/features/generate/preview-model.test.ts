@@ -101,3 +101,15 @@ describe("isAllUnverified", () => {
     expect(isAllUnverified(validatePlan(smallPlan(), smallProfile()))).toBe(false);
   });
 });
+
+describe("buildPreviewModel: removed skills (intent 003)", () => {
+  it("doesn't bring back a removed skill from the profile", () => {
+    const preview = buildPreviewModel(smallPlan(), smallProfile(), {
+      edits: {},
+      removed: ["skills[0]"],
+    });
+
+    const skills = preview.model.sections.find((section) => section.key === "skills");
+    expect(skills?.entries[0]?.bullets).toEqual(["TypeScript"]);
+  });
+});

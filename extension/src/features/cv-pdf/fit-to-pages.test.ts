@@ -129,3 +129,99 @@ describe("fitToTwoPages", () => {
     expect(result.model.clause).toBe("Klauzula");
   });
 });
+
+/** A long CV whose profile has an unplanned school (two bullets) and two skills outside the plan. */
+function longModelWithEducation(items = 2, bullets = 1) {
+  const { profile, plan } = buildLongCv(items, bullets);
+  profile.education = [
+    {
+      id: "edu_1",
+      institution: "Uczelnia Testowa",
+      degree: "inż.",
+      field: null,
+      startDate: { year: 2010, month: 10 },
+      endDate: { year: 2014, month: 2 },
+      isCurrent: false,
+      bullets: [
+        { id: "edu_1_b1", text: "Projekt dyplomowy." },
+        { id: "edu_1_b2", text: "Koło naukowe." },
+      ],
+    },
+  ];
+  profile.skills = [
+    { id: "skl_ts", name: "TypeScript", category: null },
+    { id: "skl_docker", name: "Docker", category: null },
+    { id: "skl_go", name: "Go", category: null },
+  ];
+  plan.skills = [{ name: "TypeScript", sourceIds: ["skl_ts"] }];
+  return buildCvModel(profile, plan, { clause: "Klauzula" });
+}
+
+describe("two-page fit: education and skills (intent 003)", () => {
+  it("drops unplanned education bullets first, never the entry, and profile skills last", () => {
+    const steps = planDropSteps(longModelWithEducation(2, 1));
+
+    expect(steps).toEqual([
+      { kind: "bullet", entryId: "edu_1", bulletIndex: 1 },
+      { kind: "bullet", entryId: "edu_1", bulletIndex: 0 },
+      { kind: "bullet", entryId: "exp_2", bulletIndex: 0 },
+      { kind: "item", entryId: "exp_2" },
+      { kind: "bullet", entryId: "exp_1", bulletIndex: 0 },
+      { kind: "item", entryId: "exp_1" },
+      { kind: "skill", entryId: "skills", bulletIndex: 2 },
+      { kind: "skill", entryId: "skills", bulletIndex: 1 },
+    ]);
+  });
+
+  it("keeps a planned education entry, dropping only its bullets", () => {
+    const { profile, plan } = buildLongCv(1, 0);
+    profile.education = [
+      {
+        id: "edu_1",
+        institution: "Uczelnia Testowa",
+        degree: null,
+        field: null,
+        startDate: null,
+        endDate: null,
+        isCurrent: false,
+        bullets: [{ id: "edu_1_b1", text: "Projekt dyplomowy." }],
+      },
+    ];
+    plan.items.push({
+      profileId: "edu_1",
+      rank: 2,
+      bullets: [{ text: "Projekt dyplomowy.", sourceIds: ["edu_1_b1"] }],
+    });
+
+    const steps = planDropSteps(buildCvModel(profile, plan));
+
+    expect(steps.filter((step) => step.entryId === "edu_1")).toEqual([
+      { kind: "bullet", entryId: "edu_1", bulletIndex: 0 },
+    ]);
+  });
+
+  it("reports dropped skills by name and keeps the plan's skills", () => {
+    const model = longModelWithEducation(1, 0);
+    const steps = planDropSteps(model);
+
+    const { model: smaller, dropped } = applyDropSteps(model, steps, steps.length);
+
+    expect(dropped.filter((item) => item.kind === "skill")).toEqual([
+      { kind: "skill", entryId: "skills", title: null, text: "Docker" },
+      { kind: "skill", entryId: "skills", title: null, text: "Go" },
+    ]);
+    expect(smaller.sections.find((s) => s.key === "skills")?.entries[0]?.bullets).toEqual([
+      "TypeScript",
+    ]);
+    expect(smaller.sections.find((s) => s.key === "education")?.entries).toMatchObject([
+      { id: "edu_1", bullets: [] },
+    ]);
+  });
+
+  it("keeps every education entry even when the CV can't reach two pages", async () => {
+    const result = await fitToTwoPages(longModelWithEducation(3, 2), () => Promise.resolve(3));
+
+    expect(result.fits).toBe(false);
+    expect(result.model.sections.find((s) => s.key === "education")?.entries).toHaveLength(1);
+  });
+});

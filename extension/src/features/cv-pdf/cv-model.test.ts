@@ -25,12 +25,13 @@ describe("buildCvModel", () => {
     expect(model.clause).toBe("Wyrażam zgodę …");
   });
 
-  it("orders sections: summary, ranked items, skills, languages, certifications", () => {
+  it("orders sections: summary, ranked items, education, skills, languages, certifications", () => {
     const model = buildCvModel(smallProfile(), smallPlan());
 
     expect(model.sections.map((section) => section.key)).toEqual([
       "summary",
       "experience",
+      "education",
       "skills",
       "languages",
       "certifications",
@@ -139,5 +140,143 @@ describe("formatDate / formatRange", () => {
     expect(formatRange(null, { year: 2022, month: null }, false, "en")).toBe("2022");
     expect(formatRange(start, null, false, "en")).toBe("03/2021");
     expect(formatRange(null, null, false, "en")).toBeNull();
+  });
+});
+
+/** The small profile with a second education entry (with bullets). */
+function profileWithTwoSchools() {
+  const profile = smallProfile();
+  profile.education.push({
+    id: "edu_pl",
+    institution: "Politechnika Łódzka",
+    degree: "mgr",
+    field: "Informatyka",
+    startDate: { year: 2019, month: 10 },
+    endDate: { year: 2021, month: 6 },
+    isCurrent: false,
+    bullets: [{ id: "edu_pl_b1", text: "Praca magisterska o kompilatorach." }],
+  });
+  return profile;
+}
+
+const sectionOf = (model: ReturnType<typeof buildCvModel>, key: string) =>
+  model.sections.find((section) => section.key === key);
+
+describe("buildCvModel: education is always printed (intent 003, story 001)", () => {
+  it("prints every education entry with its profile bullets when the plan has none", () => {
+    const model = buildCvModel(profileWithTwoSchools(), smallPlan());
+
+    const education = sectionOf(model, "education");
+    expect(education?.entries.map((entry) => entry.id)).toEqual(["edu_agh", "edu_pl"]);
+    expect(education?.entries[1]).toMatchObject({
+      rank: null,
+      pinned: true,
+      title: "Politechnika Łódzka",
+      subtitle: "mgr, Informatyka",
+      dates: "10/2019 – 06/2021",
+      bullets: ["Praca magisterska o kompilatorach."],
+    });
+  });
+
+  it("keeps the plan's education entries first, with the plan's bullets", () => {
+    const plan = smallPlan();
+    plan.items.push({
+      profileId: "edu_pl",
+      rank: 3,
+      bullets: [{ text: "Kompilatory.", sourceIds: ["edu_pl_b1"] }],
+    });
+
+    const education = sectionOf(buildCvModel(profileWithTwoSchools(), plan), "education");
+
+    expect(education?.entries.map((entry) => [entry.id, entry.rank, entry.bullets])).toEqual([
+      ["edu_pl", 3, ["Kompilatory."]],
+      ["edu_agh", null, []],
+    ]);
+    expect(education?.entries.every((entry) => entry.pinned)).toBe(true);
+  });
+
+  it("puts education after experience and projects when the plan has no education", () => {
+    const plan = smallPlan();
+    plan.items.push({ profileId: "prj_cvsnap", rank: 3, bullets: [] });
+
+    const keys = buildCvModel(smallProfile(), plan).sections.map((section) => section.key);
+
+    expect(keys.slice(1, 4)).toEqual(["experience", "projects", "education"]);
+  });
+
+  it("prints no education section for a profile without education", () => {
+    const profile = { ...smallProfile(), education: [] };
+
+    expect(sectionOf(buildCvModel(profile, smallPlan()), "education")).toBeUndefined();
+  });
+
+  it("prints a repeated plan education item once", () => {
+    const plan = smallPlan();
+    plan.items.push(
+      { profileId: "edu_agh", rank: 3, bullets: [] },
+      { profileId: "edu_agh", rank: 4, bullets: [] },
+    );
+
+    const education = sectionOf(buildCvModel(smallProfile(), plan), "education");
+
+    expect(education?.entries.map((entry) => entry.id)).toEqual(["edu_agh"]);
+  });
+});
+
+describe("buildCvModel: all skills are printed (intent 003, story 002)", () => {
+  const profileWithSkills = () => {
+    const profile = smallProfile();
+    profile.skills.push(
+      { id: "skl_docker", name: "Docker", category: null },
+      { id: "skl_go", name: "Go", category: null },
+    );
+    return profile;
+  };
+
+  it("lists the plan's skills first, then the profile's other skills in profile order", () => {
+    const plan = smallPlan();
+    plan.skills = [{ name: "TypeScript", sourceIds: ["skl_ts"] }];
+
+    const skills = sectionOf(buildCvModel(profileWithSkills(), plan), "skills")?.entries[0];
+
+    expect(skills?.bullets).toEqual(["TypeScript", "React", "Docker", "Go"]);
+    expect(skills?.fixedBullets).toBe(1);
+  });
+
+  it("prints every profile skill when the plan selects none", () => {
+    const plan = { ...smallPlan(), skills: [] };
+
+    const skills = sectionOf(buildCvModel(profileWithSkills(), plan), "skills")?.entries[0];
+
+    expect(skills?.bullets).toEqual(["React", "TypeScript", "Docker", "Go"]);
+    expect(skills?.fixedBullets).toBe(0);
+  });
+
+  it("doesn't repeat a profile skill the plan names but cites through another item", () => {
+    const plan = smallPlan();
+    plan.skills = [{ name: "docker ", sourceIds: ["exp_acme"] }];
+
+    const skills = sectionOf(buildCvModel(profileWithSkills(), plan), "skills")?.entries[0];
+
+    expect(skills?.bullets).toEqual(["docker ", "React", "TypeScript", "Go"]);
+  });
+
+  it("leaves out profile skills the user removed in the preview", () => {
+    const plan = { ...smallPlan(), skills: [] };
+
+    const skills = sectionOf(
+      buildCvModel(profileWithSkills(), plan, { removedSkillIds: ["skl_react", "skl_go"] }),
+      "skills",
+    )?.entries[0];
+
+    expect(skills?.bullets).toEqual(["TypeScript", "Docker"]);
+  });
+
+  it("prints no skills section when neither the plan nor the profile has skills", () => {
+    const profile = { ...smallProfile(), skills: [] };
+
+    expect(
+      sectionOf(buildCvModel(profile, { ...smallPlan(), skills: [] }), "skills"),
+    ).toBeUndefined();
   });
 });
