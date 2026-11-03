@@ -2,7 +2,7 @@
 unit: 002-history-ui
 intent: 004-application-history
 phase: inception
-status: in-progress
+status: complete
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 created: '2026-11-03T15:28:00Z'
@@ -41,8 +41,8 @@ The History tab (list, search, filter, actions), mark as sent, the already-in-hi
 - [x] **001-history-tab**: History tab: list, search, filter, actions - Must - Complete
 - [x] **002-mark-as-sent**: Mark as sent with a date - Must - Complete
 - [x] **003-already-in-history-hint**: Already-in-history hint in Generate - Should - Complete
-- [ ] **004-retention-setting**: Retention setting and pruning - Must - Planned
-- [ ] **005-privacy-notice-v2**: Privacy notice and policy v2 - Must - Planned
+- [x] **004-retention-setting**: Retention setting and pruning - Must - Complete
+- [x] **005-privacy-notice-v2**: Privacy notice and policy v2 - Must - Complete
 
 ---
 
@@ -55,9 +55,9 @@ The History tab (list, search, filter, actions), mark as sent, the already-in-hi
 
 ## Success Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
-- [ ] Code reviewed and approved
+- [x] All acceptance criteria met
+- [x] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
+- [x] Code reviewed and approved
 
 ---
 

@@ -2,7 +2,7 @@
 unit: 002-history-ui
 intent: 004-application-history
 created: 2026-11-03T16:30:45Z
-last_updated: 2026-11-03T16:49:07Z
+last_updated: 2026-11-03T17:06:17Z
 ---
 
 # Construction Log: history-ui
@@ -30,3 +30,7 @@ last_updated: 2026-11-03T16:49:07Z
 | 2026-11-03T16:34:14Z | 024-history-ui | stage-complete | plan → implement |
 | 2026-11-03T16:40:49Z | 024-history-ui | stage-complete | implement → test |
 | 2026-11-03T16:49:07Z | 024-history-ui | completed | 1283 tests + e2e; History list paged by 50 to meet the 500-entry target (393 ms first open in Chromium) |
+| 2026-11-03T16:50:05Z | 025-history-ui | started | Stage 1: plan |
+| 2026-11-03T16:53:08Z | 025-history-ui | stage-complete | plan → implement |
+| 2026-11-03T17:02:05Z | 025-history-ui | stage-complete | implement → test |
+| 2026-11-03T17:06:17Z | 025-history-ui | completed | 1303 tests + e2e; retention + Delete all; privacy notice and policy v2 |

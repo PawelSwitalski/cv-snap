@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 70
-- **Planned**: 5
+- **Planned**: 3
 - **Generated**: 0
-- **Completed**: 65
-- **Last updated**: 2026-11-03T16:49:07Z
+- **Completed**: 67
+- **Last updated**: 2026-11-03T17:06:17Z
 
 ---
 
@@ -180,9 +180,9 @@
   `memory-bank/intents/004-application-history/units/002-history-ui/stories/002-mark-as-sent.md`
 - [x] **003-already-in-history-hint** — Already-in-history hint in Generate - Should - bolt `024-history-ui` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/002-history-ui/stories/003-already-in-history-hint.md`
-- [ ] **004-retention-setting** — Retention setting and pruning - Must - bolt `025-history-ui` - PLANNED
+- [x] **004-retention-setting** — Retention setting and pruning - Must - bolt `025-history-ui` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/002-history-ui/stories/004-retention-setting.md`
-- [ ] **005-privacy-notice-v2** — Privacy notice and policy v2 - Must - bolt `025-history-ui` - PLANNED
+- [x] **005-privacy-notice-v2** — Privacy notice and policy v2 - Must - bolt `025-history-ui` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/002-history-ui/stories/005-privacy-notice-v2.md`
 
 #### 003-history-backup
@@ -209,7 +209,7 @@
 
 ## Stories by Status
 
-- **Planned**: 5
+- **Planned**: 3
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 65
+- **Completed**: 67

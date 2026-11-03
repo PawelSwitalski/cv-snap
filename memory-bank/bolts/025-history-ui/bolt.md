@@ -3,15 +3,24 @@ id: 025-history-ui
 unit: 002-history-ui
 intent: 004-application-history
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 004-retention-setting
   - 005-privacy-notice-v2
 created: '2026-11-03T15:28:00Z'
-started: null
-completed: null
+started: '2026-11-03T16:50:05Z'
+completed: '2026-11-03T17:06:17Z'
 current_stage: null
-stages_completed: []
+stages_completed:
+  - name: plan
+    completed: '2026-11-03T16:53:08Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-11-03T17:02:05Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-11-03T17:06:17Z'
+    artifact: test-walkthrough.md
 requires_bolts:
   - 024-history-ui
 enables_bolts:
@@ -49,9 +58,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md (approved, user)
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md (approved, user)
+- [x] **3. test**: Complete → tests + test-walkthrough.md (approved, user)
 
 ## Dependencies
 
@@ -64,7 +73,7 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] `pnpm test` green
-- [ ] Code reviewed (user, stage checkpoints)
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] `pnpm test` green
+- [x] Code reviewed (user, stage checkpoints)
