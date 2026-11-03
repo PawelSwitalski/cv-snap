@@ -2,7 +2,7 @@
 unit: 001-history-core
 intent: 004-application-history
 phase: inception
-status: stories-defined
+status: complete
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 created: '2026-11-03T15:28:00Z'
@@ -35,10 +35,10 @@ History entry model and IndexedDB store, saving on Download PDF (one entry per `
 
 ### Stories
 
-- [ ] **001-history-store**: History entry model and store - Must - Planned
-- [ ] **002-save-on-download**: Download PDF saves the entry - Must - Planned
-- [ ] **003-page-snapshot**: Cleaned snapshot of the job-ad page - Must - Planned
-- [ ] **004-open-saved-files**: Open a saved PDF or page - Must - Planned
+- [x] **001-history-store**: History entry model and store - Must - Complete
+- [x] **002-save-on-download**: Download PDF saves the entry - Must - Complete
+- [x] **003-page-snapshot**: Cleaned snapshot of the job-ad page - Must - Complete
+- [x] **004-open-saved-files**: Open a saved PDF or page - Must - Complete
 
 ---
 
@@ -51,9 +51,9 @@ History entry model and IndexedDB store, saving on Download PDF (one entry per `
 
 ## Success Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
-- [ ] Code reviewed and approved
+- [x] All acceptance criteria met
+- [x] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
+- [x] Code reviewed and approved
 
 ---
 

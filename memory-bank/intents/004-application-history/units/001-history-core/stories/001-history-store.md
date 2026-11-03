@@ -2,11 +2,11 @@
 id: 001-history-store
 unit: 001-history-core
 intent: 004-application-history
-status: draft
+status: complete
 priority: must
 created: '2026-11-03T15:28:00Z'
 assigned_bolt: 023-history-core
-implemented: false
+implemented: true
 ---
 
 # Story: 001-history-store

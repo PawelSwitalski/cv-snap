@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 70
-- **Planned**: 12
+- **Planned**: 8
 - **Generated**: 0
-- **Completed**: 58
-- **Last updated**: 2026-11-03T15:55:24Z
+- **Completed**: 62
+- **Last updated**: 2026-11-03T16:27:05Z
 
 ---
 
@@ -163,13 +163,13 @@
 
 #### 001-history-core
 
-- [ ] **001-history-store** — History entry model and store - Must - bolt `023-history-core` - PLANNED
+- [x] **001-history-store** — History entry model and store - Must - bolt `023-history-core` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/001-history-core/stories/001-history-store.md`
-- [ ] **002-save-on-download** — Download PDF saves the entry - Must - bolt `023-history-core` - PLANNED
+- [x] **002-save-on-download** — Download PDF saves the entry - Must - bolt `023-history-core` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/001-history-core/stories/002-save-on-download.md`
-- [ ] **003-page-snapshot** — Cleaned snapshot of the job-ad page - Must - bolt `023-history-core` - PLANNED
+- [x] **003-page-snapshot** — Cleaned snapshot of the job-ad page - Must - bolt `023-history-core` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/001-history-core/stories/003-page-snapshot.md`
-- [ ] **004-open-saved-files** — Open a saved PDF or page - Must - bolt `023-history-core` - PLANNED
+- [x] **004-open-saved-files** — Open a saved PDF or page - Must - bolt `023-history-core` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/001-history-core/stories/004-open-saved-files.md`
 
 #### 002-history-ui
@@ -209,7 +209,7 @@
 
 ## Stories by Status
 
-- **Planned**: 12
+- **Planned**: 8
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 58
+- **Completed**: 62
