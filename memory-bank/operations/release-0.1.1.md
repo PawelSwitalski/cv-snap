@@ -2,8 +2,8 @@
 release: 0.1.1
 intents: [003-complete-cv-content]
 created: 2026-11-02T22:20:00Z
-updated: 2026-11-02T23:00:00Z
-status: dev
+updated: 2026-11-03T14:59:14Z
+status: dev-verified
 ---
 
 # Release 0.1.1
@@ -22,11 +22,11 @@ them).
   - [x] Versions 0.1.1: `extension`, `native-host` (+ `HOST_VERSION`), `shared`; host tests use `HOST_VERSION` instead of a literal
   - [x] Push `main` (user), CI green on Windows, macOS, Ubuntu (41510560200; macOS re-run after a runner-queue cancel)
   - [x] `pnpm release:pack` → `release/` (store zip + host tarball); tag `v0.1.1` on `2955ba8` (local, user pushes)
-- [ ] **Dev + verify** (user, clean Chrome profile, dev build + host from the release tarball)
-  - [ ] Ad that doesn't mention education: every school and every skill in the preview and the PDF
-  - [ ] Profile with a relevant other section (course, volunteering): it appears; PDF looks right
-  - [ ] Long CV: "left out" list shows sections/skills as expected; PDF ≤ 2 pages
-  - [ ] Download PDF works (store-style build, regression of bolt 019)
+- [x] **Dev + verify** (user, clean Chrome profile, dev build + host from the release tarball)
+  - [x] Ad that doesn't mention education: every school and every skill in the preview and the PDF
+  - [x] Profile with a relevant other section (course, volunteering): it appears; PDF looks right
+  - [x] Long CV: "left out" list shows sections/skills as expected; PDF ≤ 2 pages
+  - [x] Download PDF works (store-style build, regression of bolt 019)
 - [ ] **Checkpoint 2: Staging**: upload the zip to the store item (trusted testers stay; review); `npm publish ./release/cv-snap-host-0.1.1.tgz --tag next`; verify with store install + `npx cv-snap-host@next install`
 - [ ] **Checkpoint 3: Production**: publish the store update (public); `npm dist-tag add cv-snap-host@0.1.1 latest`; GitHub Release `v0.1.1`; verify as a non-tester
 - [ ] **Checkpoint 4: Monitoring**: weekly check (`monitoring.md`)
@@ -38,6 +38,7 @@ them).
 | 2026-11-02 | Intent 003 built (bolts 020, 021); versions set to 0.1.1; tests 1162 passed |
 | 2026-11-02 | Pushed (user); CI 41510560200: macOS job cancelled after 15 min in the runner queue (no step ran), re-run green; all three OSes green |
 | 2026-11-02 | Packed: zip 0.1.1, no `key`, CSP with `wasm-unsafe-eval`; host tarball 0.1.1; tag `v0.1.1` on `2955ba8` |
+| 2026-11-03 | Dev verified (user): all four checks pass (education + skills kept, other sections, long CV ≤ 2 pages, Download PDF) |
 
 ## Artifacts (tag v0.1.1, commit 2955ba8)
 
