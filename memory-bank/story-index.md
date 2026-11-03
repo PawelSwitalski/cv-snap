@@ -1,11 +1,11 @@
 # Global Story Index
 
 ## Overview
-- **Total stories**: 54
-- **Planned**: 0
+- **Total stories**: 70
+- **Planned**: 16
 - **Generated**: 0
 - **Completed**: 54
-- **Last updated**: 2026-11-02T22:05:00Z
+- **Last updated**: 2026-11-03T15:40:00Z
 
 ---
 
@@ -159,11 +159,57 @@
 - [x] **002-other-sections-in-cv** — Selected other sections printed, dropped first - Should - bolt `021-other-sections` - ✅ COMPLETED
   `memory-bank/intents/003-complete-cv-content/units/002-other-sections/stories/002-other-sections-in-cv.md`
 
+### 004-application-history
+
+#### 001-history-core
+
+- [ ] **001-history-store** — History entry model and store - Must - bolt `023-history-core` - PLANNED
+  `memory-bank/intents/004-application-history/units/001-history-core/stories/001-history-store.md`
+- [ ] **002-save-on-download** — Download PDF saves the entry - Must - bolt `023-history-core` - PLANNED
+  `memory-bank/intents/004-application-history/units/001-history-core/stories/002-save-on-download.md`
+- [ ] **003-page-snapshot** — Cleaned snapshot of the job-ad page - Must - bolt `023-history-core` - PLANNED
+  `memory-bank/intents/004-application-history/units/001-history-core/stories/003-page-snapshot.md`
+- [ ] **004-open-saved-files** — Open a saved PDF or page - Must - bolt `023-history-core` - PLANNED
+  `memory-bank/intents/004-application-history/units/001-history-core/stories/004-open-saved-files.md`
+
+#### 002-history-ui
+
+- [ ] **001-history-tab** — History tab: list, search, filter, actions - Must - bolt `024-history-ui` - PLANNED
+  `memory-bank/intents/004-application-history/units/002-history-ui/stories/001-history-tab.md`
+- [ ] **002-mark-as-sent** — Mark as sent with a date - Must - bolt `024-history-ui` - PLANNED
+  `memory-bank/intents/004-application-history/units/002-history-ui/stories/002-mark-as-sent.md`
+- [ ] **003-already-in-history-hint** — Already-in-history hint in Generate - Should - bolt `024-history-ui` - PLANNED
+  `memory-bank/intents/004-application-history/units/002-history-ui/stories/003-already-in-history-hint.md`
+- [ ] **004-retention-setting** — Retention setting and pruning - Must - bolt `025-history-ui` - PLANNED
+  `memory-bank/intents/004-application-history/units/002-history-ui/stories/004-retention-setting.md`
+- [ ] **005-privacy-notice-v2** — Privacy notice and policy v2 - Must - bolt `025-history-ui` - PLANNED
+  `memory-bank/intents/004-application-history/units/002-history-ui/stories/005-privacy-notice-v2.md`
+
+#### 003-history-backup
+
+- [ ] **001-export-with-history** — Export includes history - Must - bolt `026-history-backup` - PLANNED
+  `memory-bank/intents/004-application-history/units/003-history-backup/stories/001-export-with-history.md`
+- [ ] **002-import-merges-history** — Import restores and merges history - Must - bolt `026-history-backup` - PLANNED
+  `memory-bank/intents/004-application-history/units/003-history-backup/stories/002-import-merges-history.md`
+
+#### 004-e2e-tests
+
+- [ ] **001-fake-ai-provider** — Fake AI provider in the host - Must - bolt `022-e2e-tests` - PLANNED
+  `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/001-fake-ai-provider.md`
+- [ ] **002-e2e-harness** — Playwright harness: extension + real host - Must - bolt `022-e2e-tests` - PLANNED
+  `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/002-e2e-harness.md`
+- [ ] **003-one-click-e2e** — E2E: one-click flow - Must - bolt `022-e2e-tests` - PLANNED
+  `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/003-one-click-e2e.md`
+- [ ] **004-e2e-ci-job** — E2E job in CI - Must - bolt `022-e2e-tests` - PLANNED
+  `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/004-e2e-ci-job.md`
+- [ ] **005-history-e2e** — E2E: history flow - Must - bolt `027-e2e-tests` - PLANNED
+  `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/005-history-e2e.md`
+
 ---
 
 ## Stories by Status
 
-- **Planned**: 0
+- **Planned**: 16
 - **Generated**: 0
 - **In Progress**: 0
 - **Completed**: 54
