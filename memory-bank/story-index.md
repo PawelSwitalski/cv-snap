@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 70
-- **Planned**: 16
+- **Planned**: 12
 - **Generated**: 0
-- **Completed**: 54
-- **Last updated**: 2026-11-03T15:40:00Z
+- **Completed**: 58
+- **Last updated**: 2026-11-03T15:55:24Z
 
 ---
 
@@ -194,13 +194,13 @@
 
 #### 004-e2e-tests
 
-- [ ] **001-fake-ai-provider** — Fake AI provider in the host - Must - bolt `022-e2e-tests` - PLANNED
+- [x] **001-fake-ai-provider** — Fake AI provider in the host - Must - bolt `022-e2e-tests` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/001-fake-ai-provider.md`
-- [ ] **002-e2e-harness** — Playwright harness: extension + real host - Must - bolt `022-e2e-tests` - PLANNED
+- [x] **002-e2e-harness** — Playwright harness: extension + real host - Must - bolt `022-e2e-tests` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/002-e2e-harness.md`
-- [ ] **003-one-click-e2e** — E2E: one-click flow - Must - bolt `022-e2e-tests` - PLANNED
+- [x] **003-one-click-e2e** — E2E: one-click flow - Must - bolt `022-e2e-tests` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/003-one-click-e2e.md`
-- [ ] **004-e2e-ci-job** — E2E job in CI - Must - bolt `022-e2e-tests` - PLANNED
+- [x] **004-e2e-ci-job** — E2E job in CI - Must - bolt `022-e2e-tests` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/004-e2e-ci-job.md`
 - [ ] **005-history-e2e** — E2E: history flow - Must - bolt `027-e2e-tests` - PLANNED
   `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/005-history-e2e.md`
@@ -209,7 +209,7 @@
 
 ## Stories by Status
 
-- **Planned**: 16
+- **Planned**: 12
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 54
+- **Completed**: 58

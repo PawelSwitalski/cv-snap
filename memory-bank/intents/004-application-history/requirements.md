@@ -1,7 +1,7 @@
 ---
 intent: 004-application-history
 phase: inception
-status: complete
+status: construction
 created: '2026-11-03T15:13:06Z'
 updated: '2026-11-03T15:23:11Z'
 ---

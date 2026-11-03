@@ -7,7 +7,7 @@ status: planned
 stories:
   - 004-retention-setting
   - 005-privacy-notice-v2
-created: '2026-11-03T15:40:00Z'
+created: '2026-11-03T15:28:00Z'
 started: null
 completed: null
 current_stage: null

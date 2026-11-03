@@ -2,11 +2,11 @@
 unit: 004-e2e-tests
 intent: 004-application-history
 phase: inception
-status: stories-defined
+status: in-progress
 unit_type: integration
 default_bolt_type: simple-construction-bolt
-created: '2026-11-03T15:40:00Z'
-updated: '2026-11-03T15:40:00Z'
+created: '2026-11-03T15:28:00Z'
+updated: '2026-11-03T15:28:00Z'
 ---
 
 # Unit Brief: 004-e2e-tests
@@ -36,10 +36,10 @@ Fake AI provider in the host, Playwright harness that loads the dev build and re
 
 ### Stories
 
-- [ ] **001-fake-ai-provider**: Fake AI provider in the host - Must - Planned
-- [ ] **002-e2e-harness**: Playwright harness: extension + real host - Must - Planned
-- [ ] **003-one-click-e2e**: E2E: one-click flow - Must - Planned
-- [ ] **004-e2e-ci-job**: E2E job in CI - Must - Planned
+- [x] **001-fake-ai-provider**: Fake AI provider in the host - Must - Complete
+- [x] **002-e2e-harness**: Playwright harness: extension + real host - Must - Complete
+- [x] **003-one-click-e2e**: E2E: one-click flow - Must - Complete
+- [x] **004-e2e-ci-job**: E2E job in CI - Must - Complete
 - [ ] **005-history-e2e**: E2E: history flow - Must - Planned
 
 ---

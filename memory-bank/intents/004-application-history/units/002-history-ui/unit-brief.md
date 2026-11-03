@@ -5,8 +5,8 @@ phase: inception
 status: stories-defined
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
-created: '2026-11-03T15:40:00Z'
-updated: '2026-11-03T15:40:00Z'
+created: '2026-11-03T15:28:00Z'
+updated: '2026-11-03T15:28:00Z'
 ---
 
 # Unit Brief: 002-history-ui

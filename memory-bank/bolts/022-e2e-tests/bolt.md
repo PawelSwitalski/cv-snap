@@ -3,17 +3,26 @@ id: 022-e2e-tests
 unit: 004-e2e-tests
 intent: 004-application-history
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 001-fake-ai-provider
   - 002-e2e-harness
   - 003-one-click-e2e
   - 004-e2e-ci-job
-created: '2026-11-03T15:40:00Z'
-started: null
-completed: null
+created: '2026-11-03T15:28:00Z'
+started: '2026-11-03T15:30:24Z'
+completed: '2026-11-03T15:55:24Z'
 current_stage: null
-stages_completed: []
+stages_completed:
+  - name: plan
+    completed: '2026-11-03T15:33:35Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-11-03T15:50:31Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-11-03T15:55:24Z'
+    artifact: test-walkthrough.md
 requires_bolts: []
 enables_bolts:
   - 027-e2e-tests
@@ -50,9 +59,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md (approved, user)
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md (approved, user)
+- [x] **3. test**: Complete → tests + test-walkthrough.md (approved, user)
 
 ## Dependencies
 
@@ -64,7 +73,7 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] `pnpm test` green and `pnpm test:e2e` green
-- [ ] Code reviewed (user, stage checkpoints)
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] `pnpm test` green and `pnpm test:e2e` green (Windows; CI Ubuntu run pending the push)
+- [x] Code reviewed (user, stage checkpoints)

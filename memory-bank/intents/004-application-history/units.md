@@ -2,7 +2,7 @@
 intent: 004-application-history
 phase: inception
 status: complete
-updated: 2026-11-03T15:40:00Z
+updated: 2026-11-03T15:28:00Z
 ---
 
 # Application History - Unit Decomposition
