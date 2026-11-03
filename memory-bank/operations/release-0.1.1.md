@@ -2,7 +2,7 @@
 release: 0.1.1
 intents: [003-complete-cv-content]
 created: 2026-11-02T22:20:00Z
-updated: 2026-11-03T14:59:14Z
+updated: 2026-11-03T15:10:00Z
 status: dev-verified
 ---
 
@@ -39,6 +39,7 @@ them).
 | 2026-11-02 | Pushed (user); CI 41510560200: macOS job cancelled after 15 min in the runner queue (no step ran), re-run green; all three OSes green |
 | 2026-11-02 | Packed: zip 0.1.1, no `key`, CSP with `wasm-unsafe-eval`; host tarball 0.1.1; tag `v0.1.1` on `2955ba8` |
 | 2026-11-03 | Dev verified (user): all four checks pass (education + skills kept, other sections, long CV ≤ 2 pages, Download PDF) |
+| 2026-11-03 | npm: first publish 404 (expired login, nothing published); after `npm login`, `cv-snap-host@0.1.1` published with `--tag next` (user). Registry integrity matches the local tarball; `latest` stays 0.1.0 |
 
 ## Artifacts (tag v0.1.1, commit 2955ba8)
 
