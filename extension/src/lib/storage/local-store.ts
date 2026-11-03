@@ -71,4 +71,5 @@ export const STORAGE_KEYS = {
   draftProfile: "profile.draft",
   model: "settings.model",
   gdprClause: "settings.gdprClause",
+  historyRetention: "settings.historyRetention",
 } as const;

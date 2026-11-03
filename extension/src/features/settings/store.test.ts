@@ -16,11 +16,28 @@ describe("parseSettings", () => {
     expect(parseSettings({ model: "claude-retired-1", gdprClause: clause })).toEqual({
       model: DEFAULT_SETTINGS.model,
       gdprClause: clause,
+      historyRetention: { mode: "forever" },
     });
     expect(parseSettings({ model: "claude-opus-5-5", gdprClause: { mode: "sometimes" } })).toEqual({
       model: "claude-opus-5-5",
       gdprClause: DEFAULT_GDPR_CLAUSE_SETTINGS,
+      historyRetention: { mode: "forever" },
     });
+  });
+
+  it("reads the history retention, and an older or invalid one as forever", () => {
+    const base = { model: "claude-opus-5-5", gdprClause: DEFAULT_GDPR_CLAUSE_SETTINGS };
+
+    expect(
+      parseSettings({ ...base, historyRetention: { mode: "months", months: 6 } }).historyRetention,
+    ).toEqual({ mode: "months", months: 6 });
+    // Settings written by 0.1.x have no such field.
+    expect(parseSettings(base).historyRetention).toEqual({ mode: "forever" });
+    for (const invalid of [{ mode: "months", months: 0 }, { mode: "months", months: 25 }, "1y"]) {
+      expect(parseSettings({ ...base, historyRetention: invalid }).historyRetention).toEqual({
+        mode: "forever",
+      });
+    }
   });
 });
 

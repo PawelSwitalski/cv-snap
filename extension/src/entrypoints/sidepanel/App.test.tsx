@@ -383,4 +383,53 @@ describe("App: history", () => {
     await screen.findByRole("button", { name: en("generate_button") });
     expect(screen.queryByRole("button", { name: en("history_title") })).toBeNull();
   });
+
+  it("deletes entries the retention setting no longer keeps when the panel opens", async () => {
+    const repository = createMemoryHistoryRepository();
+    for (const [adKey, lastDownloadedAt] of [
+      ["recent", new Date().toISOString()],
+      ["old", "2020-01-01T10:00:00.000Z"],
+    ] as const) {
+      await repository.put(historyEntry({ adKey, lastDownloadedAt }), {
+        pdf: new Blob(["%PDF"]),
+        adText: "a",
+      });
+    }
+    const store = createMemoryStore({
+      [STORAGE_KEYS.privacyNoticeVersion]: PRIVACY_NOTICE_VERSION,
+      [STORAGE_KEYS.activeProfile]: smallProfile(),
+      [STORAGE_KEYS.historyRetention]: { mode: "months", months: 6 },
+    });
+    render(
+      <App
+        deps={deps({
+          store,
+          history: {
+            repository,
+            adKeyOfTab: () => Promise.resolve(null),
+            actions: { openPdf: vi.fn(), openPage: vi.fn(), openUrl: vi.fn() },
+          },
+        })}
+      />,
+    );
+
+    await waitFor(async () => {
+      expect((await repository.list()).entries.map((entry) => entry.adKey)).toEqual(["recent"]);
+    });
+  });
+
+  it("shows the notice once more to a user who acknowledged version 1, with the history point", async () => {
+    const user = userEvent.setup();
+    const store = createMemoryStore({
+      [STORAGE_KEYS.privacyNoticeVersion]: 1,
+      [STORAGE_KEYS.activeProfile]: smallProfile(),
+    });
+    render(<App deps={deps({ store })} />);
+
+    expect(await screen.findByText(en("privacy_point_history"))).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: en("privacy_acknowledge") }));
+
+    expect(await screen.findByRole("button", { name: en("generate_button") })).toBeTruthy();
+    expect(await store.get(STORAGE_KEYS.privacyNoticeVersion)).toBe(2);
+  });
 });

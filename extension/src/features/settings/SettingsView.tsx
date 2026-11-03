@@ -12,6 +12,7 @@ import {
 import { useLanguage, useT } from "@/lib/i18n/i18n";
 import { isLanguageOverride, type MessageKey } from "@/lib/i18n/messages";
 import { BackupSection, type BackupSectionDeps } from "./BackupSection";
+import { HistorySection, type HistorySectionDeps } from "./HistorySection";
 import { GDPR_CLAUSE_MODES, MAX_CLAUSE_CHARS } from "./settings";
 import { SettingsSection } from "./SettingsSection";
 import { SitesSection, type SitesSectionDeps } from "./SitesSection";
@@ -33,6 +34,8 @@ export interface SettingsViewDeps {
   settings: SettingsStore;
   sites: SitesSectionDeps;
   backup: BackupSectionDeps;
+  /** Retention and "Delete all history" (intent 004); absent without a history. */
+  history?: HistorySectionDeps;
 }
 
 /**
@@ -69,6 +72,7 @@ export default function SettingsView({
           {t("settings_privacy_show")}
         </Button>
       </SettingsSection>
+      {deps.history ? <HistorySection deps={deps.history} /> : null}
       <BackupSection deps={deps.backup} />
     </div>
   );

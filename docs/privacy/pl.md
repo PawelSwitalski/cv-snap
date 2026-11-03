@@ -4,7 +4,7 @@ title: Polityka prywatności cv-snap
 
 # Polityka prywatności cv-snap
 
-**Wersja 1**, obowiązuje od 29 października 2026. [English](./)
+**Wersja 2**, obowiązuje od 3 listopada 2026. [English](./)
 
 cv-snap to rozszerzenie Chrome z małym programem pomocniczym (`cv-snap-host`) na Twoim komputerze.
 Dopasowuje Twoje CV do ogłoszenia o pracę za pomocą **Twojego własnego Claude Code**. Ta polityka
@@ -12,11 +12,12 @@ obejmuje obie części.
 
 ## W skrócie
 
-Te punkty cv-snap pokazuje przed rozpoczęciem (informacja o prywatności w aplikacji, wersja 1):
+Te punkty cv-snap pokazuje przed rozpoczęciem (informacja o prywatności w aplikacji, wersja 2):
 
 - Podczas generowania CV Twój profil i ogłoszenie są wysyłane do Anthropic przez Twój Claude Code, na warunkach Twojego konta Claude.
 - cv-snap nie ma serwera. Nic nie trafia do cv-snap ani nikogo innego.
 - Twoje CV, profil i ustawienia są przechowywane tylko w tym profilu Chrome na tym komputerze.
+- Pobrane CV, kopia każdego ogłoszenia i daty ich wysłania są przechowywane tylko w tym profilu Chrome, tak długo, jak wybierzesz w ustawieniach. Możesz je usunąć w Historii lub w ustawieniach.
 - Logi nigdy nie zawierają treści CV ani ogłoszeń.
 
 ## Co trafia do Anthropic
@@ -56,7 +57,12 @@ W **tym profilu Chrome** (pamięć rozszerzenia, tylko na Twoim komputerze):
   dozwolone serwisy);
 - pamięć podręczna wymagań odczytanych z ogłoszeń, aby to samo ogłoszenie nie było analizowane
   dwa razy;
-- ostatnio wygenerowane CV, tylko w pamięci sesji: znika po zamknięciu Chrome.
+- ostatnio wygenerowane CV, tylko w pamięci sesji: znika po zamknięciu Chrome;
+- Twoja **historia**: każde pobrane CV (plik PDF), tekst ogłoszenia, kopia strony ogłoszenia
+  z chwili generowania CV (bez skryptów; obrazy i style nadal ładują się z serwisu z ogłoszeniami
+  przy jej otwarciu) oraz data oznaczenia jako wysłane. Jest przechowywana tak długo, jak
+  wybierzesz w ustawieniach (zawsze albo od 1 do 24 miesięcy od ostatniego pobrania) i nigdy
+  nie jest nigdzie wysyłana.
 
 Na **Twoim komputerze**, przez program pomocniczy:
 
@@ -68,6 +74,9 @@ Lokalizacje: `%LOCALAPPDATA%\cv-snap` w Windows, `~/Library/Application Support/
 `~/.local/share/cv-snap` w Linuksie.
 
 ## Jak usunąć swoje dane
+
+- Pojedyncze CV usuniesz w **Historii**, a wszystko naraz przyciskiem **Usuń całą historię**
+  w ustawieniach. W ustawieniach możesz też włączyć automatyczne usuwanie starszych CV.
 
 1. Usuń rozszerzenie w `chrome://extensions`. Chrome kasuje wszystko, co rozszerzenie zapisało.
 2. Uruchom `npx cv-snap-host uninstall --purge`, aby usunąć program pomocniczy razem z logami.

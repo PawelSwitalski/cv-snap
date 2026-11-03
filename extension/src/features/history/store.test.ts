@@ -122,4 +122,46 @@ describe("history store", () => {
 
     expect(store.getState()).toMatchObject({ query: "acme", filter: "sent" });
   });
+
+  it("prunes what the retention no longer keeps, with the files, and says how many", async () => {
+    const repository = createMemoryHistoryRepository();
+    for (const [adKey, lastDownloadedAt] of [
+      ["new", "2026-11-01T10:00:00.000Z"],
+      ["old", "2026-01-01T10:00:00.000Z"],
+    ] as const) {
+      await repository.put(historyEntry({ adKey, lastDownloadedAt }), {
+        pdf: new Blob(["%PDF"]),
+        adText: "a",
+        snapshot: "<html></html>",
+      });
+    }
+    // Not loaded yet: the panel prunes before anything was shown.
+    const store = createHistoryStore(repository);
+
+    const pruned = await store
+      .getState()
+      .prune({ mode: "months", months: 3 }, new Date("2026-11-03T12:00:00.000Z"));
+
+    expect(pruned).toBe(1);
+    expect(store.getState().entries.map((e) => e.adKey)).toEqual(["new"]);
+    await expect(repository.getPdf("old")).resolves.toBeNull();
+    await expect(repository.getSnapshot("old")).resolves.toBeNull();
+  });
+
+  it("prunes nothing when kept forever", async () => {
+    const { store } = await loaded();
+
+    await expect(store.getState().prune({ mode: "forever" }, new Date())).resolves.toBe(0);
+    expect(store.getState().entries).toHaveLength(3);
+  });
+
+  it("deletes all history", async () => {
+    const { repository, store } = await loaded();
+
+    await store.getState().clearAll();
+
+    expect(store.getState().entries).toEqual([]);
+    expect((await repository.list()).entries).toEqual([]);
+    expect([...repository.files.keys()]).toEqual([]);
+  });
 });

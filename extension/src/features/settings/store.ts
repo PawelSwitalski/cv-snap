@@ -3,13 +3,21 @@ import { createStore, type StoreApi } from "zustand/vanilla";
 import type { GdprClauseSettings } from "@/features/cv-pdf/gdpr-clause";
 import { logger } from "@/lib/logger";
 import { STORAGE_KEYS, type LocalStore } from "@/lib/storage/local-store";
-import { DEFAULT_SETTINGS, isGdprClauseValid, parseSettings, type Settings } from "./settings";
+import {
+  DEFAULT_SETTINGS,
+  HistoryRetentionSchema,
+  isGdprClauseValid,
+  parseSettings,
+  type HistoryRetention,
+  type Settings,
+} from "./settings";
 
 export interface SettingsState extends Settings {
   status: "loading" | "ready";
   load: () => Promise<void>;
   setModel: (model: ModelId) => void;
   setGdprClause: (clause: GdprClauseSettings) => void;
+  setHistoryRetention: (retention: HistoryRetention) => void;
 }
 
 export type SettingsStore = StoreApi<SettingsState>;
@@ -32,11 +40,12 @@ export function createSettingsStore(store: LocalStore): SettingsStore {
 
     async load() {
       const read = (key: string) => store.get(key).catch(() => undefined);
-      const [model, gdprClause] = await Promise.all([
+      const [model, gdprClause, historyRetention] = await Promise.all([
         read(STORAGE_KEYS.model),
         read(STORAGE_KEYS.gdprClause),
+        read(STORAGE_KEYS.historyRetention),
       ]);
-      set({ ...parseSettings({ model, gdprClause }), status: "ready" });
+      set({ ...parseSettings({ model, gdprClause, historyRetention }), status: "ready" });
     },
 
     setModel(model) {
@@ -48,6 +57,12 @@ export function createSettingsStore(store: LocalStore): SettingsStore {
       if (!isGdprClauseValid(clause)) return;
       set({ gdprClause: clause });
       write(STORAGE_KEYS.gdprClause, clause);
+    },
+
+    setHistoryRetention(retention) {
+      if (!HistoryRetentionSchema.safeParse(retention).success) return;
+      set({ historyRetention: retention });
+      write(STORAGE_KEYS.historyRetention, retention);
     },
   }));
 }

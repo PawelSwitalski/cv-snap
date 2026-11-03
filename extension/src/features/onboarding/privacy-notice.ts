@@ -4,7 +4,7 @@ import { STORAGE_KEYS, type LocalStore } from "@/lib/storage/local-store";
  * Version of the privacy notice text (FR-2). Raise it whenever the notice's meaning changes: every
  * user then sees and acknowledges the new text once.
  */
-export const PRIVACY_NOTICE_VERSION = 1;
+export const PRIVACY_NOTICE_VERSION = 2;
 
 export async function readAcknowledgedNoticeVersion(store: LocalStore): Promise<number> {
   const value = await store.get(STORAGE_KEYS.privacyNoticeVersion);

@@ -32,6 +32,9 @@
   "privacy_point_local": {
     "message": "Twoje CV, profil i ustawienia są przechowywane tylko w tym profilu Chrome na tym komputerze."
   },
+  "privacy_point_history": {
+    "message": "Pobrane CV, kopia każdego ogłoszenia i daty ich wysłania są przechowywane tylko w tym profilu Chrome, tak długo, jak wybierzesz w ustawieniach. Możesz je usunąć w Historii lub w ustawieniach."
+  },
   "privacy_point_logs": {
     "message": "Logi nigdy nie zawierają treści CV ani ogłoszeń."
   },
@@ -1172,5 +1175,73 @@
         "content": "$2"
       }
     }
+  },
+  "settings_history_keep": {
+    "message": "Przechowuj pobrane CV"
+  },
+  "settings_history_forever": {
+    "message": "Zawsze"
+  },
+  "settings_history_months": {
+    "message": "Usuwaj po"
+  },
+  "settings_history_months_count": {
+    "message": "Liczba miesięcy"
+  },
+  "settings_history_months_option": {
+    "message": "$COUNT$ mies.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "settings_history_usage": {
+    "message": "Wpisy: $COUNT$, $MB$ MB na tym komputerze.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      },
+      "mb": {
+        "content": "$2"
+      }
+    }
+  },
+  "settings_history_clear": {
+    "message": "Usuń całą historię"
+  },
+  "settings_history_clear_title": {
+    "message": "Usunąć całą historię?"
+  },
+  "settings_history_clear_description": {
+    "message": "Wszystkie zapisane CV i kopie ogłoszeń (wpisy: $COUNT$) zostaną usunięte z tego komputera.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "settings_history_clear_confirm": {
+    "message": "Usuń wszystko"
+  },
+  "settings_history_shorten_title": {
+    "message": "Usunąć starsze CV?"
+  },
+  "settings_history_shorten_description": {
+    "message": "Wpisy pobrane przed $DATE$ (liczba: $COUNT$) zostaną teraz usunięte.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      },
+      "date": {
+        "content": "$2"
+      }
+    }
+  },
+  "settings_history_shorten_keep": {
+    "message": "Zachowaj obecne ustawienie"
+  },
+  "settings_history_shorten_confirm": {
+    "message": "Usuń i zapisz"
   }
 }

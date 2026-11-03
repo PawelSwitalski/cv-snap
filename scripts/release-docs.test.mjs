@@ -74,6 +74,7 @@ describe("privacy policy", () => {
     "privacy_point_anthropic",
     "privacy_point_no_server",
     "privacy_point_local",
+    "privacy_point_history",
     "privacy_point_logs",
   ];
 

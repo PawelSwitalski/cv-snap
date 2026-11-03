@@ -28,6 +28,7 @@ export function PrivacyNotice({
           <li>{t("privacy_point_anthropic")}</li>
           <li>{t("privacy_point_no_server")}</li>
           <li>{t("privacy_point_local")}</li>
+          <li>{t("privacy_point_history")}</li>
           <li>{t("privacy_point_logs")}</li>
         </ul>
       </CardContent>

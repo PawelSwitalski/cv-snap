@@ -159,8 +159,10 @@ function Panel({ deps }: { deps: AppDeps }) {
         subscribeGenerating: (listener) => generateStore.subscribe(listener),
         download: deps.download ?? downloadPdf,
       },
+      ...(historyStore ? { history: { settings: settingsStore, history: historyStore } } : {}),
     }),
     [
+      historyStore,
       settingsStore,
       deps.allowedSites,
       deps.generate.pageStateApis,
@@ -173,6 +175,18 @@ function Panel({ deps }: { deps: AppDeps }) {
   const draft = useStore(profileStore, (state) => state.draft);
   const active = useStore(profileStore, (state) => state.active);
   const settingsStatus = useStore(settingsStore, (state) => state.status);
+
+  // Retention (story 004-retention-setting): old entries go when the panel opens, once the
+  // setting is known.
+  useEffect(() => {
+    if (settingsStatus !== "ready" || !historyStore) return;
+    historyStore
+      .getState()
+      .prune(settingsStore.getState().historyRetention, new Date())
+      .catch((error: unknown) => {
+        logger.warn("history not pruned", error instanceof Error ? error.name : "unknown");
+      });
+  }, [settingsStatus, historyStore, settingsStore]);
   const model = useStore(settingsStore, (state) => state.model);
 
   const [noticeVersion, setNoticeVersion] = useState<number | null>(null);

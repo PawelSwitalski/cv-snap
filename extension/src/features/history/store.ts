@@ -1,6 +1,7 @@
 import { createStore, type StoreApi } from "zustand/vanilla";
 import { foldForSearch } from "@/lib/fold-text";
 import { logger } from "@/lib/logger";
+import type { HistoryRetention } from "@/features/settings/settings";
 import type { HistoryEntry } from "./history-entry";
 import type { HistoryRepository, PendingSnapshots } from "./history-repository";
 import {
@@ -8,6 +9,7 @@ import {
   type RecordDownloadInput,
   type RecordDownloadOutcome,
 } from "./record-download";
+import { expiredEntries } from "./retention";
 
 export const HISTORY_FILTERS = ["all", "sent", "not-sent"] as const;
 export type HistoryFilter = (typeof HISTORY_FILTERS)[number];
@@ -26,6 +28,10 @@ export interface HistoryState {
   /** Marks the entry as sent on a calendar date (`YYYY-MM-DD`), or as not sent (null). */
   setSentOn(adKey: string, sentOn: string | null): Promise<void>;
   remove(adKey: string): Promise<void>;
+  /** Deletes the entries the retention setting no longer keeps; returns how many (story 004). */
+  prune(retention: HistoryRetention, now: Date): Promise<number>;
+  /** "Delete all history" in Settings. */
+  clearAll(): Promise<void>;
   setQuery(query: string): void;
   setFilter(filter: HistoryFilter): void;
 }
@@ -97,6 +103,22 @@ export function createHistoryStore(
 
       async remove(adKey) {
         await repository.delete(adKey);
+        await reload();
+      },
+
+      async prune(retention, now) {
+        // From storage, not the last list: the panel may prune before anything was shown.
+        const { entries } = await repository.list();
+        const expired = expiredEntries(entries, retention, now);
+        for (const entry of expired) await repository.delete(entry.adKey);
+        await reload();
+        if (expired.length > 0) logger.info("history pruned", expired.length);
+        return expired.length;
+      },
+
+      async clearAll() {
+        const { entries } = await repository.list();
+        for (const entry of entries) await repository.delete(entry.adKey);
         await reload();
       },
 

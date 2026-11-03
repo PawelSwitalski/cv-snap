@@ -94,15 +94,15 @@ preview and download) serves that purpose.
 
 ## Permission justifications
 
-| Permission               | Justification                                                                                                                                                                              |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `storage`                | Saves the user's CV profile, settings and the list of allowed sites in the extension's local storage, and keeps the last generated CV in session storage until Chrome closes.              |
-| `unlimitedStorage`       | Stores the uploaded CV PDF, the profile and the job-requirements cache locally; together they can exceed the default storage quota.                                                        |
-| `nativeMessaging`        | Connects to the cv-snap helper program (`cv-snap-host`) that the user installs, which runs the user's own Claude Code on their computer. This is how a CV is generated without any server. |
-| `scripting`              | Registers content scripts only on the sites the user has added, to detect job ads and read the ad text when the user clicks Generate CV.                                                   |
-| `sidePanel`              | The whole user interface (onboarding, profile, preview, settings) is a side panel next to the job ad.                                                                                      |
-| `activeTab`              | Lets the user add the site of the current tab with one click ("Add this site") and read the ad on it, without broad host permissions.                                                      |
-| `https://*/*` (optional) | Requested at runtime for one site at a time, only when the user clicks "Add this site". No site is accessible until the user grants it, and the user can remove it again.                  |
+| Permission               | Justification                                                                                                                                                                                                        |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `storage`                | Saves the user's CV profile, settings, the list of allowed sites and the index of downloaded CVs (history) in the extension's local storage, and keeps the last generated CV in session storage until Chrome closes. |
+| `unlimitedStorage`       | Stores the uploaded CV PDF, the profile, the job-requirements cache and the history (downloaded CV PDFs and copies of their job-ad pages) locally; together they can exceed the default storage quota.               |
+| `nativeMessaging`        | Connects to the cv-snap helper program (`cv-snap-host`) that the user installs, which runs the user's own Claude Code on their computer. This is how a CV is generated without any server.                           |
+| `scripting`              | Registers content scripts only on the sites the user has added, to detect job ads and read the ad text when the user clicks Generate CV.                                                                             |
+| `sidePanel`              | The whole user interface (onboarding, profile, preview, settings) is a side panel next to the job ad.                                                                                                                |
+| `activeTab`              | Lets the user add the site of the current tab with one click ("Add this site") and read the ad on it, without broad host permissions.                                                                                |
+| `https://*/*` (optional) | Requested at runtime for one site at a time, only when the user clicks "Add this site". No site is accessible until the user grants it, and the user can remove it again.                                            |
 
 Remote code: **No**, the extension runs no remote code. All code is in the package; the helper
 program is a separate, user-installed npm package.
@@ -125,7 +125,9 @@ Certifications (all three are true):
       purpose.
 - [x] I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
-These answers match the [privacy policy](../docs/privacy/index.md), version 1.
+These answers match the [privacy policy](../docs/privacy/index.md), version 2. The history
+(intent 004) stays on the user's computer and is never transmitted; confirm in the dashboard that
+this still means "not collected" when uploading 0.2.0.
 
 ## Screenshots
 

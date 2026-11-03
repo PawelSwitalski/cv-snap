@@ -4,18 +4,19 @@ title: cv-snap privacy policy
 
 # cv-snap privacy policy
 
-**Version 1**, effective 29 October 2026. [Polski](pl)
+**Version 2**, effective 3 November 2026. [Polski](pl)
 
 cv-snap is a Chrome extension with a small helper program (`cv-snap-host`) on your computer. It
 tailors your CV to a job ad using **your own Claude Code**. This policy covers both parts.
 
 ## Summary
 
-These are the points cv-snap shows before you start (the in-app privacy notice, version 1):
+These are the points cv-snap shows before you start (the in-app privacy notice, version 2):
 
 - When you generate a CV, your CV profile and the job ad are sent to Anthropic through your own Claude Code, under your Claude account terms.
 - cv-snap has no server. Nothing is sent to cv-snap or anyone else.
 - Your CV, profile and settings are stored only in this Chrome profile on this computer.
+- The CVs you download, a copy of each job-ad page and the dates you sent them are kept only in this Chrome profile, for as long as you choose in Settings. You can delete them in History or Settings.
 - Logs never contain your CV or job-ad text.
 
 ## What goes to Anthropic
@@ -54,7 +55,12 @@ In **this Chrome profile** (extension storage, on your computer only):
 - your uploaded CV file, the profile created from it, and your settings (language, model, GDPR
   clause, allowed sites);
 - a cache of job requirements read from ads, so the same ad isn't analysed twice;
-- the last generated CV, in session storage only: it is gone when Chrome closes.
+- the last generated CV, in session storage only: it is gone when Chrome closes;
+- your **history**: each CV you download (the PDF file), the text of its job ad, a copy of the
+  job-ad page as it was when you generated the CV (with its scripts removed; images and styles
+  still load from the job board when you open it), and the date you marked it as sent. It is
+  kept for as long as you choose in Settings (forever, or 1 to 24 months after the last
+  download) and is never sent anywhere.
 
 On **your computer**, by the helper program:
 
@@ -65,6 +71,9 @@ Locations: `%LOCALAPPDATA%\cv-snap` on Windows, `~/Library/Application Support/c
 `~/.local/share/cv-snap` on Linux.
 
 ## How to delete your data
+
+- Delete single CVs in **History**, or everything with **Delete all history** in Settings.
+  Settings also lets the history delete old CVs automatically.
 
 1. Remove the extension in `chrome://extensions`. Chrome deletes everything the extension stored.
 2. Run `npx cv-snap-host uninstall --purge` to remove the helper together with its logs.

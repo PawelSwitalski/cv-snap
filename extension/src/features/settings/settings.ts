@@ -14,11 +14,28 @@ export interface Settings {
   /** Claude model for every call: profile creation, requirements, tailoring (FR-20). */
   model: ModelId;
   gdprClause: GdprClauseSettings;
+  /** How long the history keeps a CV (story 004-retention-setting). */
+  historyRetention: HistoryRetention;
 }
+
+/** Keep every history entry, or delete it N calendar months after its last download. */
+export type HistoryRetention = { mode: "forever" } | { mode: "months"; months: number };
+
+export const MIN_RETENTION_MONTHS = 1;
+export const MAX_RETENTION_MONTHS = 24;
+
+export const HistoryRetentionSchema = z.discriminatedUnion("mode", [
+  z.object({ mode: z.literal("forever") }),
+  z.object({
+    mode: z.literal("months"),
+    months: z.number().int().min(MIN_RETENTION_MONTHS).max(MAX_RETENTION_MONTHS),
+  }),
+]);
 
 export const DEFAULT_SETTINGS: Settings = {
   model: DEFAULT_MODEL,
   gdprClause: DEFAULT_GDPR_CLAUSE_SETTINGS,
+  historyRetention: { mode: "forever" },
 };
 
 export const GDPR_CLAUSE_MODES: readonly GdprClauseMode[] = ["polishAdsOnly", "always", "never"];
@@ -36,12 +53,20 @@ const GdprClauseSchema = z.object({
  * Reads stored settings field by field: a value that is missing or no longer valid (e.g. a model
  * that a newer version removed) falls back to its default without resetting the others.
  */
-export function parseSettings(stored: { model: unknown; gdprClause: unknown }): Settings {
+export function parseSettings(stored: {
+  model: unknown;
+  gdprClause: unknown;
+  historyRetention?: unknown;
+}): Settings {
   const model = ModelIdSchema.safeParse(stored.model);
   const gdprClause = GdprClauseSchema.safeParse(stored.gdprClause);
+  const historyRetention = HistoryRetentionSchema.safeParse(stored.historyRetention);
   return {
     model: model.success ? model.data : DEFAULT_SETTINGS.model,
     gdprClause: gdprClause.success ? gdprClause.data : DEFAULT_SETTINGS.gdprClause,
+    historyRetention: historyRetention.success
+      ? historyRetention.data
+      : DEFAULT_SETTINGS.historyRetention,
   };
 }
 
