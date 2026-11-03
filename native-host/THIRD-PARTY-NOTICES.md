@@ -2,7 +2,7 @@
 
 cv-snap-host is MIT-licensed (see LICENSE). It includes the following packages: zod is bundled into dist/cv-snap-host.mjs, and part of pdf.js is shipped in dist/vendor/pdfjs-dist.
 
-## pdfjs-dist 6.4.299
+## pdfjs-dist 6.5.438
 
 License: Apache-2.0
 
