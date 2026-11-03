@@ -111,6 +111,22 @@ describe.each(adapters)("history repository (%s)", (_name, create) => {
     await expect(history.getAdText(entry.adKey)).resolves.toBeNull();
   });
 
+  it("changes only the sent date, keeping the files", async () => {
+    const { adKey } = historyEntry();
+    await history.put(historyEntry(), { pdf: pdf(), adText: "a", snapshot: "<html></html>" });
+
+    await expect(history.setSentOn(adKey, "2026-11-02")).resolves.toBe(true);
+
+    expect(await history.get(adKey)).toEqual(historyEntry({ sentOn: "2026-11-02" }));
+    await expect(history.getSnapshot(adKey)).resolves.toBe("<html></html>");
+    await expect(history.setSentOn(adKey, null)).resolves.toBe(true);
+    expect((await history.get(adKey))?.sentOn).toBeNull();
+  });
+
+  it("reports a sent date for a deleted entry as not set", async () => {
+    await expect(history.setSentOn("gone", "2026-11-02")).resolves.toBe(false);
+  });
+
   it("hands a pending snapshot over once", async () => {
     await history.putPending("ad-1", "<html>p</html>", new Date("2026-11-03T12:00:00Z"));
 

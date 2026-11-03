@@ -1,5 +1,6 @@
 /** Which screen the side panel shows. Derived from stored state, never kept in the URL. */
-export type PanelView = "loading" | "privacy" | "settings" | "setup" | "upload" | "editor" | "home";
+export type PanelView =
+  "loading" | "privacy" | "settings" | "history" | "setup" | "upload" | "editor" | "home";
 
 export interface ViewInputs {
   isLoaded: boolean;
@@ -8,6 +9,8 @@ export interface ViewInputs {
   isPrivacyOpen: boolean;
   /** The user opened Settings from the header (story 008). */
   isSettingsOpen: boolean;
+  /** The user opened History from the header (intent 004). */
+  isHistoryOpen: boolean;
   hasDraft: boolean;
   hasActive: boolean;
   /** The setup check passed during this session (first run only). */
@@ -25,6 +28,7 @@ export function deriveView(inputs: ViewInputs): PanelView {
   if (!inputs.isLoaded) return "loading";
   if (!inputs.isNoticeAcknowledged || inputs.isPrivacyOpen) return "privacy";
   if (inputs.isSettingsOpen) return "settings";
+  if (inputs.isHistoryOpen) return "history";
   if (inputs.hasDraft) return "editor";
   if (inputs.isUploadRequested) return "upload";
   if (inputs.hasActive) return "home";

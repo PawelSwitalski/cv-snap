@@ -1035,5 +1035,142 @@
   },
   "history_page_deleted": {
     "message": "Ten wpis został usunięty z historii."
+  },
+  "history_title": {
+    "message": "Historia"
+  },
+  "history_note": {
+    "message": "Każde pobrane CV jest przechowywane tutaj, tylko na tym komputerze."
+  },
+  "history_search": {
+    "message": "Szukaj po firmie lub stanowisku"
+  },
+  "history_filter": {
+    "message": "Pokaż"
+  },
+  "history_filter_all": {
+    "message": "Wszystkie"
+  },
+  "history_filter_sent": {
+    "message": "Wysłane"
+  },
+  "history_filter_not_sent": {
+    "message": "Niewysłane"
+  },
+  "history_empty": {
+    "message": "Nie ma jeszcze żadnych CV. CV pojawi się tutaj po kliknięciu Pobierz PDF."
+  },
+  "history_no_match": {
+    "message": "Żaden wpis nie pasuje."
+  },
+  "history_clear_search": {
+    "message": "Wyczyść wyszukiwanie"
+  },
+  "history_unreadable": {
+    "message": "Nie udało się odczytać wpisów: $COUNT$. Są ukryte.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "history_load_failed": {
+    "message": "Nie udało się wczytać historii. Zamknij i otwórz panel ponownie."
+  },
+  "history_untitled": {
+    "message": "Ogłoszenie bez tytułu"
+  },
+  "history_downloaded_on": {
+    "message": "Pobrano $DATE$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "history_open_pdf": {
+    "message": "Otwórz PDF"
+  },
+  "history_open_page": {
+    "message": "Otwórz zapisaną stronę"
+  },
+  "history_open_ad": {
+    "message": "Otwórz ogłoszenie"
+  },
+  "history_delete": {
+    "message": "Usuń"
+  },
+  "history_delete_title": {
+    "message": "Usunąć ten wpis?"
+  },
+  "history_delete_description": {
+    "message": "Zapisane CV i kopia ogłoszenia „$AD$” zostaną usunięte z tego komputera.",
+    "placeholders": {
+      "ad": {
+        "content": "$1"
+      }
+    }
+  },
+  "history_delete_keep": {
+    "message": "Zachowaj"
+  },
+  "history_delete_confirm": {
+    "message": "Usuń"
+  },
+  "history_action_failed": {
+    "message": "Nie udało się. Spróbuj ponownie."
+  },
+  "sent_not_sent": {
+    "message": "Niewysłane"
+  },
+  "sent_on": {
+    "message": "Wysłano $DATE$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "sent_mark": {
+    "message": "Oznacz jako wysłane"
+  },
+  "sent_unmark": {
+    "message": "Oznacz jako niewysłane"
+  },
+  "sent_date_label": {
+    "message": "Data wysłania"
+  },
+  "hint_downloaded": {
+    "message": "CV do tego ogłoszenia zostało pobrane $DATE$.",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "hint_sent": {
+    "message": "CV do tego ogłoszenia zostało pobrane $DATE$ i wysłane $SENT$.",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      },
+      "sent": {
+        "content": "$2"
+      }
+    }
+  },
+  "hint_show": {
+    "message": "Pokaż w historii"
+  },
+  "history_show_more": {
+    "message": "Pokaż kolejne $COUNT$ (pozostało: $LEFT$)",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      },
+      "left": {
+        "content": "$2"
+      }
+    }
   }
 }

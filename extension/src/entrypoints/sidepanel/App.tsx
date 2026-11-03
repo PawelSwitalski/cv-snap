@@ -31,7 +31,9 @@ import { I18nProvider, useT } from "@/lib/i18n/i18n";
 import { logger } from "@/lib/logger";
 import type { NativeHostClient } from "@/lib/native-host-client";
 import { NativeHostProvider } from "@/lib/native-host-provider";
+import type { HistoryActions } from "@/features/history/HistoryView";
 import type { HistoryRepository, PendingSnapshots } from "@/features/history/history-repository";
+import { createHistoryStore } from "@/features/history/store";
 import type { FileStore } from "@/lib/storage/file-store";
 import type { LocalStore } from "@/lib/storage/local-store";
 
@@ -39,6 +41,8 @@ import type { LocalStore } from "@/lib/storage/local-store";
 const ProfileEditor = lazy(() => import("@/features/profile/editor/ProfileEditor"));
 /** Settings are opened rarely: loaded on first open. */
 const SettingsView = lazy(() => import("@/features/settings/SettingsView"));
+/** History (intent 004): loaded on first open. */
+const HistoryView = lazy(() => import("@/features/history/HistoryView"));
 
 export interface AppDeps {
   store: LocalStore;
@@ -64,8 +68,15 @@ export interface AppDeps {
   >;
   /** Saves a file (profile export); tests record it. */
   download?: (file: Blob, fileName: string) => void;
-  /** Downloaded CVs per ad (intent 004), on this PC. */
-  history?: HistoryRepository & PendingSnapshots;
+  /** Downloaded CVs per ad (intent 004), on this PC. Without it, nothing is saved or shown. */
+  history?: AppHistoryDeps;
+}
+
+export interface AppHistoryDeps {
+  repository: HistoryRepository & PendingSnapshots;
+  /** The ad's key in a tab, for the already-in-history hint (no snapshot is taken). */
+  adKeyOfTab: (tabId: number) => Promise<string | null>;
+  actions: HistoryActions;
 }
 
 /** Side panel root: error boundary → i18n → view router (story 001). */
@@ -85,6 +96,11 @@ function Panel({ deps }: { deps: AppDeps }) {
   const t = useT();
   const repository = useMemo(() => new ChromeStorageProfileRepository(deps.store), [deps.store]);
   const settingsStore = useMemo(() => createSettingsStore(deps.store), [deps.store]);
+  const historyRepository = deps.history?.repository;
+  const historyStore = useMemo(
+    () => (historyRepository ? createHistoryStore(historyRepository) : null),
+    [historyRepository],
+  );
   const generateStore = useMemo(
     () =>
       createGenerateStore({
@@ -118,9 +134,20 @@ function Panel({ deps }: { deps: AppDeps }) {
         setIsSettingsOpen(true);
       },
       ...(deps.generate.render ? { render: deps.generate.render } : {}),
-      ...(deps.history ? { history: deps.history } : {}),
+      ...(deps.history && historyStore
+        ? {
+            history: {
+              store: historyStore,
+              adKeyOfTab: deps.history.adKeyOfTab,
+              onShowEntry: (adKey: string) => {
+                setHistoryFocus(adKey);
+                setIsHistoryOpen(true);
+              },
+            },
+          }
+        : {}),
     }),
-    [generateStore, deps.generate, deps.history, profileStore, settingsStore],
+    [generateStore, deps.generate, deps.history, historyStore, profileStore, settingsStore],
   );
   const settingsDeps = useMemo<SettingsViewDeps>(
     () => ({
@@ -151,6 +178,9 @@ function Panel({ deps }: { deps: AppDeps }) {
   const [noticeVersion, setNoticeVersion] = useState<number | null>(null);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  /** The entry "Show in history" asked for; History scrolls to it. */
+  const [historyFocus, setHistoryFocus] = useState<string | null>(null);
   const [isSetupPassed, setIsSetupPassed] = useState(false);
   const [isUploadRequested, setIsUploadRequested] = useState(false);
 
@@ -199,6 +229,7 @@ function Panel({ deps }: { deps: AppDeps }) {
     isNoticeAcknowledged: noticeVersion !== null && isNoticeAcknowledged(noticeVersion),
     isPrivacyOpen,
     isSettingsOpen,
+    isHistoryOpen: isHistoryOpen && historyStore !== null,
     hasDraft: draft !== null,
     hasActive: active !== null,
     isSetupPassed,
@@ -212,6 +243,17 @@ function Panel({ deps }: { deps: AppDeps }) {
           ? {
               onShowSettings: () => {
                 setIsSettingsOpen(true);
+              },
+            }
+          : {})}
+        {...(noticeVersion !== null &&
+        isNoticeAcknowledged(noticeVersion) &&
+        historyStore !== null &&
+        view !== "history"
+          ? {
+              onShowHistory: () => {
+                setHistoryFocus(null);
+                setIsHistoryOpen(true);
               },
             }
           : {})}
@@ -249,6 +291,25 @@ function Panel({ deps }: { deps: AppDeps }) {
               }}
               onShowPrivacy={() => {
                 setIsPrivacyOpen(true);
+              }}
+            />
+          </Suspense>
+        ) : null}
+        {view === "history" && historyStore && deps.history ? (
+          <Suspense
+            fallback={
+              <p aria-live="polite" className="text-sm">
+                {t("loading")}
+              </p>
+            }
+          >
+            <HistoryView
+              store={historyStore}
+              actions={deps.history.actions}
+              focusAdKey={historyFocus}
+              onBack={() => {
+                setIsHistoryOpen(false);
+                setHistoryFocus(null);
               }}
             />
           </Suspense>

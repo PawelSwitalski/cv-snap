@@ -1035,5 +1035,142 @@
   },
   "history_page_deleted": {
     "message": "This entry was deleted from your history."
+  },
+  "history_title": {
+    "message": "History"
+  },
+  "history_note": {
+    "message": "Every CV you download is kept here, on this computer only."
+  },
+  "history_search": {
+    "message": "Search by company or job title"
+  },
+  "history_filter": {
+    "message": "Show"
+  },
+  "history_filter_all": {
+    "message": "All"
+  },
+  "history_filter_sent": {
+    "message": "Sent"
+  },
+  "history_filter_not_sent": {
+    "message": "Not sent"
+  },
+  "history_empty": {
+    "message": "No CVs yet. A CV appears here after you click Download PDF."
+  },
+  "history_no_match": {
+    "message": "No entries match."
+  },
+  "history_clear_search": {
+    "message": "Clear search"
+  },
+  "history_unreadable": {
+    "message": "$COUNT$ entries couldn't be read and are hidden.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "history_load_failed": {
+    "message": "History couldn't be loaded. Close and reopen the panel to try again."
+  },
+  "history_untitled": {
+    "message": "Untitled ad"
+  },
+  "history_downloaded_on": {
+    "message": "Downloaded $DATE$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "history_open_pdf": {
+    "message": "Open PDF"
+  },
+  "history_open_page": {
+    "message": "Open saved page"
+  },
+  "history_open_ad": {
+    "message": "Open original ad"
+  },
+  "history_delete": {
+    "message": "Delete"
+  },
+  "history_delete_title": {
+    "message": "Delete this entry?"
+  },
+  "history_delete_description": {
+    "message": "The saved CV and the copy of the job ad for $AD$ will be deleted from this computer.",
+    "placeholders": {
+      "ad": {
+        "content": "$1"
+      }
+    }
+  },
+  "history_delete_keep": {
+    "message": "Keep"
+  },
+  "history_delete_confirm": {
+    "message": "Delete"
+  },
+  "history_action_failed": {
+    "message": "That didn't work. Please try again."
+  },
+  "sent_not_sent": {
+    "message": "Not sent"
+  },
+  "sent_on": {
+    "message": "Sent on $DATE$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "sent_mark": {
+    "message": "Mark as sent"
+  },
+  "sent_unmark": {
+    "message": "Mark as not sent"
+  },
+  "sent_date_label": {
+    "message": "Sent date"
+  },
+  "hint_downloaded": {
+    "message": "You downloaded a CV for this ad on $DATE$.",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "hint_sent": {
+    "message": "You downloaded a CV for this ad on $DATE$ and sent it on $SENT$.",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      },
+      "sent": {
+        "content": "$2"
+      }
+    }
+  },
+  "hint_show": {
+    "message": "Show in history"
+  },
+  "history_show_more": {
+    "message": "Show $COUNT$ more ($LEFT$ left)",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      },
+      "left": {
+        "content": "$2"
+      }
+    }
   }
 }

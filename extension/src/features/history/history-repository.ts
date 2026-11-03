@@ -38,6 +38,8 @@ export interface HistoryRepository {
     files: Omit<HistoryFiles, "snapshot"> & { snapshot?: string | null },
   ): Promise<void>;
   delete(adKey: string): Promise<void>;
+  /** Changes only the sent date (story 002-mark-as-sent); false if the entry is gone. */
+  setSentOn(adKey: string, sentOn: string | null): Promise<boolean>;
 }
 
 /**
@@ -139,6 +141,13 @@ export const indexedDbHistoryRepository: HistoryRepository & PendingSnapshots = 
     await set(entry.adKey, valid, meta());
   },
 
+  async setSentOn(adKey, sentOn) {
+    const parsed = HistoryEntrySchema.safeParse(await get(adKey, meta()));
+    if (!parsed.success) return false;
+    await set(adKey, HistoryEntrySchema.parse({ ...parsed.data, sentOn }), meta());
+    return true;
+  },
+
   async delete(adKey) {
     await del(adKey, meta());
     await delMany(
@@ -228,6 +237,14 @@ export function createMemoryHistoryRepository(): HistoryRepository &
       }
       metaMap.set(entry.adKey, parsed.data);
       return Promise.resolve();
+    },
+    setSentOn(adKey, sentOn) {
+      const parsed = HistoryEntrySchema.safeParse(metaMap.get(adKey));
+      if (!parsed.success) return Promise.resolve(false);
+      const next = HistoryEntrySchema.safeParse({ ...parsed.data, sentOn });
+      if (!next.success) return Promise.reject(next.error);
+      metaMap.set(adKey, next.data);
+      return Promise.resolve(true);
     },
     delete(adKey) {
       metaMap.delete(adKey);

@@ -17,7 +17,14 @@ export const JobAdStatusMessageSchema = z.object({
 export type JobAdStatusMessage = z.infer<typeof JobAdStatusMessageSchema>;
 
 /** Background → content: capture the ad (or the user's selection) now (stories 004 and 005). */
-export const CaptureJobAdRequestSchema = z.object({ type: z.literal("capture-job-ad") });
+export const CaptureJobAdRequestSchema = z.object({
+  type: z.literal("capture-job-ad"),
+  /**
+   * False for the already-in-history hint (bolt 024), which needs only the ad's identity: the page
+   * snapshot is skipped. Missing means true (generation).
+   */
+  withSnapshot: z.boolean().optional(),
+});
 
 export type CaptureJobAdRequest = z.infer<typeof CaptureJobAdRequestSchema>;
 

@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   createNativeHostClient,
   type NativeHostClient,
@@ -20,6 +20,9 @@ import {
 } from "../../../test/generate-fixtures";
 import { draftContent, HEALTHY, healthClient, pdfFile } from "../../../test/panel-fixtures";
 import { fakeAllowedSites } from "../../../test/settings-fixtures";
+import { createMemoryHistoryRepository } from "@/features/history/history-repository";
+import { historyRowId } from "@/features/history/HistoryView";
+import { historyEntry } from "../../../test/history-fixtures";
 import { App, type AppDeps } from "./App";
 
 /** A host connection that never answers (the setup check stays in "checking"). */
@@ -308,5 +311,76 @@ describe("App", () => {
       const preview = await screen.findByRole("article", { name: en("preview_label") });
       expect(within(preview).getByText("Moja klauzula testowa.")).toBeTruthy();
     });
+  });
+});
+
+describe("App: history", () => {
+  const en = (key: Parameters<typeof formatMessage>[1], ...subs: string[]) =>
+    formatMessage("en", key, subs);
+
+  async function historyDeps(adKeyOfTab: (tabId: number) => Promise<string | null>) {
+    const repository = createMemoryHistoryRepository();
+    await repository.put(historyEntry({ company: "Acme" }), {
+      pdf: new Blob(["%PDF"]),
+      adText: "ad",
+    });
+    return {
+      repository,
+      adKeyOfTab,
+      actions: { openPdf: vi.fn(), openPage: vi.fn(), openUrl: vi.fn() },
+    };
+  }
+
+  function panel(history: AppDeps["history"]) {
+    const store = createMemoryStore({
+      [STORAGE_KEYS.privacyNoticeVersion]: PRIVACY_NOTICE_VERSION,
+      [STORAGE_KEYS.activeProfile]: smallProfile(),
+    });
+    render(
+      <App
+        deps={deps({
+          store,
+          generate: {
+            connect: fakeConnector().connect,
+            pageStateApis: fakePageStateApis(adPageFacts()).apis,
+            addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
+            render: fakeRender().render,
+          },
+          ...(history ? { history } : {}),
+        })}
+      />,
+    );
+  }
+
+  it("opens History from the header and goes back home", async () => {
+    const user = userEvent.setup();
+    panel(await historyDeps(() => Promise.resolve(null)));
+
+    await user.click(await screen.findByRole("button", { name: en("history_title") }));
+
+    expect(await screen.findByRole("heading", { name: en("history_title") })).toBeTruthy();
+    expect(screen.getByText("Acme")).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: en("action_back") }));
+    expect(await screen.findByRole("button", { name: en("generate_button") })).toBeTruthy();
+  });
+
+  it("hints that the ad in the tab is already in history, and shows the entry", async () => {
+    const user = userEvent.setup();
+    Element.prototype.scrollIntoView = vi.fn();
+    panel(await historyDeps(() => Promise.resolve(historyEntry().adKey)));
+
+    await user.click(await screen.findByRole("button", { name: en("hint_show") }));
+
+    expect(await screen.findByRole("heading", { name: en("history_title") })).toBeTruthy();
+    await waitFor(() => {
+      expect(document.activeElement?.id).toBe(historyRowId(historyEntry().adKey));
+    });
+  });
+
+  it("has no History button without a history (e.g. previews)", async () => {
+    panel(undefined);
+
+    await screen.findByRole("button", { name: en("generate_button") });
+    expect(screen.queryByRole("button", { name: en("history_title") })).toBeNull();
   });
 });

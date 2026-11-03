@@ -6,6 +6,7 @@ const base: ViewInputs = {
   isNoticeAcknowledged: true,
   isPrivacyOpen: false,
   isSettingsOpen: false,
+  isHistoryOpen: false,
   hasDraft: false,
   hasActive: false,
   isSetupPassed: false,
@@ -29,6 +30,14 @@ describe("deriveView", () => {
     ],
     ["opens settings over home", { isSettingsOpen: true, hasActive: true }, "settings"],
     ["opens settings over the editor", { isSettingsOpen: true, hasDraft: true }, "settings"],
+    ["opens history over home", { isHistoryOpen: true, hasActive: true }, "history"],
+    ["opens history over the editor", { isHistoryOpen: true, hasDraft: true }, "history"],
+    ["lets settings win over history", { isSettingsOpen: true, isHistoryOpen: true }, "settings"],
+    [
+      "never opens history before the notice is acknowledged",
+      { isNoticeAcknowledged: false, isHistoryOpen: true },
+      "privacy",
+    ],
     [
       "never opens settings before the notice is acknowledged",
       { isNoticeAcknowledged: false, isSettingsOpen: true },

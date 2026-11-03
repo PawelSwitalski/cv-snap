@@ -56,7 +56,8 @@ export default defineContentScript({
 
     browser.runtime.onMessage.addListener(
       (message: unknown, _sender, sendResponse: (response: CaptureResult) => void) => {
-        if (!CaptureJobAdRequestSchema.safeParse(message).success) return false;
+        const request = CaptureJobAdRequestSchema.safeParse(message);
+        if (!request.success) return false;
         const result = captureAd({
           document,
           url: location.href,
@@ -64,7 +65,7 @@ export default defineContentScript({
         });
         // The whole page, also for a manual selection: the history keeps what the ad looked like.
         sendResponse(
-          result.ok
+          result.ok && request.data.withSnapshot !== false
             ? {
                 ...result,
                 snapshot: snapshotPage(document.documentElement.outerHTML, location.href),

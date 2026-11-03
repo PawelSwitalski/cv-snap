@@ -4,7 +4,10 @@ import { createRoot } from "react-dom/client";
 import { createAllowedSites } from "@/features/allowed-sites/allowed-sites";
 import { connectGeneration } from "@/features/generate/generation-client";
 import { browserPageStateApis } from "@/features/generate/page-state";
+import { createAdKeyOfTab } from "@/features/history/ad-key-of-tab";
 import { indexedDbHistoryRepository } from "@/features/history/history-repository";
+import { openSavedPage, openSavedPdf } from "@/features/history/open-saved";
+import { captureApis } from "@/features/job-ad/browser-apis";
 import { createNativeHostClient } from "@/lib/native-host-client";
 import { logger } from "@/lib/logger";
 import { panelHostClient } from "@/lib/panel-host";
@@ -33,7 +36,15 @@ createRoot(rootElement).render(
           session: chromeSessionStore,
         },
         allowedSites,
-        history: indexedDbHistoryRepository,
+        history: {
+          repository: indexedDbHistoryRepository,
+          adKeyOfTab: createAdKeyOfTab(captureApis()),
+          actions: {
+            openPdf: (adKey) => openSavedPdf(indexedDbHistoryRepository, adKey),
+            openPage: (adKey) => openSavedPage(adKey),
+            openUrl: (url) => browser.tabs.create({ url }),
+          },
+        },
       }}
     />
   </StrictMode>,

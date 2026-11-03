@@ -1,6 +1,7 @@
 import type { CvProfile } from "@cv-snap/shared";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useStore } from "zustand";
+import { createStore, type StoreApi } from "zustand/vanilla";
 import type { AddSiteResult } from "@/features/allowed-sites/allowed-sites";
 import type { SettingsStore } from "@/features/settings/store";
 import { useT } from "@/lib/i18n/i18n";
@@ -8,13 +9,18 @@ import { GenerateButton } from "./GenerateButton";
 import { GenerationError } from "./GenerationError";
 import { GenerationProgress } from "./GenerationProgress";
 import { watchPageState, type PageState, type PageStateApis } from "./page-state";
-import type { HistoryRepository, PendingSnapshots } from "@/features/history/history-repository";
-import { recordDownload } from "@/features/history/record-download";
+import { HistoryHint, usePageAdKey } from "@/features/history/HistoryHint";
+import { SentStatus } from "@/features/history/SentStatus";
+import type { HistoryEntry } from "@/features/history/history-entry";
+import type { HistoryStore } from "@/features/history/store";
 import type { GenerateStore } from "./store";
 import type { RenderFitted } from "./use-fitted-cv";
 
 /** The preview pulls in react-pdf: loaded with the first result, not at panel start (≤ 500 ms). */
 const ResultView = lazy(() => import("./ResultView"));
+
+/** Stands in for the history store when there is none (hooks can't be called conditionally). */
+const EMPTY_HISTORY: StoreApi<{ entries: HistoryEntry[] }> = createStore(() => ({ entries: [] }));
 
 export interface GenerateViewDeps {
   store: GenerateStore;
@@ -28,9 +34,19 @@ export interface GenerateViewDeps {
   openSettings?: () => void;
   /** Tests replace react-pdf rendering. */
   render?: RenderFitted;
-  /** Where Download PDF saves the CV (intent 004); without it, nothing is saved. */
-  history?: HistoryRepository & Pick<PendingSnapshots, "takePending">;
+  /** The history (intent 004); without it, nothing is saved and no hint is shown. */
+  history?: GenerateHistoryDeps;
 }
+
+export interface GenerateHistoryDeps {
+  store: HistoryStore;
+  /** The ad's key in a tab, read without a snapshot (story 003-already-in-history-hint). */
+  adKeyOfTab: (tabId: number) => Promise<string | null>;
+  /** "Show in history": opens the History view at the entry. */
+  onShowEntry: (adKey: string) => void;
+}
+
+const noAdKey = () => Promise.resolve(null);
 
 /**
  * The generate flow on home (stories 005–007): the adaptive button, then progress with Cancel,
@@ -45,6 +61,15 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
   const [pageState, setPageState] = useState<PageState>({ kind: "no-tab" });
 
   useEffect(() => watchPageState(deps.pageStateApis, setPageState), [deps.pageStateApis]);
+  const pageAdKey = usePageAdKey(pageState, history?.adKeyOfTab ?? noAdKey);
+  const historyStore = history?.store;
+  const resultEntry = useStore(
+    historyStore ?? EMPTY_HISTORY,
+    (state) => state.entries.find((entry) => entry.adKey === result?.ad?.adKey) ?? null,
+  );
+  useEffect(() => {
+    void historyStore?.getState().load();
+  }, [historyStore]);
 
   if (status.kind === "running") {
     return (
@@ -67,6 +92,13 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
         }}
         onAddSite={deps.addSite}
       />
+      {history ? (
+        <HistoryHint
+          store={history.store}
+          adKey={pageAdKey ?? result?.ad?.adKey ?? null}
+          onShow={history.onShowEntry}
+        />
+      ) : null}
       {status.kind === "error" ? (
         <GenerationError
           error={status.error}
@@ -99,10 +131,13 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
             {...(history
               ? {
                   onDownloaded: (pdf: Blob, fileName: string) =>
-                    recordDownload(history, { result, fileName, pdf, now: new Date() }),
+                    history.store
+                      .getState()
+                      .recordDownload({ result, fileName, pdf, now: new Date() }),
                 }
               : {})}
           />
+          {history && resultEntry ? <SentStatus entry={resultEntry} store={history.store} /> : null}
         </Suspense>
       ) : null}
     </div>

@@ -17,6 +17,7 @@ export async function captureFromTab(
   apis: CaptureApis,
   tabId: number,
   timeoutMs: number = CAPTURE_TIMEOUT_MS,
+  options: { withSnapshot?: boolean } = {},
 ): Promise<CaptureResult> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<"timeout">((resolve) => {
@@ -25,7 +26,13 @@ export async function captureFromTab(
     }, timeoutMs);
   });
   try {
-    const reply = await Promise.race([apis.sendToTab(tabId, { type: "capture-job-ad" }), timeout]);
+    const reply = await Promise.race([
+      apis.sendToTab(tabId, {
+        type: "capture-job-ad",
+        ...(options.withSnapshot === false ? { withSnapshot: false } : {}),
+      }),
+      timeout,
+    ]);
     if (reply === "timeout") return notDetected();
     const parsed = CaptureResultSchema.safeParse(reply);
     if (parsed.success) return parsed.data;

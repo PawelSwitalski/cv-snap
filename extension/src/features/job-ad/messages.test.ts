@@ -79,3 +79,15 @@ describe("capture reply: page snapshot", () => {
     expect(accepts({ ok: true, ad, snapshot: { status: "maybe" } })).toBe(false);
   });
 });
+
+describe("capture request", () => {
+  it("may ask for the ad without a page snapshot (the history hint)", () => {
+    expect(CaptureJobAdRequestSchema.safeParse({ type: "capture-job-ad" }).success).toBe(true);
+    expect(
+      CaptureJobAdRequestSchema.safeParse({ type: "capture-job-ad", withSnapshot: false }).success,
+    ).toBe(true);
+    expect(
+      CaptureJobAdRequestSchema.safeParse({ type: "capture-job-ad", withSnapshot: "no" }).success,
+    ).toBe(false);
+  });
+});

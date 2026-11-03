@@ -1,28 +1,10 @@
-/** Letters NFKD can't decompose into ASCII (no combining mark to strip). */
-const SPECIAL_LETTERS: Record<string, string> = {
-  ł: "l",
-  Ł: "L",
-  ø: "o",
-  Ø: "O",
-  ß: "ss",
-  đ: "d",
-  Đ: "D",
-  æ: "ae",
-  Æ: "AE",
-  œ: "oe",
-  Œ: "OE",
-  þ: "th",
-  Þ: "Th",
-};
+import { stripDiacritics } from "@/lib/fold-text";
 
 const MAX_COMPANY_LENGTH = 40;
 
 /** ASCII-only token: diacritics removed, anything else non-alphanumeric becomes "_". */
 export function toAsciiToken(value: string): string {
-  return value
-    .replace(/[łŁøØßđĐæÆœŒþÞ]/g, (letter) => SPECIAL_LETTERS[letter] ?? "")
-    .normalize("NFKD")
-    .replace(/\p{M}/gu, "")
+  return stripDiacritics(value)
     .replace(/[^A-Za-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "");
 }
