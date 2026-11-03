@@ -2,11 +2,11 @@
 id: 002-mark-as-sent
 unit: 002-history-ui
 intent: 004-application-history
-status: draft
+status: complete
 priority: must
 created: '2026-11-03T15:28:00Z'
 assigned_bolt: 024-history-ui
-implemented: false
+implemented: true
 ---
 
 # Story: 002-mark-as-sent

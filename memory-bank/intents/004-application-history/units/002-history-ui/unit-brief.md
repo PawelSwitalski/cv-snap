@@ -2,7 +2,7 @@
 unit: 002-history-ui
 intent: 004-application-history
 phase: inception
-status: stories-defined
+status: in-progress
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 created: '2026-11-03T15:28:00Z'
@@ -38,9 +38,9 @@ The History tab (list, search, filter, actions), mark as sent, the already-in-hi
 
 ### Stories
 
-- [ ] **001-history-tab**: History tab: list, search, filter, actions - Must - Planned
-- [ ] **002-mark-as-sent**: Mark as sent with a date - Must - Planned
-- [ ] **003-already-in-history-hint**: Already-in-history hint in Generate - Should - Planned
+- [x] **001-history-tab**: History tab: list, search, filter, actions - Must - Complete
+- [x] **002-mark-as-sent**: Mark as sent with a date - Must - Complete
+- [x] **003-already-in-history-hint**: Already-in-history hint in Generate - Should - Complete
 - [ ] **004-retention-setting**: Retention setting and pruning - Must - Planned
 - [ ] **005-privacy-notice-v2**: Privacy notice and policy v2 - Must - Planned
 

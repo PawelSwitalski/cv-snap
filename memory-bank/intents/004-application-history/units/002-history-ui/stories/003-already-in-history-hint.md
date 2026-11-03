@@ -2,11 +2,11 @@
 id: 003-already-in-history-hint
 unit: 002-history-ui
 intent: 004-application-history
-status: draft
+status: complete
 priority: should
 created: '2026-11-03T15:28:00Z'
 assigned_bolt: 024-history-ui
-implemented: false
+implemented: true
 ---
 
 # Story: 003-already-in-history-hint

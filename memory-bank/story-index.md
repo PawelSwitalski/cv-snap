@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 70
-- **Planned**: 8
+- **Planned**: 5
 - **Generated**: 0
-- **Completed**: 62
-- **Last updated**: 2026-11-03T16:27:05Z
+- **Completed**: 65
+- **Last updated**: 2026-11-03T16:49:07Z
 
 ---
 
@@ -174,11 +174,11 @@
 
 #### 002-history-ui
 
-- [ ] **001-history-tab** — History tab: list, search, filter, actions - Must - bolt `024-history-ui` - PLANNED
+- [x] **001-history-tab** — History tab: list, search, filter, actions - Must - bolt `024-history-ui` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/002-history-ui/stories/001-history-tab.md`
-- [ ] **002-mark-as-sent** — Mark as sent with a date - Must - bolt `024-history-ui` - PLANNED
+- [x] **002-mark-as-sent** — Mark as sent with a date - Must - bolt `024-history-ui` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/002-history-ui/stories/002-mark-as-sent.md`
-- [ ] **003-already-in-history-hint** — Already-in-history hint in Generate - Should - bolt `024-history-ui` - PLANNED
+- [x] **003-already-in-history-hint** — Already-in-history hint in Generate - Should - bolt `024-history-ui` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/002-history-ui/stories/003-already-in-history-hint.md`
 - [ ] **004-retention-setting** — Retention setting and pruning - Must - bolt `025-history-ui` - PLANNED
   `memory-bank/intents/004-application-history/units/002-history-ui/stories/004-retention-setting.md`
@@ -209,7 +209,7 @@
 
 ## Stories by Status
 
-- **Planned**: 8
+- **Planned**: 5
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 62
+- **Completed**: 65
