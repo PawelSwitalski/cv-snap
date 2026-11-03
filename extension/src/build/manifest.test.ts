@@ -4,7 +4,14 @@ import { fileURLToPath } from "node:url";
 import { inflateSync } from "node:zlib";
 import { DEV_EXTENSION_ID, EXTENSION_PUBLIC_KEY } from "@cv-snap/shared";
 import { describe, expect, it } from "vitest";
-import { buildManifest, EXTENSION_PAGES_CSP, ICON_SIZES, RELEASE_MODE } from "./manifest";
+import {
+  buildManifest,
+  E2E_JOB_SITE,
+  E2E_MODE,
+  EXTENSION_PAGES_CSP,
+  ICON_SIZES,
+  RELEASE_MODE,
+} from "./manifest";
 
 const PUBLIC_DIR = fileURLToPath(new URL("../../public/", import.meta.url));
 const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
@@ -65,6 +72,14 @@ describe("buildManifest", () => {
     expect(key).toBeDefined();
     expect("key" in release).toBe(false);
     expect(release).toEqual(devWithoutKey);
+  });
+
+  it("grants only the fixture job board in the end-to-end build, otherwise the dev build", () => {
+    const { host_permissions, ...rest } = buildManifest(E2E_MODE);
+
+    expect(host_permissions).toEqual([E2E_JOB_SITE]);
+    expect(rest).toEqual(buildManifest("production"));
+    expect(E2E_JOB_SITE).toMatch(/^https:\/\/[^*/]+\/\*$/);
   });
 
   it("declares the icon and the toolbar icon in 16, 32, 48 and 128 px", () => {

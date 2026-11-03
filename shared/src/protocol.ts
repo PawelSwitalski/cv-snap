@@ -14,6 +14,12 @@ import { TailoringPlanSchema } from "./tailoring-plan.js";
 /** Name under which the host is registered with Chrome. */
 export const NATIVE_HOST_NAME = "com.cvsnap.host";
 
+/**
+ * Host name of the end-to-end test build (`wxt build --mode e2e`, bolt 022): its registration can
+ * never replace or remove a real `com.cvsnap.host` install.
+ */
+export const E2E_NATIVE_HOST_NAME = "com.cvsnap.host_e2e";
+
 /** Chrome accepts up to 64 MB extension → host. */
 export const MAX_INBOUND_MESSAGE_BYTES = 64 * 1024 * 1024;
 /** Chrome rejects host → extension messages of 1 MB or more. */

@@ -1,6 +1,7 @@
 import {
   CvSnapError,
   HostFrameSchema,
+  E2E_NATIVE_HOST_NAME,
   NATIVE_HOST_NAME,
   RESPONSE_DATA_SCHEMAS,
   type ErrorCode,
@@ -8,6 +9,7 @@ import {
   type ProgressStep,
   type ResponseData,
 } from "@cv-snap/shared";
+import { E2E_MODE } from "@/build/manifest";
 import { logger } from "@/lib/logger";
 
 /** The subset of `chrome.runtime.Port` the client uses (lets tests pass a fake port). */
@@ -40,8 +42,13 @@ interface Pending {
   onProgress: ((step: ProgressStep) => void) | undefined;
 }
 
+/** The registered host for a build mode: the end-to-end build talks to its own test host. */
+export function nativeHostName(mode: string): string {
+  return mode === E2E_MODE ? E2E_NATIVE_HOST_NAME : NATIVE_HOST_NAME;
+}
+
 const defaultDeps: NativeHostClientDeps = {
-  connect: () => browser.runtime.connectNative(NATIVE_HOST_NAME),
+  connect: () => browser.runtime.connectNative(nativeHostName(import.meta.env.MODE)),
   lastErrorMessage: () => browser.runtime.lastError?.message,
   newRequestId: () => crypto.randomUUID(),
 };

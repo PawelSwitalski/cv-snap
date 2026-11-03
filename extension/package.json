@@ -10,6 +10,7 @@
     "zip": "wxt zip",
     "build:release": "wxt build --mode release",
     "zip:release": "wxt zip --mode release",
+    "build:e2e": "wxt build --mode e2e",
     "icons": "node scripts/render-icons.mjs",
     "typecheck": "tsc --noEmit",
     "postinstall": "wxt prepare"

@@ -1,10 +1,10 @@
 import { NATIVE_HOST_NAME, promptBuilders } from "@cv-snap/shared";
-import { checkHealth } from "./health/check-health.js";
 import { createLogger, createRotatingFileSink, stderrSink, teeSinks } from "./lib/logger.js";
 import { logDir } from "./lib/paths.js";
 import { extractPdfText } from "./pdf/extract-text.js";
 import { runHost } from "./protocol/host.js";
 import { ClaudeCodeProvider } from "./providers/claude-code-provider.js";
+import { fakeProviderFromEnv } from "./providers/fake-provider.js";
 import { HOST_VERSION } from "./version.js";
 
 /**
@@ -39,17 +39,24 @@ export async function runNativeHost(): Promise<void> {
     logger.error("unhandled rejection");
   });
 
-  // Every AI step runs through the user's Claude Code with the shared prompts (bolt 005).
-  const provider = new ClaudeCodeProvider({ prompts: promptBuilders });
+  // Every AI step runs through the user's Claude Code with the shared prompts (bolt 005). The
+  // end-to-end tests' launcher sets an environment variable for canned answers instead (bolt 022).
+  const fake = fakeProviderFromEnv(process.env);
+  const provider = fake ?? new ClaudeCodeProvider({ prompts: promptBuilders });
 
-  logger.info("host started", { host: NATIVE_HOST_NAME, version: HOST_VERSION, pid: process.pid });
+  logger.info("host started", {
+    host: NATIVE_HOST_NAME,
+    version: HOST_VERSION,
+    pid: process.pid,
+    ...(fake ? { provider: "fake" } : {}),
+  });
 
   await runHost({
     input: process.stdin,
     output: process.stdout,
     logger,
     handlers: {
-      health: (_request, { signal }) => checkHealth({ signal }),
+      health: (_request, { signal }) => provider.checkHealth({ signal }),
       extractPdfText: (request, { signal, progress }) => {
         progress("extracting-pdf-text");
         return extractPdfText(request.pdfBase64, { signal });

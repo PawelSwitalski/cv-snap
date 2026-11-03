@@ -1,0 +1,10 @@
+{
+  "title": "Senior Frontend Developer",
+  "company": null,
+  "location": "Warszawa / zdalnie",
+  "seniority": "senior",
+  "mustHaves": ["5+ lat z React i TypeScript", "Testy (Jest/Vitest)"],
+  "niceToHaves": ["Next.js", "GraphQL"],
+  "keywords": ["React", "TypeScript", "Vitest"],
+  "language": "pl"
+}

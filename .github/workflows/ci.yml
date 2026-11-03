@@ -31,6 +31,36 @@ jobs:
       - run: pnpm test
       - run: pnpm --filter @cv-snap/extension zip:release
 
+  # End to end (bolt 022, story 004-e2e-ci-job): the e2e build in Playwright's Chromium, the real host
+  # with the fake AI provider. No retries, so a flaky test fails the run instead of hiding.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: pnpm --filter @cv-snap/e2e exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+        env:
+          CI: "true"
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          retention-days: 14
+
   install:
     strategy:
       fail-fast: false

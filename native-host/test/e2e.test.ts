@@ -208,6 +208,70 @@ describe("built native host (end to end)", () => {
     expect(result.exitCode).toBe(0);
     expect(result.stdout.length).toBe(0);
   });
+
+  it("answers from fixtures with the fake provider only when its environment variable is set", async () => {
+    const fixtures = fileURLToPath(new URL("../../e2e/fixtures/provider", import.meta.url));
+    const env = { ...isolatedEnv(tempDir("cvsnap-e2e-")), CV_SNAP_FAKE_PROVIDER: fixtures };
+
+    const result = await exchange(
+      process.execPath,
+      [MAIN, CHROME_ORIGIN_ARG],
+      env,
+      [
+        frame({ type: "health", requestId: "h1" }),
+        frame({ type: "createProfile", requestId: "c1", model: "claude-haiku-5-5", cvText: "x" }),
+      ],
+      3, // 2 replies + the "creating-profile" progress frame
+    );
+
+    const byId = new Map(
+      parseFrames(result.stdout)
+        .filter((f) => f.type === "response")
+        .map((f) => [f.requestId, f]),
+    );
+    expect(byId.get("h1")).toMatchObject({
+      response: { ok: true, data: { claudeFound: true, isAuthenticated: true } },
+    });
+    expect(byId.get("c1")).toMatchObject({ response: { ok: true } });
+    expect(result.exitCode).toBe(0);
+  });
+
+  it("can't be switched to the fake provider by a message", async () => {
+    const fixtures = fileURLToPath(new URL("../../e2e/fixtures/provider", import.meta.url));
+
+    const result = await exchange(
+      process.execPath,
+      [MAIN, CHROME_ORIGIN_ARG],
+      isolatedEnv(tempDir("cvsnap-e2e-")),
+      [
+        frame({
+          type: "health",
+          requestId: "h1",
+          provider: "fake",
+          CV_SNAP_FAKE_PROVIDER: fixtures,
+        }),
+        frame({
+          type: "createProfile",
+          requestId: "c1",
+          model: "claude-haiku-5-5",
+          cvText: "x",
+          CV_SNAP_FAKE_PROVIDER: fixtures,
+        }),
+      ],
+      3,
+    );
+
+    const byId = new Map(
+      parseFrames(result.stdout)
+        .filter((f) => f.type === "response")
+        .map((f) => [f.requestId, f]),
+    );
+    // Claude Code is hidden in this environment: only the real provider answers like this.
+    expect(byId.get("h1")).toMatchObject({ response: { ok: true, data: { claudeFound: false } } });
+    expect(byId.get("c1")).toMatchObject({
+      response: { ok: false, error: { code: "CLAUDE_NOT_FOUND" } },
+    });
+  });
 });
 
 describe("cv-snap-host as a user command (end to end)", () => {

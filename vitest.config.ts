@@ -29,6 +29,15 @@ export default defineConfig({
           environment: "node",
         },
       },
+      {
+        test: {
+          // Pure helpers of the Playwright harness; the browser tests run with `pnpm test:e2e`.
+          name: "e2e",
+          root: "./e2e",
+          include: ["harness/**/*.test.ts"],
+          environment: "node",
+        },
+      },
       "./extension/vitest.config.ts",
     ],
     coverage: {

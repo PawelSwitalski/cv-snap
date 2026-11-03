@@ -1,6 +1,11 @@
-import type { ProgressStep } from "@cv-snap/shared";
+import { E2E_NATIVE_HOST_NAME, NATIVE_HOST_NAME, type ProgressStep } from "@cv-snap/shared";
 import { describe, expect, it } from "vitest";
-import { createNativeHostClient, disconnectErrorCode, type NativePort } from "./native-host-client";
+import {
+  createNativeHostClient,
+  disconnectErrorCode,
+  nativeHostName,
+  type NativePort,
+} from "./native-host-client";
 
 const HEALTHY = {
   hostVersion: "0.1.0",
@@ -191,6 +196,15 @@ describe("createNativeHostClient", () => {
     chrome.client.disconnect();
 
     await expect(pending).rejects.toMatchObject({ code: "HOST_DISCONNECTED" });
+  });
+});
+
+describe("nativeHostName", () => {
+  it("connects the end-to-end build to the test host and every other build to the real one", () => {
+    expect(nativeHostName("e2e")).toBe(E2E_NATIVE_HOST_NAME);
+    for (const mode of ["development", "production", "release"]) {
+      expect(nativeHostName(mode)).toBe(NATIVE_HOST_NAME);
+    }
   });
 });
 

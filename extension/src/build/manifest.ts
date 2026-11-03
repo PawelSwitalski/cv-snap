@@ -4,6 +4,16 @@ import type { UserManifest } from "wxt";
 /** `wxt build --mode release` / `wxt zip --mode release`: the Chrome Web Store package. */
 export const RELEASE_MODE = "release";
 
+/**
+ * `wxt build --mode e2e`: the dev build for the Playwright tests (bolt 022). It also has the
+ * fixture job board as a granted site (no permission dialog in tests) and talks to the test host
+ * (`E2E_NATIVE_HOST_NAME`).
+ */
+export const E2E_MODE = "e2e";
+
+/** The fixture job board the end-to-end tests serve locally (mapped to 127.0.0.1 in Chromium). */
+export const E2E_JOB_SITE = "https://jobs.cvsnap.test/*";
+
 /** Icon sizes in `public/icon/<size>.png` (rendered from `assets/icon.svg`, bolt 013). */
 export const ICON_SIZES = [16, 32, 48, 128] as const;
 
@@ -43,6 +53,8 @@ export function buildManifest(mode: string): UserManifest {
     // (fix bolt 019). Only WebAssembly is allowed here, not eval or remote scripts.
     content_security_policy: { extension_pages: EXTENSION_PAGES_CSP },
   };
+  if (mode === RELEASE_MODE) return manifest;
   // Fixed dev ID so the native host can allow exactly this extension (story 003-host-install-scripts).
-  return mode === RELEASE_MODE ? manifest : { ...manifest, key: EXTENSION_PUBLIC_KEY };
+  const dev = { ...manifest, key: EXTENSION_PUBLIC_KEY };
+  return mode === E2E_MODE ? { ...dev, host_permissions: [E2E_JOB_SITE] } : dev;
 }
