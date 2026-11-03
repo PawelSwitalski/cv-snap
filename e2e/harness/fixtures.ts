@@ -77,7 +77,10 @@ export const test = base.extend<{ cvSnap: CvSnap }, { jobBoard: JobBoard }>({
       context = await chromium.launchPersistentContext(userDataDir, {
         channel: "chromium",
         acceptDownloads: true,
+        // The tests read English UI text; Chromium would otherwise follow the system language.
+        locale: "en-US",
         args: [
+          "--lang=en-US",
           `--disable-extensions-except=${EXTENSION_DIR}`,
           `--load-extension=${EXTENSION_DIR}`,
           "--remote-debugging-port=0",

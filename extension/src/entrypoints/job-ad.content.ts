@@ -1,6 +1,7 @@
 import { captureAd } from "@/features/job-ad/capture";
 import { CaptureJobAdRequestSchema, type CaptureResult } from "@/features/job-ad/messages";
 import { startPageWatcher } from "@/features/job-ad/page-watcher";
+import { snapshotPage } from "@/features/job-ad/snapshot";
 import { logger } from "@/lib/logger";
 
 declare global {
@@ -56,12 +57,19 @@ export default defineContentScript({
     browser.runtime.onMessage.addListener(
       (message: unknown, _sender, sendResponse: (response: CaptureResult) => void) => {
         if (!CaptureJobAdRequestSchema.safeParse(message).success) return false;
+        const result = captureAd({
+          document,
+          url: location.href,
+          selectionText: window.getSelection()?.toString() ?? null,
+        });
+        // The whole page, also for a manual selection: the history keeps what the ad looked like.
         sendResponse(
-          captureAd({
-            document,
-            url: location.href,
-            selectionText: window.getSelection()?.toString() ?? null,
-          }),
+          result.ok
+            ? {
+                ...result,
+                snapshot: snapshotPage(document.documentElement.outerHTML, location.href),
+              }
+            : result,
         );
         return false;
       },

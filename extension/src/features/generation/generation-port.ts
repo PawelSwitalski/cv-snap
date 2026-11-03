@@ -1,7 +1,10 @@
 import { CvSnapError, toErrorPayload } from "@cv-snap/shared";
-import type { AdInput } from "@/features/tailoring/requirements-resolution";
+import type { PendingSnapshots } from "@/features/history/history-repository";
+import { adKeyForInput } from "@/features/tailoring/ad-key-input";
 import { logger } from "@/lib/logger";
+import type { CapturedAd } from "./capture-ad";
 import type { GenerationPipeline } from "./generation-pipeline";
+import type { GeneratedAd } from "./generation-result";
 import { GenerateMessageSchema, type GenerateMessage, type GenerationEvent } from "./messages";
 
 /** The subset of `chrome.runtime.Port` used here (tests pass a fake). */
@@ -14,7 +17,10 @@ export interface GenerationPort {
 export interface GenerationPortDeps {
   pipeline: Pick<GenerationPipeline, "run">;
   /** Captures the ad (or the user's selection) in the tab; throws a typed error otherwise. */
-  captureAd: (tabId: number, signal: AbortSignal) => Promise<AdInput>;
+  captureAd: (tabId: number, signal: AbortSignal) => Promise<CapturedAd>;
+  /** Keeps the cleaned page until the user downloads the CV (history, story 003). */
+  snapshots: Pick<PendingSnapshots, "putPending">;
+  now?: () => Date;
 }
 
 /**
@@ -61,8 +67,25 @@ export function serveGenerationPort(port: GenerationPort, deps: GenerationPortDe
   const run = async (request: GenerateMessage, controller: AbortController) => {
     try {
       post({ type: "progress", step: "reading-job-ad" });
-      const ad = await deps.captureAd(request.tabId, controller.signal);
+      const { ad, snapshot } = await deps.captureAd(request.tabId, controller.signal);
       if (controller.signal.aborted) throw new CvSnapError("CANCELLED", "Generation was cancelled");
+      const adKey = await adKeyForInput(ad);
+      // A failed write only costs the history its page copy; the generation goes on.
+      const snapshotStatus =
+        snapshot.status === "saved"
+          ? await deps.snapshots
+              .putPending(adKey, snapshot.html, (deps.now ?? (() => new Date()))())
+              .then(
+                () => "saved" as const,
+                (error: unknown) => {
+                  logger.warn(
+                    "page snapshot not kept",
+                    error instanceof Error ? error.name : "unknown",
+                  );
+                  return "none" as const;
+                },
+              )
+          : snapshot.status;
       const result = await deps.pipeline.run({
         ad,
         override: request.override,
@@ -72,7 +95,14 @@ export function serveGenerationPort(port: GenerationPort, deps: GenerationPortDe
           post({ type: "progress", step });
         },
       });
-      post({ type: "result", result });
+      const generatedAd: GeneratedAd = {
+        adKey,
+        url: ad.url,
+        text: ad.text,
+        isManualSelection: ad.isManualSelection,
+        snapshot: snapshotStatus,
+      };
+      post({ type: "result", result: { ...result, ad: generatedAd } });
     } catch (error) {
       const payload = toErrorPayload(error);
       logger.warn("generation request failed", payload.code);

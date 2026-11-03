@@ -5,6 +5,7 @@ import {
   CaptureResultSchema,
   JobAdStatusMessageSchema,
 } from "./messages";
+import { MAX_SNAPSHOT_BYTES } from "./snapshot";
 
 describe("job-ad messages", () => {
   it("accepts a status message and rejects malformed ones", () => {
@@ -49,5 +50,32 @@ describe("job-ad messages", () => {
     expect(CaptureResultSchema.safeParse({ ok: true, ad: { ...ad, text: tooLong } }).success).toBe(
       false,
     );
+  });
+});
+
+describe("capture reply: page snapshot", () => {
+  const ad = {
+    text: "ad",
+    url: "https://a.pl/x",
+    structuredFields: null,
+    isManualSelection: false,
+  };
+  const accepts = (reply: unknown) => CaptureResultSchema.safeParse(reply).success;
+
+  it("accepts a saved, too-large or missing snapshot (an older content script sends none)", () => {
+    expect(accepts({ ok: true, ad, snapshot: { status: "saved", html: "<html></html>" } })).toBe(
+      true,
+    );
+    expect(accepts({ ok: true, ad, snapshot: { status: "too-large" } })).toBe(true);
+    expect(accepts({ ok: true, ad, snapshot: { status: "none" } })).toBe(true);
+    expect(accepts({ ok: true, ad })).toBe(true);
+  });
+
+  it("rejects a saved snapshot over the limit, or without its HTML", () => {
+    const html = "x".repeat(MAX_SNAPSHOT_BYTES + 1);
+
+    expect(accepts({ ok: true, ad, snapshot: { status: "saved", html } })).toBe(false);
+    expect(accepts({ ok: true, ad, snapshot: { status: "saved" } })).toBe(false);
+    expect(accepts({ ok: true, ad, snapshot: { status: "maybe" } })).toBe(false);
   });
 });

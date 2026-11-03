@@ -31,6 +31,7 @@ import { I18nProvider, useT } from "@/lib/i18n/i18n";
 import { logger } from "@/lib/logger";
 import type { NativeHostClient } from "@/lib/native-host-client";
 import { NativeHostProvider } from "@/lib/native-host-provider";
+import type { HistoryRepository, PendingSnapshots } from "@/features/history/history-repository";
 import type { FileStore } from "@/lib/storage/file-store";
 import type { LocalStore } from "@/lib/storage/local-store";
 
@@ -63,6 +64,8 @@ export interface AppDeps {
   >;
   /** Saves a file (profile export); tests record it. */
   download?: (file: Blob, fileName: string) => void;
+  /** Downloaded CVs per ad (intent 004), on this PC. */
+  history?: HistoryRepository & PendingSnapshots;
 }
 
 /** Side panel root: error boundary → i18n → view router (story 001). */
@@ -115,8 +118,9 @@ function Panel({ deps }: { deps: AppDeps }) {
         setIsSettingsOpen(true);
       },
       ...(deps.generate.render ? { render: deps.generate.render } : {}),
+      ...(deps.history ? { history: deps.history } : {}),
     }),
-    [generateStore, deps.generate, profileStore, settingsStore],
+    [generateStore, deps.generate, deps.history, profileStore, settingsStore],
   );
   const settingsDeps = useMemo<SettingsViewDeps>(
     () => ({

@@ -1,5 +1,4 @@
 import {
-  adKeyFor,
   type AdKey,
   type CvGenerationProvider,
   type JobRequirements,
@@ -7,6 +6,7 @@ import {
   type StructuredAdFields,
 } from "@cv-snap/shared";
 import { logger } from "@/lib/logger";
+import { adKeyForInput } from "./ad-key-input";
 import type { Clock, RequirementsCacheRepository } from "./ports";
 import { retryOnceOnInvalidOutput } from "./retry";
 
@@ -38,12 +38,7 @@ export class RequirementsResolution {
   ) {}
 
   async resolve(ad: AdInput, options: ProviderCallOptions): Promise<ResolvedRequirements> {
-    const adKey = await adKeyFor(
-      ad.url,
-      ad.isManualSelection
-        ? { kind: "selection", text: ad.text }
-        : { kind: "page", text: ad.structuredFields?.description ?? ad.text },
-    );
+    const adKey = await adKeyForInput(ad);
     const cached = await this.cache.get(adKey, this.now()).catch((error: unknown) => {
       logger.warn("requirements cache read failed; treated as a miss", error);
       return null;

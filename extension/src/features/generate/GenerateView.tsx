@@ -8,6 +8,8 @@ import { GenerateButton } from "./GenerateButton";
 import { GenerationError } from "./GenerationError";
 import { GenerationProgress } from "./GenerationProgress";
 import { watchPageState, type PageState, type PageStateApis } from "./page-state";
+import type { HistoryRepository, PendingSnapshots } from "@/features/history/history-repository";
+import { recordDownload } from "@/features/history/record-download";
 import type { GenerateStore } from "./store";
 import type { RenderFitted } from "./use-fitted-cv";
 
@@ -26,6 +28,8 @@ export interface GenerateViewDeps {
   openSettings?: () => void;
   /** Tests replace react-pdf rendering. */
   render?: RenderFitted;
+  /** Where Download PDF saves the CV (intent 004); without it, nothing is saved. */
+  history?: HistoryRepository & Pick<PendingSnapshots, "takePending">;
 }
 
 /**
@@ -33,6 +37,7 @@ export interface GenerateViewDeps {
  * then the result or the error. The button stays above a result, so the next ad is one click away.
  */
 export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profile: CvProfile }) {
+  const { history } = deps;
   const t = useT();
   const status = useStore(deps.store, (state) => state.status);
   const result = useStore(deps.store, (state) => state.result);
@@ -91,6 +96,12 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
             photo={deps.photo}
             gdprClause={gdprClause}
             {...(deps.render ? { render: deps.render } : {})}
+            {...(history
+              ? {
+                  onDownloaded: (pdf: Blob, fileName: string) =>
+                    recordDownload(history, { result, fileName, pdf, now: new Date() }),
+                }
+              : {})}
           />
         </Suspense>
       ) : null}

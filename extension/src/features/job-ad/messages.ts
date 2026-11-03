@@ -1,5 +1,6 @@
 import { MAX_AD_CHARS, StructuredAdFieldsSchema, TRUNCATION_MARKER } from "@cv-snap/shared";
 import { z } from "zod";
+import { MAX_SNAPSHOT_BYTES } from "./snapshot";
 
 /**
  * Messages between the job-ad content script and the background worker. Both directions are
@@ -43,8 +44,20 @@ export const CAPTURE_FAILURES = [
   "SITE_NOT_ALLOWED",
 ] as const;
 
+/** The cleaned page for the history (story 003-page-snapshot); a UTF-16 length bounds the bytes. */
+export const PageSnapshotSchema = z.discriminatedUnion("status", [
+  z.object({ status: z.literal("saved"), html: z.string().min(1).max(MAX_SNAPSHOT_BYTES) }),
+  z.object({ status: z.literal("too-large") }),
+  z.object({ status: z.literal("none") }),
+]);
+
 export const CaptureResultSchema = z.discriminatedUnion("ok", [
-  z.object({ ok: z.literal(true), ad: AdInputSchema }),
+  z.object({
+    ok: z.literal(true),
+    ad: AdInputSchema,
+    /** Optional: a content script of an older build (still open in a tab) doesn't send it. */
+    snapshot: PageSnapshotSchema.optional(),
+  }),
   z.object({
     ok: z.literal(false),
     reason: z.enum(CAPTURE_FAILURES),

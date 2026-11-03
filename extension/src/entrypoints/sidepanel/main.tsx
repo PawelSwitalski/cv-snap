@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { createAllowedSites } from "@/features/allowed-sites/allowed-sites";
 import { connectGeneration } from "@/features/generate/generation-client";
 import { browserPageStateApis } from "@/features/generate/page-state";
+import { indexedDbHistoryRepository } from "@/features/history/history-repository";
 import { createNativeHostClient } from "@/lib/native-host-client";
 import { logger } from "@/lib/logger";
 import { panelHostClient } from "@/lib/panel-host";
@@ -32,6 +33,7 @@ createRoot(rootElement).render(
           session: chromeSessionStore,
         },
         allowedSites,
+        history: indexedDbHistoryRepository,
       }}
     />
   </StrictMode>,

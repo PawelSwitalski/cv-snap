@@ -30,6 +30,7 @@ import { registerCvFonts } from "@/features/cv-pdf/fonts";
 import { selectClause, type GdprClauseSettings } from "@/features/cv-pdf/gdpr-clause";
 import { renderFittedCv } from "@/features/cv-pdf/render";
 import type { GenerationResult } from "@/features/generation/generation-result";
+import type { RecordDownloadOutcome } from "@/features/history/record-download";
 import { useLanguage, useT } from "@/lib/i18n/i18n";
 import { CvPreview, lineElementId } from "./CvPreview";
 import { buildPreviewModel, isAllUnverified } from "./preview-model";
@@ -57,7 +58,15 @@ export interface ResultViewProps {
   gdprClause: GdprClauseSettings;
   render?: RenderFitted;
   download?: (pdf: Blob, fileName: string) => void;
+  /**
+   * Saves the downloaded CV to history (story 002-save-on-download); called after the download
+   * has started. Without it (e.g. previews), nothing is saved.
+   */
+  onDownloaded?: (pdf: Blob, fileName: string) => Promise<RecordDownloadOutcome>;
 }
+
+/** What the line under Download PDF says about the history. */
+type HistoryNote = "none" | "saved" | "failed";
 
 /**
  * A generation result (story 006): which ad it is for, the unverified-lines summary, the parsed
@@ -72,6 +81,7 @@ export default function ResultView({
   gdprClause,
   render = renderInExtension,
   download = downloadPdf,
+  onDownloaded,
 }: ResultViewProps) {
   const t = useT();
   const changes = useStore(store, (state) => state.changes);
@@ -87,6 +97,7 @@ export default function ResultView({
   const current = currentFit(fitted, preview.model);
   const shown = current?.model ?? preview.model;
   const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [historyNote, setHistoryNote] = useState<HistoryNote>("none");
 
   const { title, company } = result.requirements;
   const unverified = preview.validation.summary.unverified;
@@ -97,7 +108,18 @@ export default function ResultView({
   const save = () => {
     // Only the PDF fitted from what the preview shows (FR-13).
     if (!current) return;
-    download(current.pdf, buildCvFileName(profile.contact.fullName, company));
+    const fileName = buildCvFileName(profile.contact.fullName, company);
+    download(current.pdf, fileName);
+    // The download never waits for, or depends on, the history (FR-1).
+    if (!onDownloaded) return;
+    onDownloaded(current.pdf, fileName).then(
+      (outcome) => {
+        setHistoryNote(outcome === "saved" ? "saved" : "none");
+      },
+      () => {
+        setHistoryNote("failed");
+      },
+    );
   };
 
   return (
@@ -187,6 +209,8 @@ export default function ResultView({
         <p aria-live="polite" className="text-xs text-muted-foreground">
           {!current && fitted.status !== "failed" ? t("progress_rendering") : null}
           {fitted.status === "failed" ? t("result_render_failed") : null}
+          {historyNote === "saved" ? t("result_saved_to_history") : null}
+          {historyNote === "failed" ? t("result_history_failed") : null}
         </p>
       </div>
 

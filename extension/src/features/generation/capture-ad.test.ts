@@ -25,10 +25,20 @@ async function errorOf(promise: Promise<unknown>): Promise<CvSnapError> {
 }
 
 describe("createCaptureAd", () => {
-  it("returns the captured ad (here the user's selection)", async () => {
+  it("returns the captured ad (here the user's selection) and the page snapshot", async () => {
+    const snapshot = { status: "saved", html: "<html></html>" } as const;
+    const capture = captureWith({ ok: true, ad, snapshot });
+
+    await expect(capture(7, new AbortController().signal)).resolves.toEqual({ ad, snapshot });
+  });
+
+  it("treats a reply without a snapshot (older content script) as none", async () => {
     const capture = captureWith({ ok: true, ad });
 
-    await expect(capture(7, new AbortController().signal)).resolves.toEqual(ad);
+    await expect(capture(7, new AbortController().signal)).resolves.toEqual({
+      ad,
+      snapshot: { status: "none" },
+    });
   });
 
   it.each([

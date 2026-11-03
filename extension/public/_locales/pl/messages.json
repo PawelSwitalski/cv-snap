@@ -701,6 +701,12 @@
   "result_render_failed": {
     "message": "Nie udało się przygotować PDF-a. Edytuj linię lub wygeneruj ponownie."
   },
+  "result_saved_to_history": {
+    "message": "Zapisano w historii."
+  },
+  "result_history_failed": {
+    "message": "PDF został pobrany, ale nie udało się zapisać go w historii."
+  },
   "result_all_unverified_title": {
     "message": "Żadna linia tego CV nie jest zweryfikowana"
   },
@@ -998,5 +1004,36 @@
   },
   "error_action_open_settings": {
     "message": "Wybierz inny model"
+  },
+  "history_page_title": {
+    "message": "Zapisane ogłoszenie"
+  },
+  "history_page_banner": {
+    "message": "Zapisane przez cv-snap $DATE$ ze strony $URL$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      },
+      "url": {
+        "content": "$2"
+      }
+    }
+  },
+  "history_page_banner_no_url": {
+    "message": "Zapisane przez cv-snap $DATE$ (zaznaczony tekst)",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "history_page_too_large": {
+    "message": "Ta strona była za duża, by ją zapisać. Poniżej tekst ogłoszenia odczytany przez cv-snap."
+  },
+  "history_page_text_only": {
+    "message": "Kopia tej strony nie została zapisana. Poniżej tekst ogłoszenia odczytany przez cv-snap."
+  },
+  "history_page_deleted": {
+    "message": "Ten wpis został usunięty z historii."
   }
 }

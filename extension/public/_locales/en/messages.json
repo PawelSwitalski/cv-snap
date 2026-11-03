@@ -701,6 +701,12 @@
   "result_render_failed": {
     "message": "The PDF couldn't be prepared. Edit a line or regenerate to try again."
   },
+  "result_saved_to_history": {
+    "message": "Saved to history."
+  },
+  "result_history_failed": {
+    "message": "The PDF was downloaded, but it couldn't be saved to history."
+  },
   "result_all_unverified_title": {
     "message": "No line of this CV is verified"
   },
@@ -998,5 +1004,36 @@
   },
   "error_action_open_settings": {
     "message": "Choose another model"
+  },
+  "history_page_title": {
+    "message": "Saved job ad"
+  },
+  "history_page_banner": {
+    "message": "Saved by cv-snap on $DATE$ from $URL$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      },
+      "url": {
+        "content": "$2"
+      }
+    }
+  },
+  "history_page_banner_no_url": {
+    "message": "Saved by cv-snap on $DATE$ (selected text)",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "history_page_too_large": {
+    "message": "This page was too large to save. Here is the ad text cv-snap read from it."
+  },
+  "history_page_text_only": {
+    "message": "No copy of this page was saved. Here is the ad text cv-snap read from it."
+  },
+  "history_page_deleted": {
+    "message": "This entry was deleted from your history."
   }
 }

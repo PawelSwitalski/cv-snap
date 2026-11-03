@@ -1,6 +1,9 @@
 import { CvSnapError } from "@cv-snap/shared";
 import { describe, expect, it } from "vitest";
 import { generationResult } from "../../../test/generate-fixtures";
+import { createMemoryHistoryRepository } from "@/features/history/history-repository";
+import type { PageSnapshot } from "@/features/job-ad/snapshot";
+import { adKeyForInput } from "@/features/tailoring/ad-key-input";
 import type { AdInput } from "@/features/tailoring/requirements-resolution";
 import type { GenerationRequest } from "./generation-result";
 import { serveGenerationPort, type GenerationPort } from "./generation-port";
@@ -12,6 +15,11 @@ const AD: AdInput = {
   structuredFields: null,
   isManualSelection: false,
 };
+
+const captured =
+  (snapshot: PageSnapshot = { status: "none" }) =>
+  () =>
+    Promise.resolve({ ad: AD, snapshot });
 
 /** Background end of the port: the test plays the side panel. */
 function backgroundPort() {
@@ -37,15 +45,16 @@ function backgroundPort() {
 
 const generate = { type: "generate", tabId: 7, override: null, model: "claude-sonnet-5-5" };
 
-/** Lets pending promise callbacks run. */
-const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+/** Lets pending callbacks run, including the AdKey hash (Web Crypto works off the main thread). */
+const settle = () => new Promise((resolve) => setTimeout(resolve, 25));
 
 describe("serveGenerationPort", () => {
   it("captures the ad, reports progress and answers with exactly one result", async () => {
     const side = backgroundPort();
     const requests: GenerationRequest[] = [];
     serveGenerationPort(side.port, {
-      captureAd: () => Promise.resolve(AD),
+      captureAd: captured(),
+      snapshots: createMemoryHistoryRepository(),
       pipeline: {
         run: (request) => {
           requests.push(request);
@@ -68,7 +77,8 @@ describe("serveGenerationPort", () => {
     const side = backgroundPort();
     let signal: AbortSignal | undefined;
     serveGenerationPort(side.port, {
-      captureAd: () => Promise.resolve(AD),
+      captureAd: captured(),
+      snapshots: createMemoryHistoryRepository(),
       pipeline: {
         run: (request) => {
           signal = request.signal;
@@ -99,6 +109,7 @@ describe("serveGenerationPort", () => {
           new CvSnapError("JOB_AD_NOT_DETECTED", "none", { reason: "SELECTION_TOO_SHORT" }),
         ),
       pipeline: { run: () => Promise.reject(new Error("not reached")) },
+      snapshots: createMemoryHistoryRepository(),
     });
 
     side.send(generate);
@@ -113,7 +124,8 @@ describe("serveGenerationPort", () => {
   it("rejects malformed requests and a second run on the same port", async () => {
     const side = backgroundPort();
     serveGenerationPort(side.port, {
-      captureAd: () => Promise.resolve(AD),
+      captureAd: captured(),
+      snapshots: createMemoryHistoryRepository(),
       pipeline: { run: () => new Promise(() => undefined) },
     });
 
@@ -130,7 +142,8 @@ describe("serveGenerationPort", () => {
   it("never leaks internal error details", async () => {
     const side = backgroundPort();
     serveGenerationPort(side.port, {
-      captureAd: () => Promise.resolve(AD),
+      captureAd: captured(),
+      snapshots: createMemoryHistoryRepository(),
       pipeline: { run: () => Promise.reject(new Error("stack with CV text Jan Testowy")) },
     });
 
@@ -141,6 +154,64 @@ describe("serveGenerationPort", () => {
     expect(side.events.at(-1)).toMatchObject({
       type: "error",
       error: { code: "GENERATION_FAILED" },
+    });
+  });
+
+  it("keeps the cleaned page as pending under the ad's key and sends only its status", async () => {
+    const side = backgroundPort();
+    const history = createMemoryHistoryRepository();
+    serveGenerationPort(side.port, {
+      captureAd: captured({ status: "saved", html: "<html>ad</html>" }),
+      snapshots: history,
+      pipeline: { run: () => Promise.resolve(generationResult()) },
+      now: () => new Date("2026-11-03T12:00:00Z"),
+    });
+
+    side.send(generate);
+    await settle();
+
+    const adKey = await adKeyForInput(AD);
+    const result = side.events.at(-1);
+    expect(result).toMatchObject({
+      type: "result",
+      result: {
+        ad: { adKey, url: AD.url, text: AD.text, isManualSelection: false, snapshot: "saved" },
+      },
+    });
+    expect(JSON.stringify(result)).not.toContain("<html>ad</html>");
+    await expect(history.takePending(adKey)).resolves.toBe("<html>ad</html>");
+  });
+
+  it("passes a too-large snapshot on as its status, without storing anything", async () => {
+    const side = backgroundPort();
+    const history = createMemoryHistoryRepository();
+    serveGenerationPort(side.port, {
+      captureAd: captured({ status: "too-large" }),
+      snapshots: history,
+      pipeline: { run: () => Promise.resolve(generationResult()) },
+    });
+
+    side.send(generate);
+    await settle();
+
+    expect(side.events.at(-1)).toMatchObject({ result: { ad: { snapshot: "too-large" } } });
+    expect(history.files.size).toBe(0);
+  });
+
+  it("still answers with the result when the snapshot can't be stored", async () => {
+    const side = backgroundPort();
+    serveGenerationPort(side.port, {
+      captureAd: captured({ status: "saved", html: "<html></html>" }),
+      snapshots: { putPending: () => Promise.reject(new Error("QuotaExceededError")) },
+      pipeline: { run: () => Promise.resolve(generationResult()) },
+    });
+
+    side.send(generate);
+    await settle();
+
+    expect(side.events.at(-1)).toMatchObject({
+      type: "result",
+      result: { ad: { snapshot: "none" } },
     });
   });
 });

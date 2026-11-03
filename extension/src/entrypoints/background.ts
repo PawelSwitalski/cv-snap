@@ -3,6 +3,7 @@ import { browserApis } from "@/features/allowed-sites/chrome-apis";
 import { browserActionClickApis, handleActionClick } from "@/features/generate/action-click";
 import { clearJobAdStatus, showJobAdStatus } from "@/features/job-ad/badge";
 import { createCaptureAd } from "@/features/generation/capture-ad";
+import { indexedDbHistoryRepository } from "@/features/history/history-repository";
 import { GenerationPipeline } from "@/features/generation/generation-pipeline";
 import { serveGenerationPort } from "@/features/generation/generation-port";
 import { GENERATION_PORT_NAME } from "@/features/generation/messages";
@@ -66,6 +67,7 @@ export default defineBackground(() => {
     serveGenerationPort(port, {
       pipeline: { run: (request) => generationPipeline().run(request) },
       captureAd,
+      snapshots: indexedDbHistoryRepository,
     });
   });
 
