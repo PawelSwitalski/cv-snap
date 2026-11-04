@@ -44,7 +44,7 @@ Settings from 0.1.x read as "keep forever". Backups from 0.1.x import unchanged.
   - [ ] Store review passed
   - [x] `npm publish ./release/cv-snap-host-0.2.0.tgz --tag next` (user; on npm since 10:58 UTC, shasum `7e20d0c5…` matches the release tarball; `next` = 0.2.0, `latest` = 0.1.0)
   - [ ] Verify: store install + `npx cv-snap-host@next install`; the Dev + verify checks above run on this build
-- [ ] **Checkpoint 3: Production**: publish the store update (public); `npm dist-tag add cv-snap-host@0.2.0 latest`; GitHub Release `v0.2.0` (done early, remove its "Rolling out" note); verify as a non-tester
+- [ ] **Checkpoint 3: Production**: publish the store update (public); `npm dist-tag add cv-snap-host@0.2.0 latest` (done early, user); GitHub Release `v0.2.0` (done early, remove its "Rolling out" note); verify as a non-tester
 - [ ] **Checkpoint 4: Monitoring**: weekly check (`monitoring.md`); watch for backup size or import reports (ZIP format deferred until real-usage feedback)
 
 ## Log
@@ -58,6 +58,7 @@ Settings from 0.1.x read as "keep forever". Backups from 0.1.x import unchanged.
 | 2026-11-04 | Tag `v0.2.0` and `main` pushed (user); zip 0.2.0 uploaded to the store for trusted testers (user); the manual checks run on the tester build instead of a separate unpacked install |
 | 2026-11-04 | Host 0.2.0 on npm `next` (published by the user at 10:58 UTC; a second publish was refused as a duplicate); npm shasum matches the release tarball |
 | 2026-11-04 | GitHub Release `v0.2.0` created and marked Latest early (user's choice), with both packages and a "rolling out" note; remove the note at Checkpoint 3. npm `latest` stays 0.1.0 until the store update is public |
+| 2026-11-04 | npm `latest` = 0.2.0 (user), before the store update is public: public 0.1.x users who reinstall the helper see the version mismatch until the store update reaches them. Rollback: `npm dist-tag add cv-snap-host@0.1.0 latest` |
 
 ## Artifacts (tag v0.2.0, commit f812ce1)
 
