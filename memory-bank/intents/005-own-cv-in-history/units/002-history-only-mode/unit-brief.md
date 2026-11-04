@@ -2,11 +2,11 @@
 unit: 002-history-only-mode
 intent: 005-own-cv-in-history
 phase: inception
-status: ready
+status: in-progress
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 created: '2026-11-04T16:40:00Z'
-updated: '2026-11-04T16:40:00Z'
+updated: '2026-11-04T19:05:00Z'
 ---
 
 # Unit Brief: 002-history-only-mode
@@ -36,9 +36,9 @@ Use cv-snap without the helper: set up with a CV PDF only, save own CVs and use 
 
 ### Stories
 
-- [ ] **001-history-only-onboarding**: Use without the helper - Must - Planned
-- [ ] **002-helper-later**: Set up the helper later - Must - Planned
-- [ ] **003-replace-stored-cv**: Replace my stored CV - Should - Planned
+- [x] **001-history-only-onboarding**: Use without the helper - Must - Complete
+- [x] **002-helper-later**: Set up the helper later - Must - Complete
+- [x] **003-replace-stored-cv**: Replace my stored CV - Should - Complete
 - [ ] **004-backup-without-profile**: Backups without a profile - Must - Planned
 - [ ] **005-privacy-text**: Privacy text for own CVs - Must - Planned
 - [ ] **006-history-only-e2e**: E2E: history-only mode - Must - Planned

@@ -2,11 +2,11 @@
 id: 003-replace-stored-cv
 unit: 002-history-only-mode
 intent: 005-own-cv-in-history
-status: draft
+status: complete
 priority: should
 created: '2026-11-04T16:40:00Z'
 assigned_bolt: 029-history-only-mode
-implemented: false
+implemented: true
 ---
 
 # Story: 003-replace-stored-cv
@@ -19,9 +19,9 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** history-only mode, **When** I open Settings, **Then** Your CV shows the stored file's name and Replace…
-- [ ] **Given** I pick a valid PDF, **When** replaced, **Then** later saves use it and existing entries keep their PDFs
-- [ ] **Given** an invalid file, **When** picked, **Then** the upload messages are shown and nothing changes
+- [x] **Given** history-only mode, **When** I open Settings, **Then** Your CV shows the stored file's name and Replace…
+- [x] **Given** I pick a valid PDF, **When** replaced, **Then** later saves use it and existing entries keep their PDFs
+- [x] **Given** an invalid file, **When** picked, **Then** the upload messages are shown and nothing changes
 
 ## Technical Notes
 

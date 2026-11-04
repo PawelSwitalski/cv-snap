@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 79
-- **Planned**: 6
+- **Planned**: 3
 - **Generated**: 0
-- **Completed**: 73
-- **Last updated**: 2026-11-04T17:45:00Z
+- **Completed**: 76
+- **Last updated**: 2026-11-04T19:05:00Z
 
 ---
 
@@ -209,10 +209,10 @@
 
 ## Stories by Status
 
-- **Planned**: 6
+- **Planned**: 3
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 73
+- **Completed**: 76
 
 ### 005-own-cv-in-history
 
@@ -227,11 +227,11 @@
 
 #### 002-history-only-mode
 
-- [ ] **001-history-only-onboarding** — Use without the helper - Must - bolt `029-history-only-mode` - PLANNED
+- [x] **001-history-only-onboarding** — Use without the helper - Must - bolt `029-history-only-mode` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/001-history-only-onboarding.md`
-- [ ] **002-helper-later** — Set up the helper later - Must - bolt `029-history-only-mode` - PLANNED
+- [x] **002-helper-later** — Set up the helper later - Must - bolt `029-history-only-mode` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/002-helper-later.md`
-- [ ] **003-replace-stored-cv** — Replace my stored CV - Should - bolt `029-history-only-mode` - PLANNED
+- [x] **003-replace-stored-cv** — Replace my stored CV - Should - bolt `029-history-only-mode` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/003-replace-stored-cv.md`
 - [ ] **004-backup-without-profile** — Backups without a profile - Must - bolt `030-history-only-backup` - PLANNED
   `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/004-backup-without-profile.md`

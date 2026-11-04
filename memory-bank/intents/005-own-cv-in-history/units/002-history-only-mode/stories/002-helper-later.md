@@ -2,11 +2,11 @@
 id: 002-helper-later
 unit: 002-history-only-mode
 intent: 005-own-cv-in-history
-status: draft
+status: complete
 priority: must
 created: '2026-11-04T16:40:00Z'
 assigned_bolt: 029-history-only-mode
-implemented: false
+implemented: true
 ---
 
 # Story: 002-helper-later
@@ -19,10 +19,10 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** history-only mode, **When** I choose Set up the helper and the check passes, **Then** I'm offered Create my profile from my CV
-- [ ] **Given** I accept, **When** extraction finishes, **Then** the editor opens with a draft, as in normal onboarding, and after confirming I'm on home with Generate
-- [ ] **Given** the check fails again, **When** shown, **Then** I can go back to history-only home
-- [ ] **Given** the switch, **When** done, **Then** every history entry and the stored CV are unchanged and history-only mode is off
+- [x] **Given** history-only mode, **When** I choose Set up the helper and the check passes, **Then** I'm offered Create my profile from my CV
+- [x] **Given** I accept, **When** extraction finishes, **Then** the editor opens with a draft, as in normal onboarding, and after confirming I'm on home with Generate
+- [x] **Given** the check fails again, **When** shown, **Then** I can go back to history-only home
+- [x] **Given** the switch, **When** done, **Then** every history entry and the stored CV are unchanged and history-only mode is off
 
 ## Technical Notes
 
