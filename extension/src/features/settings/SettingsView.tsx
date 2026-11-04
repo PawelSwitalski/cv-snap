@@ -16,6 +16,7 @@ import { HistorySection, type HistorySectionDeps } from "./HistorySection";
 import { GDPR_CLAUSE_MODES, MAX_CLAUSE_CHARS } from "./settings";
 import { SettingsSection } from "./SettingsSection";
 import { SitesSection, type SitesSectionDeps } from "./SitesSection";
+import { YourCvSection, type YourCvSectionDeps } from "./YourCvSection";
 import type { SettingsStore } from "./store";
 
 const MODEL_LABELS: Record<ModelId, [MessageKey, MessageKey]> = {
@@ -36,6 +37,8 @@ export interface SettingsViewDeps {
   backup: BackupSectionDeps;
   /** Retention and "Delete all history" (intent 004); absent without a history. */
   history?: HistorySectionDeps;
+  /** The stored CV in history-only mode (intent 005); absent otherwise. */
+  yourCv?: YourCvSectionDeps;
 }
 
 /**
@@ -72,6 +75,7 @@ export default function SettingsView({
           {t("settings_privacy_show")}
         </Button>
       </SettingsSection>
+      {deps.yourCv ? <YourCvSection deps={deps.yourCv} /> : null}
       {deps.history ? <HistorySection deps={deps.history} /> : null}
       <BackupSection deps={deps.backup} />
     </div>

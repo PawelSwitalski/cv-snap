@@ -25,14 +25,12 @@ export function GenerateButton({
 }) {
   const t = useT();
   const noteId = useId();
-  const [addProblem, setAddProblem] = useState<MessageKey | null>(null);
 
-  const note = (key: MessageKey | null, role?: "status") =>
-    key ? (
-      <p id={noteId} role={role} className="text-xs text-muted-foreground">
-        {t(key)}
-      </p>
-    ) : null;
+  const note = (key: MessageKey) => (
+    <p id={noteId} className="text-xs text-muted-foreground">
+      {t(key)}
+    </p>
+  );
 
   if (!isProfileConfirmed) {
     return (
@@ -47,30 +45,8 @@ export function GenerateButton({
   }
 
   switch (pageState.kind) {
-    case "site-not-allowed": {
-      const { url } = pageState;
-      return (
-        <div className="flex flex-col gap-1">
-          <Button
-            aria-describedby={noteId}
-            onClick={() => {
-              setAddProblem(null);
-              // No await before this call: Chrome needs the click's user gesture.
-              void onAddSite(url).then((result) => {
-                if (!result.ok)
-                  setAddProblem(
-                    result.reason === "DENIED" ? "generate_add_denied" : "generate_add_failed",
-                  );
-              });
-            }}
-          >
-            <Plus aria-hidden="true" />
-            {t("generate_add_site")}
-          </Button>
-          {note(addProblem ?? "generate_add_site_note", addProblem ? "status" : undefined)}
-        </div>
-      );
-    }
+    case "site-not-allowed":
+      return <AddSiteButton url={pageState.url} onAddSite={onAddSite} />;
     case "ad-detected":
     case "no-ad": {
       const { tabId } = pageState;
@@ -95,12 +71,7 @@ export function GenerateButton({
       );
     }
     default: {
-      const reason: MessageKey =
-        pageState.kind === "unknown-site"
-          ? "generate_click_icon"
-          : pageState.kind === "unsupported"
-            ? "generate_unsupported_page"
-            : "generate_no_tab";
+      const reason = pageNoteKey(pageState);
       return (
         <div className="flex flex-col gap-1">
           <Button disabled aria-describedby={noteId}>
@@ -112,4 +83,55 @@ export function GenerateButton({
       );
     }
   }
+}
+
+/**
+ * "Add this site" for an unlisted page (bolt 007); also on the history-only home (intent 005).
+ * Calls `permissions.request` without an await first: Chrome needs the click's user gesture.
+ */
+export function AddSiteButton({
+  url,
+  onAddSite,
+}: {
+  url: string;
+  onAddSite: (url: string) => Promise<AddSiteResult>;
+}) {
+  const t = useT();
+  const noteId = useId();
+  const [addProblem, setAddProblem] = useState<MessageKey | null>(null);
+  return (
+    <div className="flex flex-col gap-1">
+      <Button
+        aria-describedby={noteId}
+        onClick={() => {
+          setAddProblem(null);
+          void onAddSite(url).then((result) => {
+            if (!result.ok)
+              setAddProblem(
+                result.reason === "DENIED" ? "generate_add_denied" : "generate_add_failed",
+              );
+          });
+        }}
+      >
+        <Plus aria-hidden="true" />
+        {t("generate_add_site")}
+      </Button>
+      <p
+        id={noteId}
+        role={addProblem ? "status" : undefined}
+        className="text-xs text-muted-foreground"
+      >
+        {t(addProblem ?? "generate_add_site_note")}
+      </p>
+    </div>
+  );
+}
+
+/** Why nothing can be read from the tab (no tab, Chrome hides the address, not a web page). */
+export function pageNoteKey(pageState: PageState): MessageKey {
+  return pageState.kind === "unknown-site"
+    ? "generate_click_icon"
+    : pageState.kind === "unsupported"
+      ? "generate_unsupported_page"
+      : "generate_no_tab";
 }

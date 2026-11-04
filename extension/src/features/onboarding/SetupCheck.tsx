@@ -29,9 +29,15 @@ type CheckState = { status: "checking" } | { status: "done"; result: SetupCheckR
 export function SetupCheck({
   createClient,
   onContinue,
+  onUseWithoutHelper,
+  onBack,
 }: {
   createClient: () => NativeHostClient;
   onContinue: () => void;
+  /** History-only mode (intent 005): offered when the check fails. */
+  onUseWithoutHelper?: () => void;
+  /** Back to history-only home, when the user came from there to set up the helper. */
+  onBack?: () => void;
 }) {
   const t = useT();
   const [state, setState] = useState<CheckState>({ status: "checking" });
@@ -111,7 +117,20 @@ export function SetupCheck({
         >
           {t("setup_check_again")}
         </Button>
+        {onBack ? (
+          <Button variant="ghost" onClick={onBack}>
+            {t("action_back")}
+          </Button>
+        ) : null}
       </CardFooter>
+      {isBlocked && onUseWithoutHelper ? (
+        <CardFooter className="flex-col items-start gap-1">
+          <Button variant="secondary" onClick={onUseWithoutHelper}>
+            {t("setup_use_without_helper")}
+          </Button>
+          <p className="text-xs text-muted-foreground">{t("setup_use_without_helper_note")}</p>
+        </CardFooter>
+      ) : null}
     </Card>
   );
 }

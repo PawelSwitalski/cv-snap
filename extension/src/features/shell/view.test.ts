@@ -11,6 +11,8 @@ const base: ViewInputs = {
   hasActive: false,
   isSetupPassed: false,
   isUploadRequested: false,
+  isHistoryOnly: false,
+  historyOnlyStep: null,
 };
 
 describe("deriveView", () => {
@@ -50,6 +52,49 @@ describe("deriveView", () => {
     [
       "uploads a new CV on request from home",
       { hasActive: true, isUploadRequested: true },
+      "upload",
+    ],
+    // History-only mode (intent 005).
+    [
+      "uploads the CV only after Use without the helper",
+      { historyOnlyStep: "upload" },
+      "history-upload",
+    ],
+    ["shows history-only home when the mode is on", { isHistoryOnly: true }, "history-home"],
+    [
+      "goes to history-only home even after a passed setup check this session",
+      { isHistoryOnly: true, isSetupPassed: true },
+      "history-home",
+    ],
+    [
+      "runs the setup check when setting up the helper later",
+      { isHistoryOnly: true, historyOnlyStep: "helper-setup" },
+      "helper-setup",
+    ],
+    [
+      "offers the profile upload once that check passed",
+      { isHistoryOnly: true, historyOnlyStep: "helper-upload" },
+      "helper-upload",
+    ],
+    [
+      "never shows history-only home next to a profile",
+      { isHistoryOnly: true, hasActive: true },
+      "home",
+    ],
+    ["opens the editor over history-only mode", { isHistoryOnly: true, hasDraft: true }, "editor"],
+    [
+      "opens history over history-only home",
+      { isHistoryOnly: true, isHistoryOpen: true },
+      "history",
+    ],
+    [
+      "opens settings over history-only home",
+      { isHistoryOnly: true, isSettingsOpen: true },
+      "settings",
+    ],
+    [
+      "ignores a helper step without the mode",
+      { historyOnlyStep: "helper-setup", isSetupPassed: true },
       "upload",
     ],
   ])("%s", (_label, inputs, expected) => {

@@ -1371,5 +1371,69 @@
         "content": "$2"
       }
     }
+  },
+  "setup_use_without_helper": {
+    "message": "Use without the helper"
+  },
+  "setup_use_without_helper_note": {
+    "message": "Keep a history of your applications with your own CV. Tailoring a CV needs the helper; you can set it up later."
+  },
+  "store_cv_title": {
+    "message": "Add your CV"
+  },
+  "store_cv_description": {
+    "message": "Choose the CV you send with your applications (PDF). It stays on this computer; nothing is sent to Claude."
+  },
+  "store_cv_failed": {
+    "message": "The CV couldn't be saved. Try again."
+  },
+  "history_home_description": {
+    "message": "Save the CV you send for each job ad, and find it later in History."
+  },
+  "history_home_helper_title": {
+    "message": "Tailoring needs the helper"
+  },
+  "history_home_helper_description": {
+    "message": "With the helper and Claude Code, cv-snap tailors your CV to each ad. Your history stays."
+  },
+  "history_home_set_up_helper": {
+    "message": "Set up the helper"
+  },
+  "own_cv_select_hint": {
+    "message": "No job ad detected here. Select the ad text on the page, then click Save my CV to history."
+  },
+  "upload_from_stored": {
+    "message": "Create my profile from my CV"
+  },
+  "upload_from_stored_note": {
+    "message": "Uses $NAME$, the CV you added earlier. Or choose another file below.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "your_cv_title": {
+    "message": "Your CV"
+  },
+  "your_cv_stored": {
+    "message": "Stored CV: $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "your_cv_none": {
+    "message": "No CV stored yet."
+  },
+  "your_cv_note": {
+    "message": "Save my CV to history uses this file. CVs already in History don't change."
+  },
+  "your_cv_replace": {
+    "message": "Replace…"
+  },
+  "your_cv_replaced": {
+    "message": "Your CV was replaced."
   }
 }

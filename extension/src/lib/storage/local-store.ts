@@ -72,4 +72,5 @@ export const STORAGE_KEYS = {
   model: "settings.model",
   gdprClause: "settings.gdprClause",
   historyRetention: "settings.historyRetention",
+  historyOnly: "panel.historyOnly",
 } as const;

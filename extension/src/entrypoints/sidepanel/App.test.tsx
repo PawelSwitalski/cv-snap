@@ -494,3 +494,206 @@ describe("App: history", () => {
     expect(await store.get(STORAGE_KEYS.privacyNoticeVersion)).toBe(2);
   });
 });
+
+describe("App: history-only mode (intent 005)", () => {
+  const en = (key: Parameters<typeof formatMessage>[1], ...subs: string[]) =>
+    formatMessage("en", key, subs);
+  const NOT_INSTALLED = { lastError: "Specified native messaging host not found." };
+
+  const ownAd = {
+    ad: {
+      text: "Frontend Developer at Acme",
+      url: "https://jobs.example.com/1",
+      structuredFields: null,
+      isManualSelection: false,
+    },
+    adKey: "own-ad",
+    snapshot: { status: "none" as const },
+    pageTitle: "Frontend Developer",
+  };
+
+  function historyOnlyDeps(options: {
+    store: ReturnType<typeof createMemoryStore>;
+    files: ReturnType<typeof createMemoryFileStore>;
+    repository: ReturnType<typeof createMemoryHistoryRepository>;
+    hostClient: NativeHostClient;
+    createHostClient: () => NativeHostClient;
+  }) {
+    return deps({
+      store: options.store,
+      files: options.files,
+      hostClient: () => options.hostClient,
+      createHostClient: options.createHostClient,
+      generate: {
+        connect: () => {
+          throw new Error("no generation in history-only mode");
+        },
+        pageStateApis: fakePageStateApis(adPageFacts()).apis,
+        addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
+        render: fakeRender().render,
+      },
+      history: {
+        repository: options.repository,
+        adKeyOfTab: () => Promise.resolve(null),
+        captureOwnCvAd: () => Promise.resolve({ ok: true, ad: ownAd }),
+        actions: { openPdf: vi.fn(), openPage: vi.fn(), openUrl: vi.fn() },
+      },
+    });
+  }
+
+  it("works without the helper: setup fails, CV stored, own CV saved, and it is remembered", async () => {
+    const user = userEvent.setup({ applyAccept: false });
+    const store = createMemoryStore({
+      [STORAGE_KEYS.privacyNoticeVersion]: PRIVACY_NOTICE_VERSION,
+    });
+    const files = createMemoryFileStore();
+    const repository = createMemoryHistoryRepository();
+    const panelClient = silentClient();
+    const request = vi.spyOn(panelClient, "request");
+    const createHostClient = vi.fn(() => healthClient(NOT_INSTALLED));
+    const panelDeps = historyOnlyDeps({
+      store,
+      files,
+      repository,
+      hostClient: panelClient,
+      createHostClient,
+    });
+    const { unmount } = render(<App deps={panelDeps} />);
+
+    await user.click(await screen.findByRole("button", { name: en("setup_use_without_helper") }));
+    const input = document.querySelector<HTMLInputElement>('input[type="file"]');
+    if (!input) throw new Error("no file input");
+    await user.upload(input, pdfFile("Moje_CV.pdf"));
+
+    expect(
+      await screen.findByRole("button", { name: en("history_home_set_up_helper") }),
+    ).toBeTruthy();
+    expect(await store.get(STORAGE_KEYS.historyOnly)).toBe(true);
+    expect(screen.queryByRole("button", { name: en("generate_button") })).toBeNull();
+
+    await user.click(await screen.findByRole("button", { name: en("own_cv_save") }));
+    await user.click(await screen.findByRole("button", { name: en("own_cv_confirm") }));
+    expect(await screen.findByText(en("result_saved_to_history"))).toBeTruthy();
+    expect(await repository.get("own-ad")).toMatchObject({
+      source: "own",
+      fileName: "Moje_CV.pdf",
+    });
+
+    await user.click(screen.getByRole("button", { name: en("history_title") }));
+    expect(await screen.findByText(en("history_source_own"))).toBeTruthy();
+
+    // Reopened: straight to history-only home, with no setup check.
+    unmount();
+    createHostClient.mockClear();
+    render(<App deps={panelDeps} />);
+    expect(
+      await screen.findByRole("button", { name: en("history_home_set_up_helper") }),
+    ).toBeTruthy();
+    expect(createHostClient).not.toHaveBeenCalled();
+    expect(request).not.toHaveBeenCalled();
+  });
+
+  it("shows Your CV in Settings in this mode", async () => {
+    const user = userEvent.setup();
+    const files = createMemoryFileStore();
+    await files.set(FILE_KEYS.cvOriginal, pdfFile("Moje_CV.pdf"));
+    render(
+      <App
+        deps={historyOnlyDeps({
+          store: createMemoryStore({
+            [STORAGE_KEYS.privacyNoticeVersion]: PRIVACY_NOTICE_VERSION,
+            [STORAGE_KEYS.historyOnly]: true,
+          }),
+          files,
+          repository: createMemoryHistoryRepository(),
+          hostClient: silentClient(),
+          createHostClient: () => healthClient(NOT_INSTALLED),
+        })}
+      />,
+    );
+
+    await user.click(await screen.findByRole("button", { name: en("settings_title") }));
+
+    expect(await screen.findByText(en("your_cv_stored", "Moje_CV.pdf"))).toBeTruthy();
+  });
+
+  it("sets up the helper later: check, profile from the stored CV, editor; history kept", async () => {
+    const user = userEvent.setup();
+    const files = createMemoryFileStore();
+    await files.set(FILE_KEYS.cvOriginal, pdfFile("Moje_CV.pdf"));
+    const repository = createMemoryHistoryRepository();
+    await repository.put(historyEntry({ source: "own" }), {
+      pdf: new Blob(["%PDF"]),
+      adText: "ad",
+    });
+    const requests: string[] = [];
+    const hostClient: NativeHostClient = {
+      request: (payload) => {
+        requests.push(payload.type);
+        if (payload.type === "extractPdfText") {
+          return Promise.resolve({
+            text: "Jan Testowy, frontend developer.",
+            pageCount: 1,
+          } as never);
+        }
+        if (payload.type === "createProfile") return Promise.resolve(draftContent() as never);
+        return new Promise(() => undefined);
+      },
+      disconnect: () => undefined,
+    };
+    const store = createMemoryStore({
+      [STORAGE_KEYS.privacyNoticeVersion]: PRIVACY_NOTICE_VERSION,
+      [STORAGE_KEYS.historyOnly]: true,
+    });
+    let isInstalled = false;
+    render(
+      <App
+        deps={historyOnlyDeps({
+          store,
+          files,
+          repository,
+          hostClient,
+          createHostClient: () => healthClient(isInstalled ? { report: HEALTHY } : NOT_INSTALLED),
+        })}
+      />,
+    );
+
+    // Still not installed: back to history-only home.
+    await user.click(await screen.findByRole("button", { name: en("history_home_set_up_helper") }));
+    await screen.findByRole("alert");
+    await user.click(screen.getByRole("button", { name: en("action_back") }));
+    isInstalled = true;
+    await user.click(await screen.findByRole("button", { name: en("history_home_set_up_helper") }));
+    await user.click(await screen.findByRole("button", { name: en("setup_continue") }));
+    await user.click(await screen.findByRole("button", { name: en("upload_from_stored") }));
+
+    expect(await screen.findByRole("heading", { name: en("editor_title_review") })).toBeTruthy();
+    expect(requests).toEqual(["extractPdfText", "createProfile"]);
+    expect(files.files.get(FILE_KEYS.cvOriginal)).toBeDefined();
+    expect((await repository.list()).entries).toHaveLength(1);
+  });
+
+  it("is never on next to a profile: the flag is cleared and home has Generate", async () => {
+    const store = createMemoryStore({
+      [STORAGE_KEYS.privacyNoticeVersion]: PRIVACY_NOTICE_VERSION,
+      [STORAGE_KEYS.activeProfile]: smallProfile(),
+      [STORAGE_KEYS.historyOnly]: true,
+    });
+    render(
+      <App
+        deps={historyOnlyDeps({
+          store,
+          files: createMemoryFileStore(),
+          repository: createMemoryHistoryRepository(),
+          hostClient: silentClient(),
+          createHostClient: () => healthClient(NOT_INSTALLED),
+        })}
+      />,
+    );
+
+    expect(await screen.findByRole("button", { name: en("generate_button") })).toBeTruthy();
+    await waitFor(async () => {
+      expect(await store.get(STORAGE_KEYS.historyOnly)).toBeUndefined();
+    });
+  });
+});

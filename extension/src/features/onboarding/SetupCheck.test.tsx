@@ -15,6 +15,60 @@ const wrap = (ui: ReactNode) => (
   </I18nProvider>
 );
 
+describe("SetupCheck: history-only mode (intent 005)", () => {
+  it("offers Use without the helper when the check fails", async () => {
+    const onUseWithoutHelper = vi.fn();
+    const user = userEvent.setup();
+    render(
+      wrap(
+        <SetupCheck
+          createClient={() =>
+            healthClient({ lastError: "Specified native messaging host not found." })
+          }
+          onContinue={vi.fn()}
+          onUseWithoutHelper={onUseWithoutHelper}
+        />,
+      ),
+    );
+
+    await user.click(await screen.findByRole("button", { name: en("setup_use_without_helper") }));
+    expect(onUseWithoutHelper).toHaveBeenCalledOnce();
+    expect(screen.getByText(en("setup_use_without_helper_note"))).toBeTruthy();
+  });
+
+  it("doesn't offer it when the check passes", async () => {
+    render(
+      wrap(
+        <SetupCheck
+          createClient={() => healthClient({ report: HEALTHY })}
+          onContinue={vi.fn()}
+          onUseWithoutHelper={vi.fn()}
+        />,
+      ),
+    );
+
+    await screen.findByText(en("setup_all_good"));
+    expect(screen.queryByRole("button", { name: en("setup_use_without_helper") })).toBeNull();
+  });
+
+  it("goes back when opened from history-only home", async () => {
+    const onBack = vi.fn();
+    const user = userEvent.setup();
+    render(
+      wrap(
+        <SetupCheck
+          createClient={() => healthClient({ report: { ...HEALTHY, claudeFound: false } })}
+          onContinue={vi.fn()}
+          onBack={onBack}
+        />,
+      ),
+    );
+
+    await user.click(await screen.findByRole("button", { name: en("action_back") }));
+    expect(onBack).toHaveBeenCalledOnce();
+  });
+});
+
 describe("SetupCheck", () => {
   it("lets the user continue when everything is fine", async () => {
     const onContinue = vi.fn();

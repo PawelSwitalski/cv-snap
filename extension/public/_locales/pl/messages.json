@@ -1371,5 +1371,69 @@
         "content": "$2"
       }
     }
+  },
+  "setup_use_without_helper": {
+    "message": "Używaj bez pomocnika"
+  },
+  "setup_use_without_helper_note": {
+    "message": "Prowadź historię aplikacji z własnym CV. Dopasowanie CV wymaga pomocnika; możesz go zainstalować później."
+  },
+  "store_cv_title": {
+    "message": "Dodaj swoje CV"
+  },
+  "store_cv_description": {
+    "message": "Wybierz CV, które wysyłasz w aplikacjach (PDF). Zostaje na tym komputerze; nic nie trafia do Claude."
+  },
+  "store_cv_failed": {
+    "message": "Nie udało się zapisać CV. Spróbuj ponownie."
+  },
+  "history_home_description": {
+    "message": "Zapisuj CV wysłane do każdego ogłoszenia i znajdź je później w historii."
+  },
+  "history_home_helper_title": {
+    "message": "Dopasowanie CV wymaga pomocnika"
+  },
+  "history_home_helper_description": {
+    "message": "Z pomocnikiem i Claude Code cv-snap dopasuje CV do każdego ogłoszenia. Historia zostaje."
+  },
+  "history_home_set_up_helper": {
+    "message": "Zainstaluj pomocnika"
+  },
+  "own_cv_select_hint": {
+    "message": "Nie wykryto tu ogłoszenia. Zaznacz tekst ogłoszenia na stronie, a potem kliknij Zapisz moje CV w historii."
+  },
+  "upload_from_stored": {
+    "message": "Utwórz profil z mojego CV"
+  },
+  "upload_from_stored_note": {
+    "message": "Użyje pliku $NAME$, czyli CV dodanego wcześniej. Możesz też wybrać inny plik poniżej.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "your_cv_title": {
+    "message": "Twoje CV"
+  },
+  "your_cv_stored": {
+    "message": "Zapisane CV: $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "your_cv_none": {
+    "message": "Nie zapisano jeszcze CV."
+  },
+  "your_cv_note": {
+    "message": "Przycisk Zapisz moje CV w historii używa tego pliku. CV zapisane już w historii się nie zmieniają."
+  },
+  "your_cv_replace": {
+    "message": "Zamień…"
+  },
+  "your_cv_replaced": {
+    "message": "CV zostało zamienione."
   }
 }

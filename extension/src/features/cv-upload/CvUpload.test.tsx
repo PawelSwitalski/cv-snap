@@ -97,6 +97,36 @@ describe("CvUpload", () => {
     expect(fake.requests).toEqual(["extractPdfText"]);
   });
 
+  it("creates the profile from the stored CV when the helper is set up later (intent 005)", async () => {
+    const fake = fakeDeps();
+    const onDraftCreated = vi.fn();
+    const user = userEvent.setup();
+    const stored = pdfFile("Moje_CV.pdf");
+    render(
+      wrap(
+        <CvUpload
+          deps={fake.deps}
+          model="claude-sonnet-5-5"
+          hasActiveProfile={false}
+          onDraftCreated={onDraftCreated}
+          storedFile={stored}
+        />,
+      ),
+    );
+
+    expect(
+      screen.getByText(formatMessage("en", "upload_from_stored_note", ["Moje_CV.pdf"])),
+    ).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: en("upload_from_stored") }));
+
+    expect(await screen.findByText(en("upload_step_extracting"))).toBeTruthy();
+    fake.release();
+    await waitFor(() => {
+      expect(onDraftCreated).toHaveBeenCalledOnce();
+    });
+    expect(fake.files.files.get(FILE_KEYS.cvOriginal)).toBe(stored);
+  });
+
   it.each([
     ["a non-PDF", bytesFile(PNG_HEAD, "me.png", "image/png"), "upload_error_not_pdf"],
     ["a file over 10 MB", pdfFile("big.pdf", MAX_CV_BYTES + 1), "upload_error_too_large"],

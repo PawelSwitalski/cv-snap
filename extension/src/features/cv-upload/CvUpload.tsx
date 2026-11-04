@@ -54,8 +54,14 @@ export function CvUpload({
   hasActiveProfile,
   onDraftCreated,
   onBack,
+  storedFile,
 }: {
   deps: CreateProfileDeps;
+  /**
+   * The CV stored in history-only mode (intent 005): offered as "Create my profile from my CV",
+   * so setting up the helper later needs no second upload.
+   */
+  storedFile?: File;
   model: ModelId;
   hasActiveProfile: boolean;
   onDraftCreated: (draft: CvProfileContent) => void;
@@ -128,6 +134,22 @@ export function CvUpload({
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {storedFile ? (
+          <div className="flex flex-col gap-1">
+            <Button
+              disabled={isWorking}
+              onClick={() => {
+                void start(storedFile);
+              }}
+            >
+              <FileUp aria-hidden="true" />
+              {t("upload_from_stored")}
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              {t("upload_from_stored_note", storedFile.name)}
+            </p>
+          </div>
+        ) : null}
         <div
           onDragOver={(event) => {
             event.preventDefault();

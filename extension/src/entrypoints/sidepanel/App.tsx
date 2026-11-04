@@ -2,6 +2,7 @@ import { Loader2 } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { useStore } from "zustand";
 import { CvUpload } from "@/features/cv-upload/CvUpload";
+import { StoreCvOnly } from "@/features/cv-upload/StoreCvOnly";
 import type { CreateProfileDeps } from "@/features/cv-upload/create-profile-flow";
 import type { AddSiteResult, AllowedSitesStore } from "@/features/allowed-sites/allowed-sites";
 import { downloadPdf } from "@/features/cv-pdf/download";
@@ -25,7 +26,10 @@ import { ErrorBoundary } from "@/features/shell/ErrorBoundary";
 import { HomeView } from "@/features/shell/HomeView";
 import { PanelError } from "@/features/shell/PanelError";
 import { PanelHeader } from "@/features/shell/PanelHeader";
-import { deriveView } from "@/features/shell/view";
+import { readHistoryOnly, setHistoryOnly } from "@/features/shell/history-only";
+import { HistoryOnlyHome, type HistoryOnlyHomeDeps } from "@/features/shell/HistoryOnlyHome";
+import { deriveView, type HistoryOnlyStep } from "@/features/shell/view";
+import { storedCvName } from "@/features/history/record-own-cv";
 import { ProfileExtraction } from "@/features/tailoring/profile-extraction";
 import { I18nProvider, useT } from "@/lib/i18n/i18n";
 import { logger } from "@/lib/logger";
@@ -217,8 +221,16 @@ function Panel({ deps }: { deps: AppDeps }) {
   const [historyFocus, setHistoryFocus] = useState<string | null>(null);
   const [isSetupPassed, setIsSetupPassed] = useState(false);
   const [isUploadRequested, setIsUploadRequested] = useState(false);
+  /** History-only mode (intent 005): null until read from storage. */
+  const [isHistoryOnly, setIsHistoryOnlyState] = useState<boolean | null>(null);
+  const [historyOnlyStep, setHistoryOnlyStep] = useState<HistoryOnlyStep | null>(null);
+  /** The stored CV, offered when the helper is set up later (story 002-helper-later). */
+  const [storedFile, setStoredFile] = useState<File | null>(null);
 
   useEffect(() => {
+    readHistoryOnly(deps.store)
+      .catch(() => false)
+      .then(setIsHistoryOnlyState, () => undefined);
     readAcknowledgedNoticeVersion(deps.store)
       .catch(() => 0)
       .then(setNoticeVersion, () => undefined);
@@ -259,7 +271,11 @@ function Panel({ deps }: { deps: AppDeps }) {
 
   const view = deriveView({
     // Settings first: the model must be known before anything can call Claude.
-    isLoaded: noticeVersion !== null && profileStatus === "ready" && settingsStatus === "ready",
+    isLoaded:
+      noticeVersion !== null &&
+      isHistoryOnly !== null &&
+      profileStatus === "ready" &&
+      settingsStatus === "ready",
     isNoticeAcknowledged: noticeVersion !== null && isNoticeAcknowledged(noticeVersion),
     isPrivacyOpen,
     isSettingsOpen,
@@ -268,7 +284,54 @@ function Panel({ deps }: { deps: AppDeps }) {
     hasActive: active !== null,
     isSetupPassed,
     isUploadRequested,
+    isHistoryOnly: isHistoryOnly === true,
+    historyOnlyStep,
   });
+
+  // A profile ends history-only mode (story 002-helper-later); it is never on next to one.
+  useEffect(() => {
+    if (active === null || isHistoryOnly !== true) return;
+    setIsHistoryOnlyState(false);
+    setHistoryOnlyStep(null);
+    void setHistoryOnly(deps.store, false);
+  }, [active, isHistoryOnly, deps.store]);
+
+  useEffect(() => {
+    if (view !== "helper-upload") return;
+    let isCurrent = true;
+    deps.files.get(FILE_KEYS.cvOriginal).then(
+      (file) => {
+        if (!isCurrent) return;
+        setStoredFile(
+          file ? new File([file], storedCvName(file), { type: "application/pdf" }) : null,
+        );
+      },
+      () => undefined,
+    );
+    return () => {
+      isCurrent = false;
+    };
+  }, [view, deps.files]);
+
+  const historyOnlyHome: HistoryOnlyHomeDeps | null =
+    deps.history && historyStore
+      ? {
+          pageStateApis: deps.generate.pageStateApis,
+          addSite: deps.generate.addSite,
+          adKeyOfTab: deps.history.adKeyOfTab,
+          ownCv: {
+            captureAd:
+              deps.history.captureOwnCvAd ??
+              (() => Promise.resolve({ ok: false, reason: "JOB_AD_NOT_DETECTED" })),
+            storedCv: () => deps.files.get(FILE_KEYS.cvOriginal),
+            store: historyStore,
+            onShowEntry: (adKey: string) => {
+              setHistoryFocus(adKey);
+              setIsHistoryOpen(true);
+            },
+          },
+        }
+      : null;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -319,7 +382,11 @@ function Panel({ deps }: { deps: AppDeps }) {
             }
           >
             <SettingsView
-              deps={settingsDeps}
+              deps={
+                isHistoryOnly === true && active === null
+                  ? { ...settingsDeps, yourCv: { files: deps.files } }
+                  : settingsDeps
+              }
               onBack={() => {
                 setIsSettingsOpen(false);
               }}
@@ -354,6 +421,61 @@ function Panel({ deps }: { deps: AppDeps }) {
             onContinue={() => {
               setIsSetupPassed(true);
             }}
+            {...(historyOnlyHome
+              ? {
+                  onUseWithoutHelper: () => {
+                    setHistoryOnlyStep("upload");
+                  },
+                }
+              : {})}
+          />
+        ) : null}
+        {view === "history-upload" ? (
+          <StoreCvOnly
+            files={deps.files}
+            onStored={() => {
+              void setHistoryOnly(deps.store, true).then(() => {
+                setIsHistoryOnlyState(true);
+                setHistoryOnlyStep(null);
+              });
+            }}
+            onBack={() => {
+              setHistoryOnlyStep(null);
+            }}
+          />
+        ) : null}
+        {view === "history-home" && historyOnlyHome ? (
+          <HistoryOnlyHome
+            deps={historyOnlyHome}
+            onSetUpHelper={() => {
+              setHistoryOnlyStep("helper-setup");
+            }}
+          />
+        ) : null}
+        {view === "helper-setup" ? (
+          <SetupCheck
+            createClient={deps.createHostClient}
+            onContinue={() => {
+              setHistoryOnlyStep("helper-upload");
+            }}
+            onBack={() => {
+              setHistoryOnlyStep(null);
+            }}
+          />
+        ) : null}
+        {view === "helper-upload" ? (
+          <CvUpload
+            deps={uploadDeps}
+            model={model}
+            hasActiveProfile={false}
+            onDraftCreated={(newDraft) => {
+              setHistoryOnlyStep(null);
+              profileStore.getState().setNewDraft(newDraft);
+            }}
+            onBack={() => {
+              setHistoryOnlyStep(null);
+            }}
+            {...(storedFile ? { storedFile } : {})}
           />
         ) : null}
         {view === "upload" ? (
