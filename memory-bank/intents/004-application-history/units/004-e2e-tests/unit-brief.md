@@ -2,11 +2,11 @@
 unit: 004-e2e-tests
 intent: 004-application-history
 phase: inception
-status: in-progress
+status: complete
 unit_type: integration
 default_bolt_type: simple-construction-bolt
 created: '2026-11-03T15:28:00Z'
-updated: '2026-11-03T15:28:00Z'
+updated: '2026-11-04T12:00:00Z'
 ---
 
 # Unit Brief: 004-e2e-tests
@@ -40,7 +40,7 @@ Fake AI provider in the host, Playwright harness that loads the dev build and re
 - [x] **002-e2e-harness**: Playwright harness: extension + real host - Must - Complete
 - [x] **003-one-click-e2e**: E2E: one-click flow - Must - Complete
 - [x] **004-e2e-ci-job**: E2E job in CI - Must - Complete
-- [ ] **005-history-e2e**: E2E: history flow - Must - Planned
+- [x] **005-history-e2e**: E2E: history flow - Must - Complete
 
 ---
 
@@ -53,9 +53,9 @@ Fake AI provider in the host, Playwright harness that loads the dev build and re
 
 ## Success Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
-- [ ] Code reviewed and approved
+- [x] All acceptance criteria met
+- [x] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
+- [x] Code reviewed and approved
 
 ---
 

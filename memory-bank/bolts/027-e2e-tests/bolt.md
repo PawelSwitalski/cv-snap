@@ -3,14 +3,23 @@ id: 027-e2e-tests
 unit: 004-e2e-tests
 intent: 004-application-history
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 005-history-e2e
 created: '2026-11-03T15:28:00Z'
-started: null
-completed: null
+started: '2026-11-04T11:00:00Z'
+completed: '2026-11-04T12:00:00Z'
 current_stage: null
-stages_completed: []
+stages_completed:
+  - name: plan
+    completed: '2026-11-04T11:10:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-11-04T11:45:00Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-11-04T12:00:00Z'
+    artifact: test-walkthrough.md
 requires_bolts:
   - 022-e2e-tests
   - 025-history-ui
@@ -47,9 +56,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md (approved, user)
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md (approved, user)
+- [x] **3. test**: Complete → tests + test-walkthrough.md (approved, user)
 
 ## Dependencies
 
@@ -62,7 +71,7 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] `pnpm test` green and `pnpm test:e2e` green
-- [ ] Code reviewed (user, stage checkpoints)
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] `pnpm test` green and `pnpm test:e2e` green
+- [x] Code reviewed (user, stage checkpoints)

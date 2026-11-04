@@ -2,7 +2,7 @@
 unit: 004-e2e-tests
 intent: 004-application-history
 created: 2026-11-03T15:30:24Z
-last_updated: 2026-11-03T15:55:24Z
+last_updated: 2026-11-04T12:00:00Z
 ---
 
 # Construction Log: e2e-tests
@@ -30,3 +30,8 @@ last_updated: 2026-11-03T15:55:24Z
 | 2026-11-03T15:33:35Z | 022-e2e-tests | stage-complete | plan → implement |
 | 2026-11-03T15:50:31Z | 022-e2e-tests | stage-complete | implement → test |
 | 2026-11-03T15:55:24Z | 022-e2e-tests | completed | 1176 tests + e2e 10/10 on Windows; side panel via approach A; deps updated (audit 14 → 1 low); CI e2e job pending first push |
+| 2026-11-04T11:00:00Z | 027-e2e-tests | started | Stage 1: plan |
+| 2026-11-04T11:10:00Z | 027-e2e-tests | stage-complete | plan → implement |
+| 2026-11-04T11:40:00Z | 027-e2e-tests | stage-implemented | Stage 2 done, awaiting review; e2e 2/2 (history test 3 runs in a row) |
+| 2026-11-04T11:55:00Z | 027-e2e-tests | stage-tested | Stage 3 done, awaiting review: test:e2e 2/2 from a fresh build |
+| 2026-11-04T12:00:00Z | 027-e2e-tests | completed | Approved by user; test:e2e 2/2, 1340 unit tests; unit 004-e2e-tests complete |

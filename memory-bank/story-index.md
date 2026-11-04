@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 70
-- **Planned**: 1
+- **Planned**: 0
 - **Generated**: 0
-- **Completed**: 69
-- **Last updated**: 2026-11-04T10:50:00Z
+- **Completed**: 70
+- **Last updated**: 2026-11-04T12:00:00Z
 
 ---
 
@@ -202,14 +202,14 @@
   `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/003-one-click-e2e.md`
 - [x] **004-e2e-ci-job** — E2E job in CI - Must - bolt `022-e2e-tests` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/004-e2e-ci-job.md`
-- [ ] **005-history-e2e** — E2E: history flow - Must - bolt `027-e2e-tests` - PLANNED
+- [x] **005-history-e2e** — E2E: history flow - Must - bolt `027-e2e-tests` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/004-e2e-tests/stories/005-history-e2e.md`
 
 ---
 
 ## Stories by Status
 
-- **Planned**: 1
+- **Planned**: 0
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 69
+- **Completed**: 70
