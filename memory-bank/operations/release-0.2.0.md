@@ -42,7 +42,7 @@ Settings from 0.1.x read as "keep forever". Backups from 0.1.x import unchanged.
 - [ ] **Checkpoint 2: Staging**: upload the zip to the store item (trusted testers; review); `npm publish ./release/cv-snap-host-0.2.0.tgz --tag next`; verify with store install + `npx cv-snap-host@next install`
   - [x] Zip 0.2.0 uploaded to the store item, trusted testers only (user)
   - [ ] Store review passed
-  - [ ] `npm publish ./release/cv-snap-host-0.2.0.tgz --tag next` (user)
+  - [x] `npm publish ./release/cv-snap-host-0.2.0.tgz --tag next` (user; on npm since 10:58 UTC, shasum `7e20d0c5…` matches the release tarball; `next` = 0.2.0, `latest` = 0.1.0)
   - [ ] Verify: store install + `npx cv-snap-host@next install`; the Dev + verify checks above run on this build
 - [ ] **Checkpoint 3: Production**: publish the store update (public); `npm dist-tag add cv-snap-host@0.2.0 latest`; GitHub Release `v0.2.0`; verify as a non-tester
 - [ ] **Checkpoint 4: Monitoring**: weekly check (`monitoring.md`); watch for backup size or import reports (ZIP format deferred until real-usage feedback)
@@ -56,6 +56,7 @@ Settings from 0.1.x read as "keep forever". Backups from 0.1.x import unchanged.
 | 2026-11-04 | Push: first attempt rejected by GitHub (500, nothing applied), retry ok (user); CI 41815435473 green (check, e2e, install on Windows, macOS, Ubuntu) |
 | 2026-11-04 | Packed: zip 0.2.0, no `key`, CSP with `wasm-unsafe-eval`, permissions unchanged since 0.1.x; host tarball 0.2.0; tag `v0.2.0` on `f812ce1` |
 | 2026-11-04 | Tag `v0.2.0` and `main` pushed (user); zip 0.2.0 uploaded to the store for trusted testers (user); the manual checks run on the tester build instead of a separate unpacked install |
+| 2026-11-04 | Host 0.2.0 on npm `next` (published by the user at 10:58 UTC; a second publish was refused as a duplicate); npm shasum matches the release tarball |
 
 ## Artifacts (tag v0.2.0, commit f812ce1)
 
