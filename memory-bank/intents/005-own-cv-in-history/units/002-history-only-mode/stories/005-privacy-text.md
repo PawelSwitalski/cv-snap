@@ -2,11 +2,11 @@
 id: 005-privacy-text
 unit: 002-history-only-mode
 intent: 005-own-cv-in-history
-status: draft
+status: complete
 priority: must
 created: '2026-11-04T16:40:00Z'
 assigned_bolt: 030-history-only-backup
-implemented: false
+implemented: true
 ---
 
 # Story: 005-privacy-text
@@ -19,8 +19,8 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** the privacy policy (en, pl), **When** read, **Then** it says an own CV can be stored in History on this computer and that in history-only mode nothing goes to Claude
-- [ ] **Given** the notice version, **When** decided, **Then** it is bumped only if what is stored or sent changes beyond that (decided in the bolt plan)
+- [x] **Given** the privacy policy (en, pl), **When** read, **Then** it says an own CV can be stored in History on this computer and that in history-only mode nothing goes to Claude
+- [x] **Given** the notice version, **When** decided, **Then** it is bumped only if what is stored or sent changes beyond that (decided in the bolt plan)
 
 ## Technical Notes
 

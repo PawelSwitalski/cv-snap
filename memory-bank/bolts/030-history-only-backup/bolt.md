@@ -3,16 +3,25 @@ id: 030-history-only-backup
 unit: 002-history-only-mode
 intent: 005-own-cv-in-history
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 004-backup-without-profile
   - 005-privacy-text
   - 006-history-only-e2e
 created: '2026-11-04T16:40:00Z'
-started: null
-completed: null
+started: '2026-11-04T19:15:00Z'
+completed: '2026-11-04T20:20:00Z'
 current_stage: null
-stages_completed: []
+stages_completed:
+  - name: plan
+    completed: '2026-11-04T19:20:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-11-04T19:55:00Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-11-04T20:20:00Z'
+    artifact: test-walkthrough.md
 requires_bolts:
   - 029-history-only-mode
 enables_bolts: []
@@ -49,9 +58,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md (approved, user; decisions 1–3 as proposed)
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md (approved, user)
+- [x] **3. test**: Complete → tests + test-walkthrough.md (approved, user)
 
 ## Dependencies
 
@@ -63,7 +72,7 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] `pnpm test` green and `pnpm test:e2e` green
-- [ ] Code reviewed (user, stage checkpoints)
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] `pnpm test` green and `pnpm test:e2e` green
+- [x] Code reviewed (user, stage checkpoints)

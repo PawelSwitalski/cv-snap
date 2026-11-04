@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 79
-- **Planned**: 3
+- **Planned**: 0
 - **Generated**: 0
-- **Completed**: 76
-- **Last updated**: 2026-11-04T19:05:00Z
+- **Completed**: 79
+- **Last updated**: 2026-11-04T20:20:00Z
 
 ---
 
@@ -209,10 +209,10 @@
 
 ## Stories by Status
 
-- **Planned**: 3
+- **Planned**: 0
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 76
+- **Completed**: 79
 
 ### 005-own-cv-in-history
 
@@ -233,9 +233,9 @@
   `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/002-helper-later.md`
 - [x] **003-replace-stored-cv** — Replace my stored CV - Should - bolt `029-history-only-mode` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/003-replace-stored-cv.md`
-- [ ] **004-backup-without-profile** — Backups without a profile - Must - bolt `030-history-only-backup` - PLANNED
+- [x] **004-backup-without-profile** — Backups without a profile - Must - bolt `030-history-only-backup` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/004-backup-without-profile.md`
-- [ ] **005-privacy-text** — Privacy text for own CVs - Must - bolt `030-history-only-backup` - PLANNED
+- [x] **005-privacy-text** — Privacy text for own CVs - Must - bolt `030-history-only-backup` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/005-privacy-text.md`
-- [ ] **006-history-only-e2e** — E2E: history-only mode - Must - bolt `030-history-only-backup` - PLANNED
+- [x] **006-history-only-e2e** — E2E: history-only mode - Must - bolt `030-history-only-backup` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/006-history-only-e2e.md`

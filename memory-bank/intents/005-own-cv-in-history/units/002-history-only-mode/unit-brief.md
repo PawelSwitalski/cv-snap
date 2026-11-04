@@ -2,11 +2,11 @@
 unit: 002-history-only-mode
 intent: 005-own-cv-in-history
 phase: inception
-status: in-progress
+status: complete
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 created: '2026-11-04T16:40:00Z'
-updated: '2026-11-04T19:05:00Z'
+updated: '2026-11-04T20:20:00Z'
 ---
 
 # Unit Brief: 002-history-only-mode
@@ -39,9 +39,9 @@ Use cv-snap without the helper: set up with a CV PDF only, save own CVs and use 
 - [x] **001-history-only-onboarding**: Use without the helper - Must - Complete
 - [x] **002-helper-later**: Set up the helper later - Must - Complete
 - [x] **003-replace-stored-cv**: Replace my stored CV - Should - Complete
-- [ ] **004-backup-without-profile**: Backups without a profile - Must - Planned
-- [ ] **005-privacy-text**: Privacy text for own CVs - Must - Planned
-- [ ] **006-history-only-e2e**: E2E: history-only mode - Must - Planned
+- [x] **004-backup-without-profile**: Backups without a profile - Must - Complete
+- [x] **005-privacy-text**: Privacy text for own CVs - Must - Complete
+- [x] **006-history-only-e2e**: E2E: history-only mode - Must - Complete
 
 ---
 
@@ -54,9 +54,9 @@ Use cv-snap without the helper: set up with a CV PDF only, save own CVs and use 
 
 ## Success Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
-- [ ] Code reviewed and approved
+- [x] All acceptance criteria met
+- [x] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
+- [x] Code reviewed and approved
 
 ---
 
