@@ -147,12 +147,13 @@ describe("renderFittedCv", () => {
     }
   });
 
+  // Two full fits: 2.6–3.5 s on CI, over the 5 s default on a busy runner.
   it("drops the same content every time", async () => {
     const first = await renderFittedCv(longModel());
     const second = await renderFittedCv(longModel());
 
     expect(second.dropped).toEqual(first.dropped);
-  });
+  }, 20_000);
 
   it("drops nothing when the CV already fits", async () => {
     const result = await renderFittedCv(smallModel());
