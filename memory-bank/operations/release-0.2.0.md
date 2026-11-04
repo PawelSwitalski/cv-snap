@@ -2,8 +2,8 @@
 release: 0.2.0
 intents: [004-application-history]
 created: 2026-11-04T12:10:00Z
-updated: 2026-11-04T12:10:00Z
-status: building
+updated: 2026-11-04T10:45:00Z
+status: built
 ---
 
 # Release 0.2.0
@@ -26,11 +26,11 @@ Settings from 0.1.x read as "keep forever". Backups from 0.1.x import unchanged.
 
 ## Progress
 
-- [ ] **Checkpoint 1: Build**
+- [x] **Checkpoint 1: Build**
   - [x] Versions 0.2.0: `extension`, `native-host` (+ `HOST_VERSION`), `shared`
   - [x] Typecheck, lint, format, `pnpm test`, `pnpm test:e2e` green locally
-  - [ ] Push `main` (user), CI green on Windows, macOS, Ubuntu (first CI run of the e2e job with the history test)
-  - [ ] `pnpm release:pack` → `release/` (store zip + host tarball); tag `v0.2.0` (local, user pushes)
+  - [x] Push `main` (user), CI green on Windows, macOS, Ubuntu (41815435473, incl. the e2e job with the history test)
+  - [x] `pnpm release:pack` → `release/` (store zip + host tarball); tag `v0.2.0` on `f812ce1` (local, user pushes)
 - [ ] **Dev + verify** (user, clean Chrome profile, release build + host from the tarball)
   - [ ] Upgrade path: with the 0.1.x host still installed, the panel asks to update the helper; after `npx ./cv-snap-host-0.2.0.tgz install` it works
   - [ ] Download two CVs: both in History; the saved page opens and looks like the ad; Open PDF opens the same file
@@ -49,3 +49,12 @@ Settings from 0.1.x read as "keep forever". Backups from 0.1.x import unchanged.
 |---|---|
 | 2026-11-04 | Intent 004 built (bolts 022–027); 1340 tests, e2e 2/2; release planned as 0.2.0, 0.1.1 superseded (user) |
 | 2026-11-04 | Versions set to 0.2.0; locally green: 1340 tests, e2e 2/2 (fresh build), typecheck, lint, format |
+| 2026-11-04 | Push: first attempt rejected by GitHub (500, nothing applied), retry ok (user); CI 41815435473 green (check, e2e, install on Windows, macOS, Ubuntu) |
+| 2026-11-04 | Packed: zip 0.2.0, no `key`, CSP with `wasm-unsafe-eval`, permissions unchanged since 0.1.x; host tarball 0.2.0; tag `v0.2.0` on `f812ce1` |
+
+## Artifacts (tag v0.2.0, commit f812ce1)
+
+| File | Size | SHA-256 |
+|---|---|---|
+| `release/cv-snap-0.2.0-chrome-release.zip` | 1,834,950 B | `a02a4693335ae342648403dcfe068742d31e2b53c575d80f0a0908a2b3bc055d` |
+| `release/cv-snap-host-0.2.0.tgz` | 2,794,467 B | `c9dc1061436568045480457d987edcd485587904a27df676de7567d1499d988e` |
