@@ -2,11 +2,15 @@
 release: 0.2.0
 intents: [004-application-history]
 created: 2026-11-04T12:10:00Z
-updated: 2026-11-04T13:00:00Z
-status: staging
+updated: 2026-11-04T20:40:00Z
+status: superseded
 ---
 
 # Release 0.2.0
+
+**Superseded by 0.2.1** (user, 2026-11-04): the trusted-tester review is cancelled and 0.2.1
+is submitted instead. Host 0.2.0 on npm and the GitHub Release `v0.2.0` stay; see
+`release-0.2.1.md`.
 
 Feature release: application history. Every downloaded CV is kept with a cleaned copy of the job
 ad, a sent date, search and filters, a retention setting, and backups that include the history.
@@ -59,6 +63,7 @@ Settings from 0.1.x read as "keep forever". Backups from 0.1.x import unchanged.
 | 2026-11-04 | Host 0.2.0 on npm `next` (published by the user at 10:58 UTC; a second publish was refused as a duplicate); npm shasum matches the release tarball |
 | 2026-11-04 | GitHub Release `v0.2.0` created and marked Latest early (user's choice), with both packages and a "rolling out" note; remove the note at Checkpoint 3. npm `latest` stays 0.1.0 until the store update is public |
 | 2026-11-04 | npm `latest` = 0.2.0 (user), before the store update is public: public 0.1.x users who reinstall the helper see the version mismatch until the store update reaches them. Rollback: `npm dist-tag add cv-snap-host@0.1.0 latest` |
+| 2026-11-04 | Superseded by 0.2.1 (user): store review to be cancelled before 0.2.1 is uploaded; npm host 0.2.0 and GitHub Release `v0.2.0` kept |
 
 ## Artifacts (tag v0.2.0, commit f812ce1)
 
