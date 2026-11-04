@@ -1,2 +1,2 @@
 /** Host version reported by the health check; kept equal to package.json (checked by a test). */
-export const HOST_VERSION = "0.2.0";
+export const HOST_VERSION = "0.2.1";
