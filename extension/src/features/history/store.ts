@@ -10,6 +10,7 @@ import {
   type RecordDownloadOutcome,
 } from "./record-download";
 import { mergeEntry } from "./merge-import";
+import { recordOwnCv, type OwnCvInput } from "./record-own-cv";
 import { expiredEntries } from "./retention";
 
 export const HISTORY_FILTERS = ["all", "sent", "not-sent"] as const;
@@ -26,6 +27,8 @@ export interface HistoryState {
   load(): Promise<void>;
   /** Download PDF (bolt 023) through the store, so every view sees the new entry. */
   recordDownload(input: RecordDownloadInput): Promise<RecordDownloadOutcome>;
+  /** Save my CV to history (intent 005): the user's own CV for an ad, with no host involved. */
+  recordOwnCv(input: OwnCvInput): Promise<void>;
   /** Marks the entry as sent on a calendar date (`YYYY-MM-DD`), or as not sent (null). */
   setSentOn(adKey: string, sentOn: string | null): Promise<void>;
   remove(adKey: string): Promise<void>;
@@ -100,6 +103,11 @@ export function createHistoryStore(
         const outcome = await recordDownload(repository, input);
         if (outcome === "saved") await reload();
         return outcome;
+      },
+
+      async recordOwnCv(input) {
+        await recordOwnCv(repository, input);
+        await reload();
       },
 
       async setSentOn(adKey, sentOn) {

@@ -1282,5 +1282,94 @@
   },
   "settings_history_shorten_confirm": {
     "message": "Delete and save"
+  },
+  "own_cv_save": {
+    "message": "Save my CV to history"
+  },
+  "own_cv_choose": {
+    "message": "Choose another PDF…"
+  },
+  "own_cv_description": {
+    "message": "Applying with your own CV? Save it with this ad. Nothing is sent to Claude."
+  },
+  "own_cv_file": {
+    "message": "CV file: $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "own_cv_title_label": {
+    "message": "Job title"
+  },
+  "own_cv_company_label": {
+    "message": "Company"
+  },
+  "own_cv_confirm": {
+    "message": "Save"
+  },
+  "own_cv_cancel": {
+    "message": "Cancel"
+  },
+  "own_cv_failed": {
+    "message": "Your CV wasn't saved to history. Try again."
+  },
+  "own_cv_replace_title": {
+    "message": "Replace the tailored CV in history?"
+  },
+  "own_cv_replace_description": {
+    "message": "This ad already has a tailored CV in your history. Saving your own CV replaces it. The sent date is kept."
+  },
+  "own_cv_replace_keep": {
+    "message": "Keep the tailored CV"
+  },
+  "own_cv_replace_confirm": {
+    "message": "Replace"
+  },
+  "tailored_replace_title": {
+    "message": "Replace your CV in history?"
+  },
+  "tailored_replace_description": {
+    "message": "The PDF was downloaded. This ad already has your own CV in history: replace it with this tailored CV? The sent date is kept."
+  },
+  "tailored_replace_keep": {
+    "message": "Keep my CV"
+  },
+  "tailored_replace_confirm": {
+    "message": "Replace"
+  },
+  "history_source_own": {
+    "message": "Your CV"
+  },
+  "history_source_tailored": {
+    "message": "Tailored"
+  },
+  "history_saved_on": {
+    "message": "Saved $DATE$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "hint_own_saved": {
+    "message": "You saved your CV for this ad on $DATE$.",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "hint_own_sent": {
+    "message": "You saved your CV for this ad on $DATE$ and sent it on $SENT$.",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      },
+      "sent": {
+        "content": "$2"
+      }
+    }
   }
 }

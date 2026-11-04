@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input, Label, Select } from "@/components/ui/field";
 import { dateFormatter } from "@/lib/date-format";
 import { useLanguage, useT } from "@/lib/i18n/i18n";
-import type { HistoryEntry } from "./history-entry";
+import { entrySource, type HistoryEntry } from "./history-entry";
 import { SentStatus } from "./SentStatus";
 import { HISTORY_FILTERS, visibleEntries, type HistoryFilter, type HistoryStore } from "./store";
 
@@ -309,7 +309,19 @@ function HistoryRow({
         </span>
         {entry.title ? <span className="text-sm">{entry.title}</span> : null}
         <span className="text-xs text-muted-foreground">
-          {t("history_downloaded_on", downloaded)}
+          {entrySource(entry) === "own" ? (
+            <>
+              <span className="font-medium">{t("history_source_own")}</span>
+              {" · "}
+              <span>{t("history_saved_on", downloaded)}</span>
+            </>
+          ) : (
+            <>
+              <span className="font-medium">{t("history_source_tailored")}</span>
+              {" · "}
+              <span>{t("history_downloaded_on", downloaded)}</span>
+            </>
+          )}
         </span>
       </div>
       <SentStatus entry={entry} store={store} />

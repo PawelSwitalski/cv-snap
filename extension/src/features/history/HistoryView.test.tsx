@@ -251,4 +251,20 @@ describe("HistoryView", () => {
       expect(document.activeElement?.id).toBe(historyRowId("ad-3"));
     });
   });
+
+  it("labels each entry as the user's own CV or a tailored one (intent 005)", async () => {
+    await setup([
+      historyEntry({ adKey: "own", company: "Own Co", source: "own" }),
+      historyEntry({ adKey: "tailored", company: "Tailored Co", source: "tailored" }),
+      historyEntry({ adKey: "old", company: "Old Co" }),
+    ]);
+    await screen.findByText("Own Co");
+
+    expect(row("Own Co").getByText(en("history_source_own"))).toBeTruthy();
+    expect(row("Own Co").getByText(en("history_saved_on", "Nov 1, 2026"))).toBeTruthy();
+    expect(row("Tailored Co").getByText(en("history_source_tailored"))).toBeTruthy();
+    // An entry from 0.2.0 has no source: it was a tailored download.
+    expect(row("Old Co").getByText(en("history_source_tailored"))).toBeTruthy();
+    expect(row("Old Co").getByText(en("history_downloaded_on", "Nov 1, 2026"))).toBeTruthy();
+  });
 });

@@ -15,6 +15,13 @@ export const MAX_HISTORY_PDF_BYTES = 10 * 1024 * 1024;
 export const SNAPSHOT_STATUSES = ["saved", "too-large", "none"] as const;
 export type SnapshotStatus = (typeof SNAPSHOT_STATUSES)[number];
 
+/**
+ * Which CV an entry holds (intent 005): the user's own CV, or one tailored by Download PDF.
+ * Optional so the schema stays at version 1 and 0.2.0 still reads the entries; absent = tailored.
+ */
+export const ENTRY_SOURCES = ["own", "tailored"] as const;
+export type EntrySource = (typeof ENTRY_SOURCES)[number];
+
 /** `YYYY-MM-DD`: a calendar date in the user's time zone, not a timestamp (story 002, bolt 024). */
 const CalendarDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
@@ -33,6 +40,7 @@ export const HistoryEntrySchema = z.object({
   lastDownloadedAt: z.iso.datetime(),
   sentOn: CalendarDateSchema.nullable(),
   snapshot: z.enum(SNAPSHOT_STATUSES),
+  source: z.enum(ENTRY_SOURCES).optional(),
   /** Byte sizes of the stored files ("space used" in settings, bolt 025). */
   sizes: z.object({
     pdf: z.number().int().nonnegative(),
@@ -42,6 +50,10 @@ export const HistoryEntrySchema = z.object({
 });
 
 export type HistoryEntry = z.infer<typeof HistoryEntrySchema>;
+
+export function entrySource(entry: Pick<HistoryEntry, "source">): EntrySource {
+  return entry.source ?? "tailored";
+}
 
 /** Files of an entry, stored next to its metadata. */
 export const HISTORY_FILE_KINDS = ["pdf", "snapshot", "adText"] as const;

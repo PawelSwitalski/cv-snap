@@ -103,9 +103,14 @@ describe("usePageAdKey", () => {
 });
 
 describe("HistoryHint", () => {
-  async function show(adKey: string | null, sentOn: string | null = null) {
+  async function show(
+    adKey: string | null,
+    sentOn: string | null = null,
+    source?: "own" | "tailored",
+  ) {
     const repository = createMemoryHistoryRepository();
-    await repository.put(historyEntry({ sentOn, lastDownloadedAt: "2026-11-01T10:00:00.000Z" }), {
+    const entry = historyEntry({ sentOn, lastDownloadedAt: "2026-11-01T10:00:00.000Z" });
+    await repository.put(source ? { ...entry, source } : entry, {
       pdf: new Blob(["%PDF"]),
       adText: "a",
     });
@@ -136,6 +141,24 @@ describe("HistoryHint", () => {
 
     expect(
       screen.getByText(en("hint_sent", "November 1, 2026", "November 2, 2026"), { exact: false }),
+    ).toBeTruthy();
+  });
+
+  it("says the user saved their own CV for this ad (intent 005)", async () => {
+    await show(historyEntry().adKey, null, "own");
+
+    expect(
+      screen.getByText(en("hint_own_saved", "November 1, 2026"), { exact: false }),
+    ).toBeTruthy();
+  });
+
+  it("says when the user's own CV was sent", async () => {
+    await show(historyEntry().adKey, "2026-11-02", "own");
+
+    expect(
+      screen.getByText(en("hint_own_sent", "November 1, 2026", "November 2, 2026"), {
+        exact: false,
+      }),
     ).toBeTruthy();
   });
 

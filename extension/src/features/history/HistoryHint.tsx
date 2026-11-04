@@ -4,6 +4,7 @@ import { useStore } from "zustand";
 import { Button } from "@/components/ui/button";
 import type { PageState } from "@/features/generate/page-state";
 import { useLanguage, useT } from "@/lib/i18n/i18n";
+import { entrySource } from "./history-entry";
 import { formatCalendarDate } from "./SentStatus";
 import { todayLocal, type HistoryStore } from "./store";
 
@@ -44,7 +45,10 @@ export function usePageAdKey(
   return adKey;
 }
 
-/** "You downloaded a CV for this ad on …" (story 003); never blocks Generate. */
+/**
+ * "You downloaded a CV for this ad on …" (story 003), or "You saved your CV …" for the user's own
+ * CV (intent 005); never blocks Generate.
+ */
 export function HistoryHint({
   store,
   adKey,
@@ -62,12 +66,17 @@ export function HistoryHint({
   if (!entry) return null;
 
   const downloaded = formatCalendarDate(todayLocal(new Date(entry.lastDownloadedAt)), language);
+  const isOwn = entrySource(entry) === "own";
   return (
     <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
       <History aria-hidden="true" className="size-4" />
       {entry.sentOn
-        ? t("hint_sent", downloaded, formatCalendarDate(entry.sentOn, language))
-        : t("hint_downloaded", downloaded)}
+        ? t(
+            isOwn ? "hint_own_sent" : "hint_sent",
+            downloaded,
+            formatCalendarDate(entry.sentOn, language),
+          )
+        : t(isOwn ? "hint_own_saved" : "hint_downloaded", downloaded)}
       <Button
         size="sm"
         variant="link"

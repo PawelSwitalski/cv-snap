@@ -205,6 +205,26 @@ describe("backup with history", () => {
     }
   });
 
+  it("keeps whether an entry holds the user's own CV (intent 005)", async () => {
+    const source = historySource();
+    const [first, second] = source.entries;
+    if (!first || !second) throw new Error("no entries");
+    source.entries = [{ ...first, source: "own" }, second];
+
+    const parsed = await parseBackup(await buildBackupFile(smallProfile(), null, source, NOW));
+
+    if (!parsed.ok) throw new Error(parsed.problem);
+    expect(parsed.history.map((item) => item.entry.source)).toEqual(["own", undefined]);
+  });
+
+  it("refuses an unknown entry source", async () => {
+    const file = await withEditedEntry((item) => {
+      (item.entry as Record<string, unknown>).source = "ai";
+    });
+
+    expect(await parseBackup(file)).toMatchObject({ ok: false, problem: "BAD_HISTORY" });
+  });
+
   it("marks the history with its own schema version", async () => {
     expect(await backupJson()).toMatchObject({
       format: "cv-snap-profile",

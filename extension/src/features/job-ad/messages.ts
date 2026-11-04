@@ -28,6 +28,9 @@ export const CaptureJobAdRequestSchema = z.object({
 
 export type CaptureJobAdRequest = z.infer<typeof CaptureJobAdRequestSchema>;
 
+/** `document.title` is cut to this before it leaves the page. */
+export const MAX_PAGE_TITLE_CHARS = 1000;
+
 /** Minimum length of a manual selection (FR-8). */
 export const MIN_SELECTION_CHARS = 200;
 
@@ -64,6 +67,8 @@ export const CaptureResultSchema = z.discriminatedUnion("ok", [
     ad: AdInputSchema,
     /** Optional: a content script of an older build (still open in a tab) doesn't send it. */
     snapshot: PageSnapshotSchema.optional(),
+    /** `document.title`: prefills the job title of an own CV (intent 005). Optional, as above. */
+    pageTitle: z.string().max(MAX_PAGE_TITLE_CHARS).optional(),
   }),
   z.object({
     ok: z.literal(false),

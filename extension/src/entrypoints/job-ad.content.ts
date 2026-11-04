@@ -1,5 +1,9 @@
 import { captureAd } from "@/features/job-ad/capture";
-import { CaptureJobAdRequestSchema, type CaptureResult } from "@/features/job-ad/messages";
+import {
+  CaptureJobAdRequestSchema,
+  MAX_PAGE_TITLE_CHARS,
+  type CaptureResult,
+} from "@/features/job-ad/messages";
 import { startPageWatcher } from "@/features/job-ad/page-watcher";
 import { snapshotPage } from "@/features/job-ad/snapshot";
 import { logger } from "@/lib/logger";
@@ -69,6 +73,7 @@ export default defineContentScript({
             ? {
                 ...result,
                 snapshot: snapshotPage(document.documentElement.outerHTML, location.href),
+                pageTitle: document.title.slice(0, MAX_PAGE_TITLE_CHARS),
               }
             : result,
         );

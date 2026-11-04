@@ -43,6 +43,7 @@ describe("recordDownload", () => {
       lastDownloadedAt: "2026-11-03T10:00:00.000Z",
       sentOn: null,
       snapshot: "saved",
+      source: "tailored",
       sizes: { pdf: 2, snapshot: 17, adText: AD.text.length },
     });
     await expect(history.getPdf(AD.adKey)).resolves.toBe(downloaded);

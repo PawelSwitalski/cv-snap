@@ -5,6 +5,7 @@ import { createAllowedSites } from "@/features/allowed-sites/allowed-sites";
 import { connectGeneration } from "@/features/generate/generation-client";
 import { browserPageStateApis } from "@/features/generate/page-state";
 import { createAdKeyOfTab } from "@/features/history/ad-key-of-tab";
+import { createCaptureOwnCvAd } from "@/features/history/capture-own-cv-ad";
 import { indexedDbHistoryRepository } from "@/features/history/history-repository";
 import { openSavedPage, openSavedPdf } from "@/features/history/open-saved";
 import { captureApis } from "@/features/job-ad/browser-apis";
@@ -39,6 +40,7 @@ createRoot(rootElement).render(
         history: {
           repository: indexedDbHistoryRepository,
           adKeyOfTab: createAdKeyOfTab(captureApis()),
+          captureOwnCvAd: createCaptureOwnCvAd(captureApis()),
           actions: {
             openPdf: (adKey) => openSavedPdf(indexedDbHistoryRepository, adKey),
             openPage: (adKey) => openSavedPage(adKey),

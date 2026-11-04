@@ -32,9 +32,10 @@ import { logger } from "@/lib/logger";
 import type { NativeHostClient } from "@/lib/native-host-client";
 import { NativeHostProvider } from "@/lib/native-host-provider";
 import type { HistoryActions } from "@/features/history/HistoryView";
+import type { CaptureOwnCvAdResult } from "@/features/history/capture-own-cv-ad";
 import type { HistoryRepository, PendingSnapshots } from "@/features/history/history-repository";
 import { createHistoryStore } from "@/features/history/store";
-import type { FileStore } from "@/lib/storage/file-store";
+import { FILE_KEYS, type FileStore } from "@/lib/storage/file-store";
 import type { LocalStore } from "@/lib/storage/local-store";
 
 /** The editor is the largest view; it loads only when a draft is opened (≤ 500 ms panel start). */
@@ -76,6 +77,8 @@ export interface AppHistoryDeps {
   repository: HistoryRepository & PendingSnapshots;
   /** The ad's key in a tab, for the already-in-history hint (no snapshot is taken). */
   adKeyOfTab: (tabId: number) => Promise<string | null>;
+  /** The ad in a tab for Save my CV to history (intent 005); without it, the buttons are hidden. */
+  captureOwnCvAd?: (tabId: number) => Promise<CaptureOwnCvAdResult>;
   actions: HistoryActions;
 }
 
@@ -143,11 +146,27 @@ function Panel({ deps }: { deps: AppDeps }) {
                 setHistoryFocus(adKey);
                 setIsHistoryOpen(true);
               },
+              ...(deps.history.captureOwnCvAd
+                ? {
+                    ownCv: {
+                      captureAd: deps.history.captureOwnCvAd,
+                      storedCv: () => deps.files.get(FILE_KEYS.cvOriginal),
+                    },
+                  }
+                : {}),
             },
           }
         : {}),
     }),
-    [generateStore, deps.generate, deps.history, historyStore, profileStore, settingsStore],
+    [
+      generateStore,
+      deps.generate,
+      deps.history,
+      deps.files,
+      historyStore,
+      profileStore,
+      settingsStore,
+    ],
   );
   const settingsDeps = useMemo<SettingsViewDeps>(
     () => ({

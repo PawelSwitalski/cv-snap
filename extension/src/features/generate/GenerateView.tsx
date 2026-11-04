@@ -9,9 +9,20 @@ import { GenerateButton } from "./GenerateButton";
 import { GenerationError } from "./GenerationError";
 import { GenerationProgress } from "./GenerationProgress";
 import { watchPageState, type PageState, type PageStateApis } from "./page-state";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { HistoryHint, usePageAdKey } from "@/features/history/HistoryHint";
+import { SaveOwnCv, type SaveOwnCvDeps } from "@/features/history/SaveOwnCv";
 import { SentStatus } from "@/features/history/SentStatus";
-import type { HistoryEntry } from "@/features/history/history-entry";
+import { entrySource, type HistoryEntry } from "@/features/history/history-entry";
+import type { RecordDownloadOutcome } from "@/features/history/record-download";
 import type { HistoryStore } from "@/features/history/store";
 import type { GenerateStore } from "./store";
 import type { RenderFitted } from "./use-fitted-cv";
@@ -44,6 +55,8 @@ export interface GenerateHistoryDeps {
   adKeyOfTab: (tabId: number) => Promise<string | null>;
   /** "Show in history": opens the History view at the entry. */
   onShowEntry: (adKey: string) => void;
+  /** Save my CV to history (intent 005); without it, the buttons aren't shown. */
+  ownCv?: Pick<SaveOwnCvDeps, "captureAd" | "storedCv">;
 }
 
 const noAdKey = () => Promise.resolve(null);
@@ -59,6 +72,8 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
   const result = useStore(deps.store, (state) => state.result);
   const gdprClause = useStore(deps.settings, (state) => state.gdprClause);
   const [pageState, setPageState] = useState<PageState>({ kind: "no-tab" });
+  /** A tailored download for an ad whose entry holds the user's own CV waits for this answer. */
+  const [replaceOwn, setReplaceOwn] = useState<((isReplace: boolean) => void) | null>(null);
 
   useEffect(() => watchPageState(deps.pageStateApis, setPageState), [deps.pageStateApis]);
   const pageAdKey = usePageAdKey(pageState, history?.adKeyOfTab ?? noAdKey);
@@ -92,6 +107,12 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
         }}
         onAddSite={deps.addSite}
       />
+      {history?.ownCv ? (
+        <SaveOwnCv
+          pageState={pageState}
+          deps={{ ...history.ownCv, store: history.store, onShowEntry: history.onShowEntry }}
+        />
+      ) : null}
       {history ? (
         <HistoryHint
           store={history.store}
@@ -130,16 +151,49 @@ export function GenerateView({ deps, profile }: { deps: GenerateViewDeps; profil
             {...(deps.render ? { render: deps.render } : {})}
             {...(history
               ? {
-                  onDownloaded: (pdf: Blob, fileName: string) =>
-                    history.store
+                  onDownloaded: async (
+                    pdf: Blob,
+                    fileName: string,
+                  ): Promise<RecordDownloadOutcome> => {
+                    // The PDF is already downloaded; only replacing the user's own CV asks first.
+                    if (resultEntry && entrySource(resultEntry) === "own") {
+                      const isReplace = await new Promise<boolean>((resolve) => {
+                        setReplaceOwn(() => resolve);
+                      });
+                      setReplaceOwn(null);
+                      if (!isReplace) return "skipped";
+                    }
+                    return history.store
                       .getState()
-                      .recordDownload({ result, fileName, pdf, now: new Date() }),
+                      .recordDownload({ result, fileName, pdf, now: new Date() });
+                  },
                 }
               : {})}
           />
           {history && resultEntry ? <SentStatus entry={resultEntry} store={history.store} /> : null}
         </Suspense>
       ) : null}
+      <AlertDialog
+        open={replaceOwn !== null}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) replaceOwn?.(false);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogTitle>{t("tailored_replace_title")}</AlertDialogTitle>
+          <AlertDialogDescription>{t("tailored_replace_description")}</AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("tailored_replace_keep")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                replaceOwn?.(true);
+              }}
+            >
+              {t("tailored_replace_confirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

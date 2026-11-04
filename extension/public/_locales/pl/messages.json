@@ -1282,5 +1282,94 @@
   },
   "settings_history_shorten_confirm": {
     "message": "Usuń i zapisz"
+  },
+  "own_cv_save": {
+    "message": "Zapisz moje CV w historii"
+  },
+  "own_cv_choose": {
+    "message": "Wybierz inny PDF…"
+  },
+  "own_cv_description": {
+    "message": "Wysyłasz własne CV? Zapisz je razem z tym ogłoszeniem. Nic nie trafia do Claude."
+  },
+  "own_cv_file": {
+    "message": "Plik CV: $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "own_cv_title_label": {
+    "message": "Stanowisko"
+  },
+  "own_cv_company_label": {
+    "message": "Firma"
+  },
+  "own_cv_confirm": {
+    "message": "Zapisz"
+  },
+  "own_cv_cancel": {
+    "message": "Anuluj"
+  },
+  "own_cv_failed": {
+    "message": "Nie udało się zapisać CV w historii. Spróbuj ponownie."
+  },
+  "own_cv_replace_title": {
+    "message": "Zastąpić dopasowane CV w historii?"
+  },
+  "own_cv_replace_description": {
+    "message": "To ogłoszenie ma już w historii dopasowane CV. Zapisanie własnego CV je zastąpi. Data wysłania zostanie zachowana."
+  },
+  "own_cv_replace_keep": {
+    "message": "Zostaw dopasowane CV"
+  },
+  "own_cv_replace_confirm": {
+    "message": "Zastąp"
+  },
+  "tailored_replace_title": {
+    "message": "Zastąpić Twoje CV w historii?"
+  },
+  "tailored_replace_description": {
+    "message": "PDF został pobrany. To ogłoszenie ma już w historii Twoje własne CV: zastąpić je tym dopasowanym CV? Data wysłania zostanie zachowana."
+  },
+  "tailored_replace_keep": {
+    "message": "Zostaw moje CV"
+  },
+  "tailored_replace_confirm": {
+    "message": "Zastąp"
+  },
+  "history_source_own": {
+    "message": "Twoje CV"
+  },
+  "history_source_tailored": {
+    "message": "Dopasowane"
+  },
+  "history_saved_on": {
+    "message": "Zapisano $DATE$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "hint_own_saved": {
+    "message": "Twoje CV do tego ogłoszenia zostało zapisane $DATE$.",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "hint_own_sent": {
+    "message": "Twoje CV do tego ogłoszenia zostało zapisane $DATE$ i wysłane $SENT$.",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      },
+      "sent": {
+        "content": "$2"
+      }
+    }
   }
 }

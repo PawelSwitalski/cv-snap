@@ -6,7 +6,7 @@ import {
   type NativeHostClient,
   type NativePort,
 } from "@/lib/native-host-client";
-import { createMemoryFileStore } from "@/lib/storage/file-store";
+import { createMemoryFileStore, FILE_KEYS } from "@/lib/storage/file-store";
 import { createMemoryStore, STORAGE_KEYS } from "@/lib/storage/local-store";
 import { formatMessage } from "@/lib/i18n/messages";
 import { PRIVACY_NOTICE_VERSION } from "@/features/onboarding/privacy-notice";
@@ -375,6 +375,67 @@ describe("App: history", () => {
     await waitFor(() => {
       expect(document.activeElement?.id).toBe(historyRowId(historyEntry().adKey));
     });
+  });
+
+  it("saves the user's own CV for the ad without any call to the host (intent 005)", async () => {
+    const user = userEvent.setup();
+    const repository = createMemoryHistoryRepository();
+    const files = createMemoryFileStore();
+    await files.set(FILE_KEYS.cvOriginal, pdfFile("Moje_CV.pdf"));
+    const client = silentClient();
+    const request = vi.spyOn(client, "request");
+    const connect = vi.fn(fakeConnector().connect);
+    render(
+      <App
+        deps={deps({
+          store: createMemoryStore({
+            [STORAGE_KEYS.privacyNoticeVersion]: PRIVACY_NOTICE_VERSION,
+            [STORAGE_KEYS.activeProfile]: smallProfile(),
+          }),
+          files,
+          hostClient: () => client,
+          createHostClient: () => client,
+          generate: {
+            connect,
+            pageStateApis: fakePageStateApis(adPageFacts()).apis,
+            addSite: () => Promise.resolve({ ok: false, reason: "DENIED" }),
+            render: fakeRender().render,
+          },
+          history: {
+            repository,
+            adKeyOfTab: () => Promise.resolve(null),
+            captureOwnCvAd: () =>
+              Promise.resolve({
+                ok: true,
+                ad: {
+                  ad: {
+                    text: "Frontend Developer at Acme",
+                    url: "https://jobs.example.com/1",
+                    structuredFields: null,
+                    isManualSelection: false,
+                  },
+                  adKey: "own-ad",
+                  snapshot: { status: "none" },
+                  pageTitle: "Frontend Developer",
+                },
+              }),
+            actions: { openPdf: vi.fn(), openPage: vi.fn(), openUrl: vi.fn() },
+          },
+        })}
+      />,
+    );
+
+    await user.click(await screen.findByRole("button", { name: en("own_cv_save") }));
+    await user.click(await screen.findByRole("button", { name: en("own_cv_confirm") }));
+
+    expect(await screen.findByText(en("result_saved_to_history"))).toBeTruthy();
+    expect(await repository.get("own-ad")).toMatchObject({
+      source: "own",
+      title: "Frontend Developer",
+      fileName: "Moje_CV.pdf",
+    });
+    expect(request).not.toHaveBeenCalled();
+    expect(connect).not.toHaveBeenCalled();
   });
 
   it("has no History button without a history (e.g. previews)", async () => {
