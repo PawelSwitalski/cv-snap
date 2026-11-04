@@ -2,8 +2,8 @@
 release: 0.2.1
 intents: [004-application-history, 005-own-cv-in-history]
 created: 2026-11-04T20:40:00Z
-updated: 2026-11-04T20:40:00Z
-status: planned
+updated: 2026-11-04T19:25:00Z
+status: built
 ---
 
 # Release 0.2.1
@@ -32,11 +32,11 @@ the 0.2.1 extension, and users don't need to reinstall it.
 
 ## Progress
 
-- [ ] **Checkpoint 1: Build**
+- [x] **Checkpoint 1: Build**
   - [x] Versions 0.2.1: `extension`, `native-host` (+ `HOST_VERSION`), `shared`
   - [x] Typecheck, lint, format, `pnpm test` green locally (1412 tests); `pnpm test:e2e` 3/3 at `e569804`
-  - [ ] Push `main` (user), CI green on Windows, macOS, Ubuntu (incl. the new history-only e2e)
-  - [ ] `pnpm release:pack` → `release/` (store zip + host tarball); tag `v0.2.1` (user pushes)
+  - [x] Push `main` (user), CI 41879646305 green on attempt 3 (check, e2e incl. the new history-only test, install on Windows, macOS, Ubuntu)
+  - [x] `pnpm release:pack` → `release/` (store zip + host tarball); tag `v0.2.1` on `860fc7e` (local, user pushes)
 - [ ] **Dev + verify** (user, on the tester build or unpacked): the 0.2.0 checks, plus:
   - [ ] Save my CV to history on a real job board: stored CV and Choose another PDF…; title/company prefilled; "Your CV" in History; replace prompts in both directions
   - [ ] History-only mode on a second Chrome profile without the helper registered (or with the native-host manifest renamed): Use without the helper → add CV → save → reopen the panel
@@ -52,3 +52,12 @@ the 0.2.1 extension, and users don't need to reinstall it.
 |---|---|
 | 2026-11-04 | Intent 005 built (bolts 028–030); release planned as 0.2.1, replacing 0.2.0's store review (user) |
 | 2026-11-04 | Versions set to 0.2.1 (host too: `release:pack` requires equal versions); locally green: 1412 tests, typecheck, lint, format |
+| 2026-11-04 | Push (user); CI 41879646305: Windows install failed twice on runner image `windows-2025-vs2026` 20261103.298.1 (helper PDF and registry tests ~10× slower, timeouts); green on attempt 3 on image 20261030.294.1. Helper code unchanged since 0.2.0; all 236 helper tests pass locally on Windows. Watch: the new image may fail CI again until GitHub fixes it |
+| 2026-11-04 | Packed: zip 0.2.1, no `key`, permissions and CSP unchanged (no build-config change since `v0.2.0`); host tarball 0.2.1; tag `v0.2.1` on `860fc7e` |
+
+## Artifacts (tag v0.2.1, commit 860fc7e)
+
+| File | Size | SHA-256 |
+|---|---|---|
+| `release/cv-snap-0.2.1-chrome-release.zip` | 1,842,430 B | `5327741e334ae893828ab53dc066977a0d473538cb3870c8afc44dd5cf6b1b62` |
+| `release/cv-snap-host-0.2.1.tgz` | 2,794,467 B | `984ee54516e23c91353e32be40c7e394acd765fd51cfe01c36039a66ca8d9952` |
