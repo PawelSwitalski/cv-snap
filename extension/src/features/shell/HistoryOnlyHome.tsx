@@ -48,7 +48,7 @@ export function HistoryOnlyHome({
     <div className="flex flex-col gap-3">
       <Card aria-labelledby="history-home-title">
         <CardHeader>
-          <CardTitle id="history-home-title">{t("home_title")}</CardTitle>
+          <CardTitle id="history-home-title">{t("history_home_title")}</CardTitle>
           <CardDescription>{t("history_home_description")}</CardDescription>
         </CardHeader>
         <CardContent>

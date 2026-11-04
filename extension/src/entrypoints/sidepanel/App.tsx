@@ -182,6 +182,11 @@ function Panel({ deps }: { deps: AppDeps }) {
         subscribeGenerating: (listener) => generateStore.subscribe(listener),
         download: deps.download ?? downloadPdf,
         ...(historyStore ? { history: { store: historyStore, settings: settingsStore } } : {}),
+        onHistoryOnlyImported: () => {
+          void setHistoryOnly(deps.store, true).then(() => {
+            setIsHistoryOnlyState(true);
+          });
+        },
       },
       ...(historyStore ? { history: { settings: settingsStore, history: historyStore } } : {}),
     }),
@@ -191,6 +196,7 @@ function Panel({ deps }: { deps: AppDeps }) {
       deps.allowedSites,
       deps.generate.pageStateApis,
       deps.download,
+      deps.store,
       profileStore,
       generateStore,
     ],

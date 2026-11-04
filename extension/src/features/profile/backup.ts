@@ -18,7 +18,7 @@ import { validatePhoto } from "./photo";
  * base64 only when the user chooses, and optionally the history. `schemaVersion` is the profile
  * schema version and `history.schemaVersion` the history entry version, so a file from a newer
  * cv-snap is recognised and refused instead of being half-read. Without history the file is the
- * 0.1.x format exactly; 0.1.x ignores the `history` field.
+ * 0.1.x format exactly; 0.1.x ignores the `history` field. A history-only backup (intent 005) has no `profile`.
  */
 export const BACKUP_FORMAT = "cv-snap-profile";
 
@@ -65,7 +65,13 @@ export type BackupProblem =
   | "BAD_HISTORY";
 
 export type ParsedBackup =
-  | { ok: true; profile: CvProfile; photo: Blob | null; history: HistoryEntryWithFiles[] }
+  | {
+      ok: true;
+      /** Null for a history-only backup (intent 005), which then has at least one entry. */
+      profile: CvProfile | null;
+      photo: Blob | null;
+      history: HistoryEntryWithFiles[];
+    }
   | { ok: false; problem: BackupProblem };
 
 export async function buildBackup(
@@ -93,13 +99,23 @@ export async function buildBackup(
  * string holds the whole history; without it, it is the 0.1.x file as before.
  */
 export async function buildBackupFile(
-  profile: CvProfile,
+  profile: CvProfile | null,
   photo: Blob | null,
   history: BackupHistorySource | null,
   now: Date = new Date(),
 ): Promise<Blob> {
-  const backup = await buildBackup(profile, photo, now);
-  if (!history) return new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+  // History-only mode (intent 005): no profile, no photo, and the history is the whole point.
+  const backup: Omit<ProfileBackup, "profile"> & { profile?: CvProfile } = profile
+    ? await buildBackup(profile, photo, now)
+    : {
+        format: BACKUP_FORMAT,
+        schemaVersion: CV_PROFILE_SCHEMA_VERSION,
+        exportedAt: now.toISOString(),
+      };
+  if (!history) {
+    if (!profile) throw new Error("a backup without a profile needs the history");
+    return new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+  }
 
   const items: string[] = [];
   for (const entry of history.entries) {
@@ -145,7 +161,8 @@ export function backupFileName(now: Date = new Date()): string {
 const EnvelopeSchema = z.object({
   format: z.literal(BACKUP_FORMAT),
   schemaVersion: z.number().int().positive(),
-  profile: z.unknown(),
+  /** Absent in a history-only backup (intent 005). */
+  profile: z.unknown().optional(),
   photo: z
     .object({ type: z.enum(PHOTO_TYPES), base64: z.string().max(MAX_PHOTO_BASE64) })
     .optional(),
@@ -193,13 +210,18 @@ export async function parseBackup(file: Blob): Promise<ParsedBackup> {
     return { ok: false, problem: "NEWER_VERSION" };
   }
 
-  const profile = CvProfileSchema.safeParse(rawProfile);
-  if (!profile.success || profile.data.confirmedAt === null) {
+  // No profile: a history-only backup (intent 005), valid only with history in it.
+  const isHistoryOnly = rawProfile === undefined;
+  if (isHistoryOnly && (!historyEnvelope || historyEnvelope.data.entries.length === 0)) {
+    return { ok: false, problem: "INVALID" };
+  }
+  const profile = isHistoryOnly ? null : CvProfileSchema.safeParse(rawProfile);
+  if (profile && (!profile.success || profile.data.confirmedAt === null)) {
     return { ok: false, problem: "INVALID" };
   }
 
   let photo: Blob | null = null;
-  if (rawPhoto) {
+  if (rawPhoto && profile) {
     try {
       photo = new Blob([base64ToBytes(rawPhoto.base64)], { type: rawPhoto.type });
     } catch {
@@ -210,7 +232,7 @@ export async function parseBackup(file: Blob): Promise<ParsedBackup> {
 
   const history = historyEnvelope ? await parseHistory(historyEnvelope.data.entries) : [];
   if (history === null) return { ok: false, problem: "BAD_HISTORY" };
-  return { ok: true, profile: profile.data, photo, history };
+  return { ok: true, profile: profile ? profile.data : null, photo, history };
 }
 
 /**

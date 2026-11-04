@@ -4,7 +4,7 @@ title: Polityka prywatności cv-snap
 
 # Polityka prywatności cv-snap
 
-**Wersja 2**, obowiązuje od 3 listopada 2026. [English](./)
+**Wersja 2**, obowiązuje od 3 listopada 2026; tekst zaktualizowany 4 listopada 2026. [English](./)
 
 cv-snap to rozszerzenie Chrome z małym programem pomocniczym (`cv-snap-host`) na Twoim komputerze.
 Dopasowuje Twoje CV do ogłoszenia o pracę za pomocą **Twojego własnego Claude Code**. Ta polityka
@@ -17,7 +17,7 @@ Te punkty cv-snap pokazuje przed rozpoczęciem (informacja o prywatności w apli
 - Podczas generowania CV Twój profil i ogłoszenie są wysyłane do Anthropic przez Twój Claude Code, na warunkach Twojego konta Claude.
 - cv-snap nie ma serwera. Nic nie trafia do cv-snap ani nikogo innego.
 - Twoje CV, profil i ustawienia są przechowywane tylko w tym profilu Chrome na tym komputerze.
-- Pobrane CV, kopia każdego ogłoszenia i daty ich wysłania są przechowywane tylko w tym profilu Chrome, tak długo, jak wybierzesz w ustawieniach. Możesz je usunąć w Historii lub w ustawieniach.
+- Pobrane i zapisane CV, kopia każdego ogłoszenia i daty ich wysłania są przechowywane tylko w tym profilu Chrome, tak długo, jak wybierzesz w ustawieniach. Możesz je usunąć w Historii lub w ustawieniach.
 - Logi nigdy nie zawierają treści CV ani ogłoszeń.
 
 ## Co trafia do Anthropic
@@ -46,8 +46,16 @@ Twoim komputerze.
 
 cv-snap czyta strony tylko w serwisach dodanych przez Ciebie przyciskiem **Dodaj tę stronę**;
 Chrome prosi o zgodę dla każdego z nich. Na tych stronach sprawdza, na Twoim komputerze, czy strona
-jest ogłoszeniem, i czyta tekst ogłoszenia, gdy klikniesz **Generuj CV**. Serwis możesz usunąć w
-ustawieniach rozszerzenia albo w szczegółach rozszerzenia w Chrome.
+jest ogłoszeniem, i czyta tekst ogłoszenia, gdy klikniesz **Generuj CV** albo **Zapisz moje CV
+w historii**. Serwis możesz usunąć w ustawieniach rozszerzenia albo w szczegółach rozszerzenia
+w Chrome.
+
+## Korzystanie z cv-snap bez pomocnika
+
+Jeśli wybierzesz **Używaj bez pomocnika**, cv-snap prowadzi tylko historię Twoich aplikacji
+z własnym CV. Nie używa programu pomocniczego ani Claude Code, więc **nic nie trafia do
+Anthropic** ani nigdzie indziej: plik CV, ogłoszenia i historia zostają w tym profilu Chrome.
+Dopasowywanie CV jest wyłączone, dopóki nie zainstalujesz pomocnika.
 
 ## Co jest przechowywane i gdzie
 
@@ -58,14 +66,15 @@ W **tym profilu Chrome** (pamięć rozszerzenia, tylko na Twoim komputerze):
 - pamięć podręczna wymagań odczytanych z ogłoszeń, aby to samo ogłoszenie nie było analizowane
   dwa razy;
 - ostatnio wygenerowane CV, tylko w pamięci sesji: znika po zamknięciu Chrome;
-- Twoja **historia**: każde pobrane CV (plik PDF), tekst ogłoszenia, kopia strony ogłoszenia
-  z chwili generowania CV (bez skryptów; obrazy i style nadal ładują się z serwisu z ogłoszeniami
+- Twoja **historia**: każde pobrane CV albo Twoje własne CV zapisane przyciskiem **Zapisz moje CV
+  w historii** (plik PDF), tekst ogłoszenia, kopia strony ogłoszenia z chwili generowania lub
+  zapisania CV (bez skryptów; obrazy i style nadal ładują się z serwisu z ogłoszeniami
   przy jej otwarciu) oraz data oznaczenia jako wysłane. Jest przechowywana tak długo, jak
   wybierzesz w ustawieniach (zawsze albo od 1 do 24 miesięcy od ostatniego pobrania) i nigdy
   nie jest nigdzie wysyłana.
 
 **Plik kopii zapasowej** eksportowany w ustawieniach zawiera Twój profil oraz, jeśli tak wybierzesz,
-zdjęcie i historię. Jest zapisywany tam, gdzie wskażesz, i cv-snap nigdzie go nie wysyła.
+zdjęcie i historię. Bez profilu (gdy korzystasz z cv-snap bez pomocnika) zawiera tylko historię. Jest zapisywany tam, gdzie wskażesz, i cv-snap nigdzie go nie wysyła.
 
 Na **Twoim komputerze**, przez program pomocniczy:
 

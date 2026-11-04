@@ -33,6 +33,15 @@ export interface CvSnap {
   openSidePanel(tab: Page): Promise<Page>;
 }
 
+/**
+ * What a test starts with: the helper registered for the test browser, and a confirmed profile.
+ * The history-only test (intent 005) turns both off to be a user without the helper.
+ */
+export interface CvSnapSetup {
+  host: boolean;
+  profile: boolean;
+}
+
 async function waitForDevToolsPort(userDataDir: string): Promise<number> {
   const file = join(userDataDir, "DevToolsActivePort");
   for (let attempt = 0; attempt < 100; attempt++) {
@@ -47,7 +56,12 @@ async function waitForDevToolsPort(userDataDir: string): Promise<number> {
   throw new Error("Chromium didn't write DevToolsActivePort");
 }
 
-export const test = base.extend<{ cvSnap: CvSnap }, { jobBoard: JobBoard }>({
+export const test = base.extend<
+  { cvSnapSetup: CvSnapSetup; cvSnap: CvSnap },
+  { jobBoard: JobBoard }
+>({
+  cvSnapSetup: [{ host: true, profile: true }, { option: true }],
+
   jobBoard: [
     // Playwright reads the fixture's dependencies from this destructuring; there are none.
     // eslint-disable-next-line no-empty-pattern
@@ -59,18 +73,20 @@ export const test = base.extend<{ cvSnap: CvSnap }, { jobBoard: JobBoard }>({
     { scope: "worker" },
   ],
 
-  cvSnap: async ({ jobBoard }, use) => {
+  cvSnap: async ({ jobBoard, cvSnapSetup }, use) => {
     const workDir = mkdtempSync(join(tmpdir(), "cvsnap-e2e-"));
     const userDataDir = join(workDir, "profile");
-    const registration = registerHost({
-      platform: process.platform,
-      workDir: join(workDir, "host"),
-      userDataDir,
-      nodePath: process.execPath,
-      hostScript: HOST_SCRIPT,
-      fixturesDir: join(FIXTURES_DIR, "provider"),
-      extensionId: DEV_EXTENSION_ID,
-    });
+    const registration = cvSnapSetup.host
+      ? registerHost({
+          platform: process.platform,
+          workDir: join(workDir, "host"),
+          userDataDir,
+          nodePath: process.execPath,
+          hostScript: HOST_SCRIPT,
+          fixturesDir: join(FIXTURES_DIR, "provider"),
+          extensionId: DEV_EXTENSION_ID,
+        })
+      : null;
     let context: BrowserContext | undefined;
     const remotes: { close(): Promise<void> }[] = [];
     try {
@@ -90,14 +106,26 @@ export const test = base.extend<{ cvSnap: CvSnap }, { jobBoard: JobBoard }>({
       const serviceWorker =
         context.serviceWorkers()[0] ?? (await context.waitForEvent("serviceworker"));
       const extensionId = new URL(serviceWorker.url()).host;
+      // The job board's content script is registered at install; a page opened before that has
+      // none. Seeding a profile used to hide this race (bolt 030).
+      for (let attempt = 0; ; attempt++) {
+        const registered = await serviceWorker.evaluate(
+          async () => (await chrome.scripting.getRegisteredContentScripts()).length,
+        );
+        if (registered > 0) break;
+        if (attempt >= 100) throw new Error("the job-ad content script wasn't registered");
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
 
-      const profile: unknown = JSON.parse(
-        readFileSync(join(FIXTURES_DIR, "provider", "profile.json"), "utf8"),
-      );
-      await serviceWorker.evaluate(([key, value]) => chrome.storage.local.set({ [key]: value }), [
-        ACTIVE_PROFILE_KEY,
-        profile,
-      ] as const);
+      if (cvSnapSetup.profile) {
+        const profile: unknown = JSON.parse(
+          readFileSync(join(FIXTURES_DIR, "provider", "profile.json"), "utf8"),
+        );
+        await serviceWorker.evaluate(([key, value]) => chrome.storage.local.set({ [key]: value }), [
+          ACTIVE_PROFILE_KEY,
+          profile,
+        ] as const);
+      }
 
       const port = await waitForDevToolsPort(userDataDir);
       const browserContext = context;
@@ -145,7 +173,7 @@ export const test = base.extend<{ cvSnap: CvSnap }, { jobBoard: JobBoard }>({
     } finally {
       for (const remote of remotes) await remote.close().catch(() => undefined);
       await context?.close();
-      registration.remove();
+      registration?.remove();
       rmSync(workDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
     }
   },

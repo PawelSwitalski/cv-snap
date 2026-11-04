@@ -52,6 +52,11 @@ export interface BackupSectionDeps {
   download: (file: Blob, fileName: string) => void;
   /** History in the backup (bolt 026); absent without a history. */
   history?: { store: HistoryStore; settings: SettingsStore; now?: () => Date };
+  /**
+   * A history-only backup was imported where there is no profile (intent 005): the panel turns
+   * history-only mode on.
+   */
+  onHistoryOnlyImported?: () => void;
 }
 
 type Status =
@@ -60,7 +65,8 @@ type Status =
   | { kind: "confirm-export"; bytes: number }
   | {
       kind: "confirm";
-      profile: CvProfile;
+      /** Null for a history-only backup: only the history is imported. */
+      profile: CvProfile | null;
       photo: Blob | null;
       history: HistoryEntryWithFiles[];
       changes: number;
@@ -92,16 +98,18 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
   const historyId = useId();
   const inputId = useId();
   const noteId = useId();
-  const includesHistory = withHistory && entries.length > 0;
+  // Without a profile (history-only mode, intent 005) the backup is the history alone.
+  const canExportHistoryOnly = !active && historyStore !== undefined && entries.length > 0;
+  const includesHistory = (withHistory || canExportHistoryOnly) && entries.length > 0;
 
   useEffect(() => {
     if (historyStore?.getState().status === "idle") void historyStore.getState().load();
   }, [historyStore]);
 
   const exportBackup = async () => {
-    if (!active) return;
+    if (!active && !canExportHistoryOnly) return;
     try {
-      const photo = withPhoto ? ((await deps.profiles.getState().photo()) ?? null) : null;
+      const photo = active && withPhoto ? ((await deps.profiles.getState().photo()) ?? null) : null;
       const history =
         includesHistory && historyStore
           ? {
@@ -131,6 +139,10 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
       return;
     }
     const history = historyStore ? parsed.history : [];
+    if (!parsed.profile && history.length === 0) {
+      setStatus({ kind: "message", key: "backup_error_invalid", isError: true });
+      return;
+    }
     if (history.length > 0 && historyStore?.getState().status !== "ready") {
       await historyStore?.getState().load();
     }
@@ -144,7 +156,7 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
   };
 
   const importBackup = async (
-    profile: CvProfile,
+    profile: CvProfile | null,
     photo: Blob | null,
     history: readonly HistoryEntryWithFiles[],
   ) => {
@@ -157,7 +169,8 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
       if (history.length > 0 && deps.history) {
         changed = await deps.history.store.getState().importEntries(history);
       }
-      await deps.profiles.getState().importProfile(profile, photo);
+      if (profile) await deps.profiles.getState().importProfile(profile, photo);
+      else if (!active) deps.onHistoryOnlyImported?.();
     } catch (error) {
       logger.error("backup import failed", error instanceof Error ? error.name : "unknown");
       setStatus({ kind: "message", key: "backup_error_import", isError: true });
@@ -172,7 +185,7 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
       }
       setStatus({
         kind: "message",
-        key: "backup_imported_with_history",
+        key: profile ? "backup_imported_with_history" : "backup_imported_history_only",
         args: [String(changed)],
         isError: false,
       });
@@ -181,26 +194,30 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
     }
   };
 
+  const isHistoryOnlyImport = status.kind === "confirm" && status.profile === null;
+
   return (
     <SettingsSection heading="settings_backup">
       <p className="text-xs text-muted-foreground">{t("settings_backup_note")}</p>
-      <div className="flex items-center gap-2">
-        <Checkbox
-          id={photoId}
-          checked={withPhoto}
-          disabled={!hasPhoto}
-          onChange={(event) => {
-            setWithPhoto(event.currentTarget.checked);
-          }}
-        />
-        <Label htmlFor={photoId}>{t("backup_include_photo")}</Label>
-      </div>
+      {active ? (
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id={photoId}
+            checked={withPhoto}
+            disabled={!hasPhoto}
+            onChange={(event) => {
+              setWithPhoto(event.currentTarget.checked);
+            }}
+          />
+          <Label htmlFor={photoId}>{t("backup_include_photo")}</Label>
+        </div>
+      ) : null}
       {historyStore ? (
         <div className="flex items-center gap-2">
           <Checkbox
             id={historyId}
             checked={includesHistory}
-            disabled={entries.length === 0}
+            disabled={entries.length === 0 || canExportHistoryOnly}
             onChange={(event) => {
               setWithHistory(event.currentTarget.checked);
             }}
@@ -209,7 +226,12 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
         </div>
       ) : null}
       <div className="flex flex-wrap gap-2">
-        <Button variant="outline" size="sm" disabled={!active} onClick={requestExport}>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={!active && !canExportHistoryOnly}
+          onClick={requestExport}
+        >
           <Download aria-hidden="true" />
           {t("backup_export")}
         </Button>
@@ -240,7 +262,12 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
           }}
         />
       </div>
-      {!active ? <p className="text-xs text-muted-foreground">{t("backup_no_profile")}</p> : null}
+      {!active && !canExportHistoryOnly ? (
+        <p className="text-xs text-muted-foreground">{t("backup_no_profile")}</p>
+      ) : null}
+      {canExportHistoryOnly ? (
+        <p className="text-xs text-muted-foreground">{t("backup_history_only_note")}</p>
+      ) : null}
       {isGenerating ? (
         <p id={noteId} className="text-xs text-muted-foreground">
           {t("backup_blocked_generating")}
@@ -285,18 +312,25 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
         }}
       >
         <AlertDialogContent>
-          <AlertDialogTitle>{t("backup_confirm_title")}</AlertDialogTitle>
+          <AlertDialogTitle>
+            {isHistoryOnlyImport
+              ? t("backup_confirm_history_only_title")
+              : t("backup_confirm_title")}
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            {status.kind === "confirm"
+            {status.kind === "confirm" && status.profile
               ? t("backup_confirm_description", status.profile.contact.fullName)
               : null}
-            {hasDraft ? ` ${t("backup_confirm_draft")}` : null}
-            {status.kind === "confirm" && status.changes > 0
+            {hasDraft && !isHistoryOnlyImport ? ` ${t("backup_confirm_draft")}` : null}
+            {status.kind === "confirm" && (status.changes > 0 || isHistoryOnlyImport)
               ? ` ${t("backup_confirm_history", String(status.changes))}`
               : null}
+            {isHistoryOnlyImport ? ` ${t("backup_confirm_history_only_profile")}` : null}
           </AlertDialogDescription>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t("backup_confirm_keep")}</AlertDialogCancel>
+            <AlertDialogCancel>
+              {isHistoryOnlyImport ? t("backup_large_cancel") : t("backup_confirm_keep")}
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (status.kind === "confirm") {
@@ -304,7 +338,7 @@ export function BackupSection({ deps }: { deps: BackupSectionDeps }) {
                 }
               }}
             >
-              {t("backup_confirm_replace")}
+              {isHistoryOnlyImport ? t("backup_import") : t("backup_confirm_replace")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -23,6 +23,7 @@ import { fakeAllowedSites } from "../../../test/settings-fixtures";
 import { createMemoryHistoryRepository } from "@/features/history/history-repository";
 import { historyRowId } from "@/features/history/HistoryView";
 import { historyEntry } from "../../../test/history-fixtures";
+import { buildBackupFile } from "@/features/profile/backup";
 import { App, type AppDeps } from "./App";
 
 /** A host connection that never answers (the setup check stays in "checking"). */
@@ -671,6 +672,45 @@ describe("App: history-only mode (intent 005)", () => {
     expect(requests).toEqual(["extractPdfText", "createProfile"]);
     expect(files.files.get(FILE_KEYS.cvOriginal)).toBeDefined();
     expect((await repository.list()).entries).toHaveLength(1);
+  });
+
+  it("imports a history-only backup on a clean panel and opens history-only home", async () => {
+    const user = userEvent.setup({ applyAccept: false });
+    const store = createMemoryStore({
+      [STORAGE_KEYS.privacyNoticeVersion]: PRIVACY_NOTICE_VERSION,
+    });
+    const repository = createMemoryHistoryRepository();
+    const backup = await buildBackupFile(null, null, {
+      entries: [historyEntry({ adKey: "own-ad", source: "own", snapshot: "none" })],
+      files: () => Promise.resolve({ pdf: new Blob(["%PDF-own"]), snapshot: null, adText: "ad" }),
+    });
+    render(
+      <App
+        deps={historyOnlyDeps({
+          store,
+          files: createMemoryFileStore(),
+          repository,
+          hostClient: silentClient(),
+          createHostClient: () => healthClient(NOT_INSTALLED),
+        })}
+      />,
+    );
+
+    await user.click(await screen.findByRole("button", { name: en("settings_title") }));
+    await user.upload(
+      await screen.findByLabelText(en("backup_import")),
+      new File([await backup.text()], "cv-snap-backup.json", { type: "application/json" }),
+    );
+    const dialog = await screen.findByRole("alertdialog");
+    await user.click(within(dialog).getByRole("button", { name: en("backup_import") }));
+    await screen.findByText(en("backup_imported_history_only", "1"));
+    await user.click(screen.getByRole("button", { name: en("settings_back") }));
+
+    expect(
+      await screen.findByRole("button", { name: en("history_home_set_up_helper") }),
+    ).toBeTruthy();
+    expect(await store.get(STORAGE_KEYS.historyOnly)).toBe(true);
+    expect((await repository.get("own-ad"))?.source).toBe("own");
   });
 
   it("is never on next to a profile: the flag is cleared and home has Generate", async () => {

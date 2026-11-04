@@ -33,7 +33,7 @@
     "message": "Your CV, profile and settings are stored only in this Chrome profile on this computer."
   },
   "privacy_point_history": {
-    "message": "The CVs you download, a copy of each job-ad page and the dates you sent them are kept only in this Chrome profile, for as long as you choose in Settings. You can delete them in History or Settings."
+    "message": "The CVs you download or save, a copy of each job-ad page and the dates you sent them are kept only in this Chrome profile, for as long as you choose in Settings. You can delete them in History or Settings."
   },
   "privacy_point_logs": {
     "message": "Logs never contain your CV or job-ad text."
@@ -1435,5 +1435,25 @@
   },
   "your_cv_replaced": {
     "message": "Your CV was replaced."
+  },
+  "backup_history_only_note": {
+    "message": "Without a profile, the backup holds your history only."
+  },
+  "backup_confirm_history_only_title": {
+    "message": "Import your history?"
+  },
+  "backup_confirm_history_only_profile": {
+    "message": "This backup has no profile; your profile stays as it is."
+  },
+  "history_home_title": {
+    "message": "Your applications"
+  },
+  "backup_imported_history_only": {
+    "message": "History imported. Entries added or updated: $COUNT$.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
   }
 }

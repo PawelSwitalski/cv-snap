@@ -29,8 +29,13 @@ const filesOf = (text: string) => ({
   adText: text,
 });
 
-async function setup(local: HistoryEntry[] = [historyEntry({ adKey: "local" })]) {
-  const memory = createMemoryStore({ [STORAGE_KEYS.activeProfile]: smallProfile() });
+async function setup(
+  local: HistoryEntry[] = [historyEntry({ adKey: "local" })],
+  options: { hasProfile?: boolean } = {},
+) {
+  const memory = createMemoryStore(
+    options.hasProfile === false ? {} : { [STORAGE_KEYS.activeProfile]: smallProfile() },
+  );
   const settings = createSettingsStore(memory);
   await settings.getState().load();
   const profiles = createProfileStore({
@@ -42,6 +47,7 @@ async function setup(local: HistoryEntry[] = [historyEntry({ adKey: "local" })])
   for (const entry of local) await repository.put(entry, filesOf(entry.adKey));
   const history = createHistoryStore(repository);
   const download = vi.fn<(file: Blob, fileName: string) => void>();
+  const onHistoryOnlyImported = vi.fn();
   render(
     <I18nProvider store={memory} browserLanguage="en-US">
       <BackupSection
@@ -51,6 +57,7 @@ async function setup(local: HistoryEntry[] = [historyEntry({ adKey: "local" })])
           subscribeGenerating: () => () => undefined,
           download,
           history: { store: history, settings, now: () => NOW },
+          onHistoryOnlyImported,
         }}
       />
     </I18nProvider>,
@@ -59,7 +66,15 @@ async function setup(local: HistoryEntry[] = [historyEntry({ adKey: "local" })])
   await waitFor(() => {
     expect(history.getState().status).toBe("ready");
   });
-  return { settings, profiles, repository, history, download, user: userEvent.setup() };
+  return {
+    settings,
+    profiles,
+    repository,
+    history,
+    download,
+    onHistoryOnlyImported,
+    user: userEvent.setup(),
+  };
 }
 
 const exportButton = () => screen.getByRole("button", { name: en("backup_export") });
@@ -209,5 +224,86 @@ describe("BackupSection with history", () => {
     expect(screen.queryByRole("alertdialog")).toBeNull();
     expect(ctx.profiles.getState().active?.id).toBe(smallProfile().id);
     expect(ctx.history.getState().entries.map((e) => e.adKey)).toEqual(["local"]);
+  });
+});
+
+/** A history-only backup (intent 005): no profile. */
+async function historyOnlyBackupWith(entries: HistoryEntry[]): Promise<File> {
+  const file = await buildBackupFile(null, null, {
+    entries,
+    files: (adKey) => Promise.resolve(filesOf(`backup ${adKey}`)),
+  });
+  return new File([await file.text()], "cv-snap-backup.json", { type: "application/json" });
+}
+
+describe("BackupSection without a profile (intent 005)", () => {
+  it("exports the history alone, with no photo option", async () => {
+    const ctx = await setup([historyEntry({ adKey: "own", source: "own" })], {
+      hasProfile: false,
+    });
+
+    expect(screen.queryByLabelText(en("backup_include_photo"))).toBeNull();
+    expect(screen.getByLabelText<HTMLInputElement>(en("backup_include_history")).checked).toBe(
+      true,
+    );
+    expect(screen.getByText(en("backup_history_only_note"))).toBeTruthy();
+    await ctx.user.click(exportButton());
+
+    const file = await exported(ctx.download);
+    expect(file).not.toHaveProperty("profile");
+    expect(file).toMatchObject({
+      history: { entries: [{ entry: { adKey: "own", source: "own" } }] },
+    });
+  });
+
+  it("can't export without a profile or history", async () => {
+    await setup([], { hasProfile: false });
+
+    expect(exportButton()).toHaveProperty("disabled", true);
+    expect(screen.getByText(en("backup_no_profile"))).toBeTruthy();
+  });
+
+  it("imports a history-only backup on a clean panel and turns history-only mode on", async () => {
+    const ctx = await setup([], { hasProfile: false });
+
+    await ctx.user.upload(
+      screen.getByLabelText(en("backup_import")),
+      await historyOnlyBackupWith([historyEntry({ adKey: "own", source: "own" })]),
+    );
+    const dialog = await screen.findByRole("alertdialog");
+    expect(within(dialog).getByText(en("backup_confirm_history_only_title"))).toBeTruthy();
+    expect(dialog.textContent).toContain(en("backup_confirm_history_only_profile"));
+    await ctx.user.click(within(dialog).getByRole("button", { name: en("backup_import") }));
+
+    expect(await screen.findByRole("status")).toHaveProperty(
+      "textContent",
+      en("backup_imported_history_only", "1"),
+    );
+    expect(ctx.history.getState().entries.map((e) => e.source)).toEqual(["own"]);
+    expect(ctx.onHistoryOnlyImported).toHaveBeenCalledOnce();
+    expect(ctx.profiles.getState().active).toBeNull();
+  });
+
+  it("merges only the history of a profile-less backup next to a profile", async () => {
+    const ctx = await setup();
+
+    await ctx.user.upload(
+      screen.getByLabelText(en("backup_import")),
+      await historyOnlyBackupWith([
+        historyEntry({ adKey: "from-backup", lastDownloadedAt: RECENT }),
+      ]),
+    );
+    const dialog = await screen.findByRole("alertdialog");
+    await ctx.user.click(within(dialog).getByRole("button", { name: en("backup_import") }));
+
+    await screen.findByRole("status");
+    expect(ctx.profiles.getState().active?.id).toBe(smallProfile().id);
+    expect(
+      ctx.history
+        .getState()
+        .entries.map((e) => e.adKey)
+        .sort(),
+    ).toEqual(["from-backup", "local"]);
+    expect(ctx.onHistoryOnlyImported).not.toHaveBeenCalled();
   });
 });

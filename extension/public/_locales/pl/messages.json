@@ -33,7 +33,7 @@
     "message": "Twoje CV, profil i ustawienia są przechowywane tylko w tym profilu Chrome na tym komputerze."
   },
   "privacy_point_history": {
-    "message": "Pobrane CV, kopia każdego ogłoszenia i daty ich wysłania są przechowywane tylko w tym profilu Chrome, tak długo, jak wybierzesz w ustawieniach. Możesz je usunąć w Historii lub w ustawieniach."
+    "message": "Pobrane i zapisane CV, kopia każdego ogłoszenia i daty ich wysłania są przechowywane tylko w tym profilu Chrome, tak długo, jak wybierzesz w ustawieniach. Możesz je usunąć w Historii lub w ustawieniach."
   },
   "privacy_point_logs": {
     "message": "Logi nigdy nie zawierają treści CV ani ogłoszeń."
@@ -1435,5 +1435,25 @@
   },
   "your_cv_replaced": {
     "message": "CV zostało zamienione."
+  },
+  "backup_history_only_note": {
+    "message": "Bez profilu kopia zawiera tylko historię."
+  },
+  "backup_confirm_history_only_title": {
+    "message": "Zaimportować historię?"
+  },
+  "backup_confirm_history_only_profile": {
+    "message": "Ta kopia nie zawiera profilu; Twój profil pozostaje bez zmian."
+  },
+  "history_home_title": {
+    "message": "Twoje aplikacje"
+  },
+  "backup_imported_history_only": {
+    "message": "Zaimportowano historię. Dodane lub zaktualizowane wpisy: $COUNT$.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
   }
 }

@@ -205,6 +205,34 @@ describe("backup with history", () => {
     }
   });
 
+  it("builds and reads a backup without a profile (history-only mode, intent 005)", async () => {
+    const source = historySource();
+
+    const file = await buildBackupFile(null, null, source, NOW);
+    const json = JSON.parse(await file.text()) as Record<string, unknown>;
+    const parsed = await parseBackup(file);
+
+    expect(json).not.toHaveProperty("profile");
+    if (!parsed.ok) throw new Error(parsed.problem);
+    expect(parsed.profile).toBeNull();
+    expect(parsed.history.map((item) => item.entry)).toEqual(source.entries);
+  });
+
+  it("refuses a backup with neither a profile nor history", async () => {
+    const empty: Record<string, unknown> = { ...(await backupJson()) };
+    delete empty.profile;
+    delete empty.history;
+
+    expect(await parseBackup(fileOf(empty))).toMatchObject({ ok: false, problem: "INVALID" });
+    expect(
+      await parseBackup(fileOf({ ...empty, history: { schemaVersion: 1, entries: [] } })),
+    ).toMatchObject({ ok: false, problem: "INVALID" });
+  });
+
+  it("won't build a backup with neither a profile nor history", async () => {
+    await expect(buildBackupFile(null, null, null, NOW)).rejects.toThrow();
+  });
+
   it("keeps whether an entry holds the user's own CV (intent 005)", async () => {
     const source = historySource();
     const [first, second] = source.entries;
