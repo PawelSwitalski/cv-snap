@@ -46,5 +46,15 @@
         </ul>
       </article>
     </main>
+    <script>
+      // Marker for the saved-page test (bolt 027): does nothing on the job board itself, and
+      // would show up if a saved copy of this page ever ran its scripts.
+      if (location.hostname !== "jobs.cvsnap.test") {
+        const marker = document.createElement("p");
+        marker.id = "e2e-script-ran";
+        marker.textContent = "The saved page ran a script.";
+        document.body.append(marker);
+      }
+    </script>
   </body>
 </html>
