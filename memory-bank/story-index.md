@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 79
-- **Planned**: 9
+- **Planned**: 6
 - **Generated**: 0
-- **Completed**: 70
-- **Last updated**: 2026-11-04T16:40:00Z
+- **Completed**: 73
+- **Last updated**: 2026-11-04T17:45:00Z
 
 ---
 
@@ -209,20 +209,20 @@
 
 ## Stories by Status
 
-- **Planned**: 9
+- **Planned**: 6
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 70
+- **Completed**: 73
 
 ### 005-own-cv-in-history
 
 #### 001-own-cv-save
 
-- [ ] **001-entry-source** — Entry source: your CV or tailored - Must - bolt `028-own-cv-save` - PLANNED
+- [x] **001-entry-source** — Entry source: your CV or tailored - Must - bolt `028-own-cv-save` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/001-own-cv-save/stories/001-entry-source.md`
-- [ ] **002-save-own-cv** — Save my CV for an ad, without the host - Must - bolt `028-own-cv-save` - PLANNED
+- [x] **002-save-own-cv** — Save my CV for an ad, without the host - Must - bolt `028-own-cv-save` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/001-own-cv-save/stories/002-save-own-cv.md`
-- [ ] **003-save-own-cv-panel** — Save my CV in the panel - Must - bolt `028-own-cv-save` - PLANNED
+- [x] **003-save-own-cv-panel** — Save my CV in the panel - Must - bolt `028-own-cv-save` - ✅ COMPLETED
   `memory-bank/intents/005-own-cv-in-history/units/001-own-cv-save/stories/003-save-own-cv-panel.md`
 
 #### 002-history-only-mode

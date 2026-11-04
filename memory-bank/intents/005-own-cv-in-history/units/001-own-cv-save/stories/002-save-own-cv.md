@@ -2,11 +2,11 @@
 id: 002-save-own-cv
 unit: 001-own-cv-save
 intent: 005-own-cv-in-history
-status: draft
+status: complete
 priority: must
 created: '2026-11-04T16:40:00Z'
 assigned_bolt: 028-own-cv-save
-implemented: false
+implemented: true
 ---
 
 # Story: 002-save-own-cv
@@ -19,11 +19,11 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a captured ad and a stored original CV, **When** I save my CV, **Then** one entry is written with the stored CV's exact bytes, the ad text and the snapshot, source "own", and no native host call is made
-- [ ] **Given** a picked PDF, **When** I save it, **Then** it is checked like a CV upload (signature, not empty, at most 10 MB) and saved to that entry only; the stored CV is unchanged
-- [ ] **Given** an ad already in history (either kind), **When** I save my CV, **Then** it stays one entry with the new PDF, source, title, company and last-saved date; created and sent dates are kept
-- [ ] **Given** a write that fails, **When** saving, **Then** no partial entry is left and the error is reported
-- [ ] **Given** the ad's JSON-LD, **When** preparing the save, **Then** the title and company are prefilled from it; otherwise the title is the page title (trimmed, at most 200 chars) and the company empty
+- [x] **Given** a captured ad and a stored original CV, **When** I save my CV, **Then** one entry is written with the stored CV's exact bytes, the ad text and the snapshot, source "own", and no native host call is made
+- [x] **Given** a picked PDF, **When** I save it, **Then** it is checked like a CV upload (signature, not empty, at most 10 MB) and saved to that entry only; the stored CV is unchanged
+- [x] **Given** an ad already in history (either kind), **When** I save my CV, **Then** it stays one entry with the new PDF, source, title, company and last-saved date; created and sent dates are kept
+- [x] **Given** a write that fails, **When** saving, **Then** no partial entry is left and the error is reported
+- [x] **Given** the ad's JSON-LD, **When** preparing the save, **Then** the title and company are prefilled from it; otherwise the title is the page title (trimmed, at most 200 chars) and the company empty
 
 ## Technical Notes
 

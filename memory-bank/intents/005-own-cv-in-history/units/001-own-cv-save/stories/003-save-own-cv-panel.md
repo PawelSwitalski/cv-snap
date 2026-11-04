@@ -2,11 +2,11 @@
 id: 003-save-own-cv-panel
 unit: 001-own-cv-save
 intent: 005-own-cv-in-history
-status: draft
+status: complete
 priority: must
 created: '2026-11-04T16:40:00Z'
 assigned_bolt: 028-own-cv-save
-implemented: false
+implemented: true
 ---
 
 # Story: 003-save-own-cv-panel
@@ -19,12 +19,12 @@ implemented: false
 
 ## Acceptance Criteria
 
-- [ ] **Given** a job ad in the panel, **When** I look at Generate, **Then** I see Save my CV to history and Choose another PDF…
-- [ ] **Given** I click either, **When** the form opens, **Then** Job title and Company are prefilled (FR-2) and editable; Save stores exactly what I typed
-- [ ] **Given** the ad has an entry of the other kind, **When** I save, **Then** I'm asked to confirm the replacement first
-- [ ] **Given** the save succeeds, **When** done, **Then** I see "Saved to history" with Show in history
-- [ ] **Given** the "already in history" hint, **When** shown, **Then** it says whether the entry is my CV or tailored
-- [ ] **Given** no stored CV, **When** I look, **Then** only Choose another PDF… is offered
+- [x] **Given** a job ad in the panel, **When** I look at Generate, **Then** I see Save my CV to history and Choose another PDF…
+- [x] **Given** I click either, **When** the form opens, **Then** Job title and Company are prefilled (FR-2) and editable; Save stores exactly what I typed
+- [x] **Given** the ad has an entry of the other kind, **When** I save, **Then** I'm asked to confirm the replacement first
+- [x] **Given** the save succeeds, **When** done, **Then** I see "Saved to history" with Show in history
+- [x] **Given** the "already in history" hint, **When** shown, **Then** it says whether the entry is my CV or tailored
+- [x] **Given** no stored CV, **When** I look, **Then** only Choose another PDF… is offered
 
 ## Technical Notes
 

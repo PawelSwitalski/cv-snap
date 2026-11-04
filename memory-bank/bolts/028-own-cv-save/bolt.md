@@ -3,16 +3,25 @@ id: 028-own-cv-save
 unit: 001-own-cv-save
 intent: 005-own-cv-in-history
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 001-entry-source
   - 002-save-own-cv
   - 003-save-own-cv-panel
 created: '2026-11-04T16:40:00Z'
-started: null
-completed: null
+started: '2026-11-04T17:00:00Z'
+completed: '2026-11-04T17:45:00Z'
 current_stage: null
-stages_completed: []
+stages_completed:
+  - name: plan
+    completed: '2026-11-04T17:02:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-11-04T17:15:00Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-11-04T17:45:00Z'
+    artifact: test-walkthrough.md
 requires_bolts: []
 enables_bolts:
   - 029-history-only-mode
@@ -48,9 +57,9 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Stages
 
-- [ ] **1. plan**: Pending → implementation-plan.md
-- [ ] **2. implement**: Pending → source + implementation-walkthrough.md
-- [ ] **3. test**: Pending → tests + test-walkthrough.md
+- [x] **1. plan**: Complete → implementation-plan.md (approved, user)
+- [x] **2. implement**: Complete → source + implementation-walkthrough.md (approved, user)
+- [x] **3. test**: Complete → tests + test-walkthrough.md (approved, user)
 
 ## Dependencies
 
@@ -62,7 +71,7 @@ Implement and test the stories below so that every acceptance criterion passes.
 
 ## Success Criteria
 
-- [ ] All stories implemented
-- [ ] All acceptance criteria met
-- [ ] `pnpm test` green
-- [ ] Code reviewed (user, stage checkpoints)
+- [x] All stories implemented
+- [x] All acceptance criteria met
+- [x] `pnpm test` green
+- [x] Code reviewed (user, stage checkpoints)

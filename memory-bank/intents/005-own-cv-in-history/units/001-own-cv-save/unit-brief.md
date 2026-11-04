@@ -2,11 +2,11 @@
 unit: 001-own-cv-save
 intent: 005-own-cv-in-history
 phase: inception
-status: ready
+status: complete
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 created: '2026-11-04T16:40:00Z'
-updated: '2026-11-04T16:40:00Z'
+updated: '2026-11-04T17:45:00Z'
 ---
 
 # Unit Brief: 001-own-cv-save
@@ -37,9 +37,9 @@ Save the user's own CV (stored or picked) for the current ad, with offline title
 
 ### Stories
 
-- [ ] **001-entry-source**: Entry source: your CV or tailored - Must - Planned
-- [ ] **002-save-own-cv**: Save my CV for an ad, without the host - Must - Planned
-- [ ] **003-save-own-cv-panel**: Save my CV in the panel - Must - Planned
+- [x] **001-entry-source**: Entry source: your CV or tailored - Must - Complete
+- [x] **002-save-own-cv**: Save my CV for an ad, without the host - Must - Complete
+- [x] **003-save-own-cv-panel**: Save my CV in the panel - Must - Complete
 
 ---
 
@@ -52,9 +52,9 @@ Save the user's own CV (stored or picked) for the current ad, with offline title
 
 ## Success Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
-- [ ] Code reviewed and approved
+- [x] All acceptance criteria met
+- [x] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
+- [x] Code reviewed and approved
 
 ---
 
