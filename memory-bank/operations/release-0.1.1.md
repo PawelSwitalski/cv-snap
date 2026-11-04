@@ -2,11 +2,13 @@
 release: 0.1.1
 intents: [003-complete-cv-content]
 created: 2026-11-02T22:20:00Z
-updated: 2026-11-03T15:10:00Z
-status: dev-verified
+updated: 2026-11-04T12:10:00Z
+status: superseded
 ---
 
 # Release 0.1.1
+
+**Superseded by 0.2.0** (user, 2026-11-04): a tester-only build; Checkpoints 2–4 are not done for 0.1.1. Its fixes ship in 0.2.0 (`release-0.2.0.md`).
 
 Defect release: the tailored CV keeps every education entry and every profile skill, and can
 include relevant other sections. Both packages change (the tailoring prompt is built in the host).
@@ -40,6 +42,7 @@ them).
 | 2026-11-02 | Packed: zip 0.1.1, no `key`, CSP with `wasm-unsafe-eval`; host tarball 0.1.1; tag `v0.1.1` on `2955ba8` |
 | 2026-11-03 | Dev verified (user): all four checks pass (education + skills kept, other sections, long CV ≤ 2 pages, Download PDF) |
 | 2026-11-03 | npm: first publish 404 (expired login, nothing published); after `npm login`, `cv-snap-host@0.1.1` published with `--tag next` (user). Registry integrity matches the local tarball; `latest` stays 0.1.0 |
+| 2026-11-04 | Superseded by 0.2.0 (user): not promoted beyond trusted testers; host 0.1.1 stays on npm `next` until 0.2.0 |
 
 ## Artifacts (tag v0.1.1, commit 2955ba8)
 
