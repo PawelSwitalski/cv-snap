@@ -248,4 +248,4 @@ which CV they sent. This intent adds:
 
 | Question | Owner | Due Date | Resolution |
 |----------|-------|----------|------------|
-| Backup file format with binaries (one JSON with base64, or ZIP) | Construction (design) | Bolt design | Pending |
+| Backup file format with binaries (one JSON with base64, or ZIP) | Construction (design) | Bolt design | Decided 2026-11-04: one JSON with base64 (existing envelope + optional `history`); ZIP deferred until real-usage feedback; 50 MB export warning |

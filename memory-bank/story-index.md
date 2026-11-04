@@ -2,10 +2,10 @@
 
 ## Overview
 - **Total stories**: 70
-- **Planned**: 3
+- **Planned**: 1
 - **Generated**: 0
-- **Completed**: 67
-- **Last updated**: 2026-11-03T17:06:17Z
+- **Completed**: 69
+- **Last updated**: 2026-11-04T10:50:00Z
 
 ---
 
@@ -187,9 +187,9 @@
 
 #### 003-history-backup
 
-- [ ] **001-export-with-history** — Export includes history - Must - bolt `026-history-backup` - PLANNED
+- [x] **001-export-with-history** — Export includes history - Must - bolt `026-history-backup` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/003-history-backup/stories/001-export-with-history.md`
-- [ ] **002-import-merges-history** — Import restores and merges history - Must - bolt `026-history-backup` - PLANNED
+- [x] **002-import-merges-history** — Import restores and merges history - Must - bolt `026-history-backup` - ✅ COMPLETED
   `memory-bank/intents/004-application-history/units/003-history-backup/stories/002-import-merges-history.md`
 
 #### 004-e2e-tests
@@ -209,7 +209,7 @@
 
 ## Stories by Status
 
-- **Planned**: 3
+- **Planned**: 1
 - **Generated**: 0
 - **In Progress**: 0
-- **Completed**: 67
+- **Completed**: 69

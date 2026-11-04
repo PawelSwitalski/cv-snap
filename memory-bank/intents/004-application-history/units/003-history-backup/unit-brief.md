@@ -2,11 +2,11 @@
 unit: 003-history-backup
 intent: 004-application-history
 phase: inception
-status: stories-defined
+status: complete
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 created: '2026-11-03T15:28:00Z'
-updated: '2026-11-03T15:28:00Z'
+updated: '2026-11-04T10:50:00Z'
 ---
 
 # Unit Brief: 003-history-backup
@@ -34,8 +34,8 @@ Export includes history; import restores and merges it by `AdKey`; 0.1.x profile
 
 ### Stories
 
-- [ ] **001-export-with-history**: Export includes history - Must - Planned
-- [ ] **002-import-merges-history**: Import restores and merges history - Must - Planned
+- [x] **001-export-with-history**: Export includes history - Must - Complete
+- [x] **002-import-merges-history**: Import restores and merges history - Must - Complete
 
 ---
 
@@ -48,9 +48,9 @@ Export includes history; import restores and merges it by `AdKey`; 0.1.x profile
 
 ## Success Criteria
 
-- [ ] All acceptance criteria met
-- [ ] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
-- [ ] Code reviewed and approved
+- [x] All acceptance criteria met
+- [x] Tests passing (`pnpm test`; `pnpm test:e2e` where E2E applies)
+- [x] Code reviewed and approved
 
 ---
 
