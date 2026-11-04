@@ -64,6 +64,9 @@ W **tym profilu Chrome** (pamięć rozszerzenia, tylko na Twoim komputerze):
   wybierzesz w ustawieniach (zawsze albo od 1 do 24 miesięcy od ostatniego pobrania) i nigdy
   nie jest nigdzie wysyłana.
 
+**Plik kopii zapasowej** eksportowany w ustawieniach zawiera Twój profil oraz, jeśli tak wybierzesz,
+zdjęcie i historię. Jest zapisywany tam, gdzie wskażesz, i cv-snap nigdzie go nie wysyła.
+
 Na **Twoim komputerze**, przez program pomocniczy:
 
 - sam zainstalowany program i logi jego działania. Logi nigdy nie zawierają treści CV ani

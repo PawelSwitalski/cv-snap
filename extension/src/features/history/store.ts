@@ -2,13 +2,14 @@ import { createStore, type StoreApi } from "zustand/vanilla";
 import { foldForSearch } from "@/lib/fold-text";
 import { logger } from "@/lib/logger";
 import type { HistoryRetention } from "@/features/settings/settings";
-import type { HistoryEntry } from "./history-entry";
+import type { HistoryEntry, HistoryEntryWithFiles, HistoryFiles } from "./history-entry";
 import type { HistoryRepository, PendingSnapshots } from "./history-repository";
 import {
   recordDownload,
   type RecordDownloadInput,
   type RecordDownloadOutcome,
 } from "./record-download";
+import { mergeEntry } from "./merge-import";
 import { expiredEntries } from "./retention";
 
 export const HISTORY_FILTERS = ["all", "sent", "not-sent"] as const;
@@ -32,6 +33,13 @@ export interface HistoryState {
   prune(retention: HistoryRetention, now: Date): Promise<number>;
   /** "Delete all history" in Settings. */
   clearAll(): Promise<void>;
+  /** An entry's files for the backup file; null when they are gone. */
+  readFiles(adKey: string): Promise<HistoryFiles | null>;
+  /**
+   * Merges validated backup entries into the history, one by one (story 002-import-merges-history);
+   * returns how many were added or changed.
+   */
+  importEntries(items: readonly HistoryEntryWithFiles[]): Promise<number>;
   setQuery(query: string): void;
   setFilter(filter: HistoryFilter): void;
 }
@@ -120,6 +128,37 @@ export function createHistoryStore(
         const { entries } = await repository.list();
         for (const entry of entries) await repository.delete(entry.adKey);
         await reload();
+      },
+
+      async readFiles(adKey) {
+        const [pdf, snapshot, adText] = await Promise.all([
+          repository.getPdf(adKey),
+          repository.getSnapshot(adKey),
+          repository.getAdText(adKey),
+        ]);
+        return pdf && adText !== null ? { pdf, snapshot, adText } : null;
+      },
+
+      async importEntries(items) {
+        let changed = 0;
+        try {
+          for (const { entry, files } of items) {
+            const action = mergeEntry(await repository.get(entry.adKey), entry);
+            if (action.kind === "keep") continue;
+            if (action.kind === "update") {
+              // The local CV stays: its files are written back unchanged with the new metadata.
+              const local = await get().readFiles(entry.adKey);
+              if (!local) continue;
+              await repository.put(action.entry, { pdf: local.pdf, adText: local.adText });
+            } else {
+              await repository.put(action.entry, files);
+            }
+            changed += 1;
+          }
+        } finally {
+          await reload();
+        }
+        return changed;
       },
 
       setQuery(query) {

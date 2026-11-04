@@ -17,3 +17,11 @@ export async function blobToBase64(file: Blob): Promise<string> {
   }
   return btoa(binary);
 }
+
+/** Bytes of a base64 string; throws on invalid base64 (as `atob` does). */
+export function base64ToBytes(base64: string): Uint8Array<ArrayBuffer> {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return bytes;
+}

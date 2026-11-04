@@ -62,6 +62,9 @@ In **this Chrome profile** (extension storage, on your computer only):
   kept for as long as you choose in Settings (forever, or 1 to 24 months after the last
   download) and is never sent anywhere.
 
+A **backup file** you export in Settings contains your profile and, if you choose, your photo and
+your history. It is saved where you choose and is never sent anywhere by cv-snap.
+
 On **your computer**, by the helper program:
 
 - the installed helper itself, and logs of what it did. Logs never contain your CV or job-ad text;

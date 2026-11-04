@@ -158,6 +158,7 @@ function Panel({ deps }: { deps: AppDeps }) {
         isGenerating: () => generateStore.getState().status.kind === "running",
         subscribeGenerating: (listener) => generateStore.subscribe(listener),
         download: deps.download ?? downloadPdf,
+        ...(historyStore ? { history: { store: historyStore, settings: settingsStore } } : {}),
       },
       ...(historyStore ? { history: { settings: settingsStore, history: historyStore } } : {}),
     }),

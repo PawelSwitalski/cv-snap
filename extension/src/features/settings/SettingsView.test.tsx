@@ -222,7 +222,7 @@ describe("SettingsView", () => {
       });
       const [file, name] = ctx.download.mock.calls[0] ?? [];
       const exported = JSON.parse((await file?.text()) ?? "{}") as Record<string, unknown>;
-      expect(name).toMatch(/^cv-snap-profile-\d{4}-\d{2}-\d{2}\.json$/);
+      expect(name).toMatch(/^cv-snap-backup-\d{4}-\d{2}-\d{2}\.json$/);
       expect(exported).toMatchObject({ format: "cv-snap-profile", schemaVersion: 1 });
       expect(exported.photo).toBeUndefined();
 

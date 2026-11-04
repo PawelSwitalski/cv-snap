@@ -938,19 +938,19 @@
     "message": "Show the privacy notice"
   },
   "settings_backup": {
-    "message": "Profile backup"
+    "message": "Backup"
   },
   "settings_backup_note": {
-    "message": "Save your confirmed profile to a file, or restore it, e.g. on another computer."
+    "message": "Save your confirmed profile and your history to a file, or restore them, e.g. on another computer."
   },
   "backup_include_photo": {
     "message": "Include photo"
   },
   "backup_export": {
-    "message": "Export profile"
+    "message": "Export backup"
   },
   "backup_import": {
-    "message": "Import profile"
+    "message": "Import backup"
   },
   "backup_no_profile": {
     "message": "Confirm a profile first to export it."
@@ -959,22 +959,22 @@
     "message": "Import is available when the generation has finished."
   },
   "backup_exported": {
-    "message": "Profile exported."
+    "message": "Backup exported."
   },
   "backup_imported": {
     "message": "Profile imported. It is now your active profile."
   },
   "backup_error_export": {
-    "message": "The profile couldn't be exported. Please try again."
+    "message": "The backup couldn't be exported. Please try again."
   },
   "backup_error_import": {
-    "message": "The profile couldn't be imported. Your current profile is unchanged."
+    "message": "The backup couldn't be imported. Your current profile is unchanged."
   },
   "backup_error_too_large": {
-    "message": "The file is larger than 5 MB, so it isn't a cv-snap profile backup."
+    "message": "The file is larger than 256 MB, so it isn't a cv-snap backup."
   },
   "backup_error_not_a_backup": {
-    "message": "This file isn't a cv-snap profile backup. Choose a file exported from cv-snap."
+    "message": "This file isn't a cv-snap backup. Choose a file exported from cv-snap."
   },
   "backup_error_newer_version": {
     "message": "This backup was made by a newer version of cv-snap. Update cv-snap, then import it again."
@@ -1004,6 +1004,45 @@
   },
   "backup_confirm_replace": {
     "message": "Replace"
+  },
+  "backup_include_history": {
+    "message": "Include history"
+  },
+  "backup_error_bad_history": {
+    "message": "The history in this backup is damaged or incomplete, so nothing was imported."
+  },
+  "backup_imported_with_history": {
+    "message": "Profile imported, with history entries added or updated: $COUNT$. The profile is now your active profile.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "backup_confirm_history": {
+    "message": "CVs from the history to add or update: $COUNT$. Your other history entries stay.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "backup_large_title": {
+    "message": "Export a large backup?"
+  },
+  "backup_large_description": {
+    "message": "With the history, the backup file will be about $MB$ MB. Exporting may take a moment.",
+    "placeholders": {
+      "mb": {
+        "content": "$1"
+      }
+    }
+  },
+  "backup_large_cancel": {
+    "message": "Cancel"
+  },
+  "backup_large_export": {
+    "message": "Export"
   },
   "error_action_open_settings": {
     "message": "Choose another model"

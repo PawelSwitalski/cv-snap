@@ -164,4 +164,70 @@ describe("history store", () => {
     expect((await repository.list()).entries).toEqual([]);
     expect([...repository.files.keys()]).toEqual([]);
   });
+
+  it("reads an entry's files for the backup, or null when its PDF is gone", async () => {
+    const { repository, store } = await loaded();
+    repository.files.delete("pdf:b");
+
+    const files = await store.getState().readFiles("a");
+
+    expect(files).toMatchObject({ snapshot: null, adText: "a" });
+    expect(await files?.pdf.text()).toBe("%PDF");
+    await expect(store.getState().readFiles("b")).resolves.toBeNull();
+  });
+
+  it("merges backup entries: adds, replaces, updates, keeps", async () => {
+    const { repository, store } = await loaded();
+    const later = "2026-11-03T09:00:00.000Z";
+    const earlier = "2026-10-20T09:00:00.000Z";
+    const backupFiles = (text: string) => ({
+      pdf: new Blob([`%PDF ${text}`]),
+      snapshot: `<p>${text}</p>`,
+      adText: text,
+    });
+
+    const changed = await store.getState().importEntries([
+      { entry: historyEntry({ adKey: "d" }), files: backupFiles("new ad") },
+      { entry: historyEntry({ adKey: "a", lastDownloadedAt: later }), files: backupFiles("newer") },
+      {
+        entry: historyEntry({ adKey: "c", lastDownloadedAt: earlier, sentOn: "2026-10-30" }),
+        files: backupFiles("older"),
+      },
+      { entry: ENTRIES[1] ?? historyEntry(), files: backupFiles("same") },
+    ]);
+
+    expect(changed).toBe(3);
+    expect(store.getState().entries.map((e) => e.adKey)).toEqual(["a", "b", "c", "d"]);
+    // Replaced: the backup's CV and files.
+    expect(await (await repository.getPdf("a"))?.text()).toBe("%PDF newer");
+    await expect(repository.getSnapshot("a")).resolves.toBe("<p>newer</p>");
+    // Updated: the local CV stays, the sent date comes from the backup.
+    expect(await repository.get("c")).toMatchObject({ sentOn: "2026-10-30" });
+    expect(await (await repository.getPdf("c"))?.text()).toBe("%PDF");
+    await expect(repository.getAdText("c")).resolves.toBe("a");
+    // Kept as it was.
+    await expect(repository.getAdText("b")).resolves.toBe("a");
+    await expect(repository.getAdText("d")).resolves.toBe("new ad");
+  });
+
+  it("shows what was written when an import fails halfway", async () => {
+    const repository = createMemoryHistoryRepository();
+    const store = createHistoryStore({
+      ...repository,
+      put: (entry, files) =>
+        entry.adKey === "broken"
+          ? Promise.reject(new Error("QuotaExceededError"))
+          : repository.put(entry, files),
+    });
+    const files = { pdf: new Blob(["%PDF"]), snapshot: null, adText: "a" };
+
+    await expect(
+      store.getState().importEntries([
+        { entry: historyEntry({ adKey: "ok" }), files },
+        { entry: historyEntry({ adKey: "broken" }), files },
+      ]),
+    ).rejects.toThrow("QuotaExceededError");
+
+    expect(store.getState().entries.map((e) => e.adKey)).toEqual(["ok"]);
+  });
 });

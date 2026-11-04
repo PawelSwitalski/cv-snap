@@ -938,19 +938,19 @@
     "message": "Pokaż informację o prywatności"
   },
   "settings_backup": {
-    "message": "Kopia profilu"
+    "message": "Kopia zapasowa"
   },
   "settings_backup_note": {
-    "message": "Zapisz zatwierdzony profil do pliku lub go przywróć, np. na innym komputerze."
+    "message": "Zapisz zatwierdzony profil i historię do pliku lub je przywróć, np. na innym komputerze."
   },
   "backup_include_photo": {
     "message": "Dołącz zdjęcie"
   },
   "backup_export": {
-    "message": "Eksportuj profil"
+    "message": "Eksportuj kopię"
   },
   "backup_import": {
-    "message": "Importuj profil"
+    "message": "Importuj kopię"
   },
   "backup_no_profile": {
     "message": "Najpierw zatwierdź profil, aby go wyeksportować."
@@ -959,22 +959,22 @@
     "message": "Import będzie dostępny po zakończeniu generowania."
   },
   "backup_exported": {
-    "message": "Profil wyeksportowany."
+    "message": "Kopia wyeksportowana."
   },
   "backup_imported": {
     "message": "Profil zaimportowany. Jest teraz Twoim aktywnym profilem."
   },
   "backup_error_export": {
-    "message": "Nie udało się wyeksportować profilu. Spróbuj ponownie."
+    "message": "Nie udało się wyeksportować kopii. Spróbuj ponownie."
   },
   "backup_error_import": {
-    "message": "Nie udało się zaimportować profilu. Obecny profil się nie zmienił."
+    "message": "Nie udało się zaimportować kopii. Obecny profil się nie zmienił."
   },
   "backup_error_too_large": {
-    "message": "Plik jest większy niż 5 MB, więc nie jest kopią profilu cv-snap."
+    "message": "Plik jest większy niż 256 MB, więc nie jest kopią cv-snap."
   },
   "backup_error_not_a_backup": {
-    "message": "Ten plik nie jest kopią profilu cv-snap. Wybierz plik wyeksportowany z cv-snap."
+    "message": "Ten plik nie jest kopią cv-snap. Wybierz plik wyeksportowany z cv-snap."
   },
   "backup_error_newer_version": {
     "message": "Ta kopia pochodzi z nowszej wersji cv-snap. Zaktualizuj cv-snap i zaimportuj ją ponownie."
@@ -1004,6 +1004,45 @@
   },
   "backup_confirm_replace": {
     "message": "Zastąp"
+  },
+  "backup_include_history": {
+    "message": "Dołącz historię"
+  },
+  "backup_error_bad_history": {
+    "message": "Historia w tej kopii jest uszkodzona lub niekompletna, więc niczego nie zaimportowano."
+  },
+  "backup_imported_with_history": {
+    "message": "Profil zaimportowany, dodane lub zaktualizowane wpisy historii: $COUNT$. Jest teraz Twoim aktywnym profilem.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "backup_confirm_history": {
+    "message": "CV z historii do dodania lub zaktualizowania: $COUNT$. Pozostałe wpisy historii zostaną.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "backup_large_title": {
+    "message": "Wyeksportować dużą kopię?"
+  },
+  "backup_large_description": {
+    "message": "Z historią plik kopii będzie miał około $MB$ MB. Eksport może chwilę potrwać.",
+    "placeholders": {
+      "mb": {
+        "content": "$1"
+      }
+    }
+  },
+  "backup_large_cancel": {
+    "message": "Anuluj"
+  },
+  "backup_large_export": {
+    "message": "Eksportuj"
   },
   "error_action_open_settings": {
     "message": "Wybierz inny model"

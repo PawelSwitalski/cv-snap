@@ -15,6 +15,7 @@ import { Label, Select } from "@/components/ui/field";
 import { expiredEntries, historyUsage, retentionCutoff } from "@/features/history/retention";
 import type { HistoryStore } from "@/features/history/store";
 import { dateFormatter } from "@/lib/date-format";
+import { megabytes } from "@/lib/format-size";
 import { useLanguage, useT } from "@/lib/i18n/i18n";
 import { MAX_RETENTION_MONTHS, MIN_RETENTION_MONTHS, type HistoryRetention } from "./settings";
 import { SettingsSection } from "./SettingsSection";
@@ -33,12 +34,6 @@ const MONTH_OPTIONS = Array.from(
 
 /** Default when switching from "forever" to a period. */
 const DEFAULT_MONTHS = 12;
-
-/** Size for people: "0.4 MB", "12 MB" (one decimal below 10 MB). */
-function megabytes(bytes: number, language: string): string {
-  const mb = bytes / (1024 * 1024);
-  return new Intl.NumberFormat(language, { maximumFractionDigits: mb < 10 ? 1 : 0 }).format(mb);
-}
 
 /**
  * Settings → History (story 004-retention-setting): how long CVs are kept, what the history uses,

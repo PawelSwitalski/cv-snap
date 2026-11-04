@@ -8,6 +8,9 @@ import { z } from "zod";
  */
 export const HISTORY_SCHEMA_VERSION = 1;
 
+/** A generated CV is far smaller; a larger PDF in a backup isn't one of ours (bolt 026). */
+export const MAX_HISTORY_PDF_BYTES = 10 * 1024 * 1024;
+
 /** Cleaned page snapshot (story 003): saved, dropped as larger than 5 MB, or not available. */
 export const SNAPSHOT_STATUSES = ["saved", "too-large", "none"] as const;
 export type SnapshotStatus = (typeof SNAPSHOT_STATUSES)[number];
@@ -49,6 +52,12 @@ export interface HistoryFiles {
   /** Cleaned page HTML, or null when the entry has none. */
   snapshot: string | null;
   adText: string;
+}
+
+/** An entry with its files, as read from a backup file (bolt 026). */
+export interface HistoryEntryWithFiles {
+  entry: HistoryEntry;
+  files: HistoryFiles;
 }
 
 /** The list (metadata only) plus how many stored records couldn't be read. */
