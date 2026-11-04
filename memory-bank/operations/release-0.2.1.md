@@ -54,6 +54,7 @@ the 0.2.1 extension, and users don't need to reinstall it.
 | 2026-11-04 | Versions set to 0.2.1 (host too: `release:pack` requires equal versions); locally green: 1412 tests, typecheck, lint, format |
 | 2026-11-04 | Push (user); CI 41879646305: Windows install failed twice on runner image `windows-2025-vs2026` 20261103.298.1 (helper PDF and registry tests ~10× slower, timeouts); green on attempt 3 on image 20261030.294.1. Helper code unchanged since 0.2.0; all 236 helper tests pass locally on Windows. Watch: the new image may fail CI again until GitHub fixes it |
 | 2026-11-04 | Packed: zip 0.2.1, no `key`, permissions and CSP unchanged (no build-config change since `v0.2.0`); host tarball 0.2.1; tag `v0.2.1` on `860fc7e` |
+| 2026-11-04 | `main` and tag `v0.2.1` pushed (user). CI 41888959597 (release-log commit): `check` failed on a pre-existing slow test (`render.test.tsx` › "drops the same content every time", two full PDF fits; 2.6–3.5 s on earlier runs, over the 5 s default this time). Test-only fix: 20 s limit. Release files and tag unchanged |
 
 ## Artifacts (tag v0.2.1, commit 860fc7e)
 
