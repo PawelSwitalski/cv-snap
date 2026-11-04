@@ -1,11 +1,11 @@
 # Global Story Index
 
 ## Overview
-- **Total stories**: 70
-- **Planned**: 0
+- **Total stories**: 79
+- **Planned**: 9
 - **Generated**: 0
 - **Completed**: 70
-- **Last updated**: 2026-11-04T12:00:00Z
+- **Last updated**: 2026-11-04T16:40:00Z
 
 ---
 
@@ -209,7 +209,33 @@
 
 ## Stories by Status
 
-- **Planned**: 0
+- **Planned**: 9
 - **Generated**: 0
 - **In Progress**: 0
 - **Completed**: 70
+
+### 005-own-cv-in-history
+
+#### 001-own-cv-save
+
+- [ ] **001-entry-source** — Entry source: your CV or tailored - Must - bolt `028-own-cv-save` - PLANNED
+  `memory-bank/intents/005-own-cv-in-history/units/001-own-cv-save/stories/001-entry-source.md`
+- [ ] **002-save-own-cv** — Save my CV for an ad, without the host - Must - bolt `028-own-cv-save` - PLANNED
+  `memory-bank/intents/005-own-cv-in-history/units/001-own-cv-save/stories/002-save-own-cv.md`
+- [ ] **003-save-own-cv-panel** — Save my CV in the panel - Must - bolt `028-own-cv-save` - PLANNED
+  `memory-bank/intents/005-own-cv-in-history/units/001-own-cv-save/stories/003-save-own-cv-panel.md`
+
+#### 002-history-only-mode
+
+- [ ] **001-history-only-onboarding** — Use without the helper - Must - bolt `029-history-only-mode` - PLANNED
+  `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/001-history-only-onboarding.md`
+- [ ] **002-helper-later** — Set up the helper later - Must - bolt `029-history-only-mode` - PLANNED
+  `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/002-helper-later.md`
+- [ ] **003-replace-stored-cv** — Replace my stored CV - Should - bolt `029-history-only-mode` - PLANNED
+  `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/003-replace-stored-cv.md`
+- [ ] **004-backup-without-profile** — Backups without a profile - Must - bolt `030-history-only-backup` - PLANNED
+  `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/004-backup-without-profile.md`
+- [ ] **005-privacy-text** — Privacy text for own CVs - Must - bolt `030-history-only-backup` - PLANNED
+  `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/005-privacy-text.md`
+- [ ] **006-history-only-e2e** — E2E: history-only mode - Must - bolt `030-history-only-backup` - PLANNED
+  `memory-bank/intents/005-own-cv-in-history/units/002-history-only-mode/stories/006-history-only-e2e.md`
